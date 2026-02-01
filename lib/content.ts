@@ -79,3 +79,29 @@ export function getAllWisata(): Wisata[] {
 export function getWisataBySlug(slug: string): Wisata {
     return loadJSON<Wisata>(`wisata/${slug}.json`);
 }
+
+export interface Herbal {
+    slug: string;
+    name: string;
+    latin: string;
+    excerpt: string;
+    description: string;
+    cover: string;
+    gallery: string[];
+    benefits: string[];
+    usage: string[];
+}
+
+export function getAllHerbal(): Herbal[] {
+    const dir = path.join(CONTENT_DIR, "b2h/katalog-tanaman");
+    const files = fs.readdirSync(dir);
+
+    return files.map((file) => {
+        const raw = fs.readFileSync(path.join(dir, file), "utf-8");
+        return JSON.parse(raw);
+    });
+}
+
+export function getHerbalBySlug(slug: string): Herbal {
+    return loadJSON<Herbal>(`b2h/katalog-tanaman/${slug}.json`);
+}
