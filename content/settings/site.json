@@ -1,0 +1,37 @@
+{
+  "siteName": "Visit Bantaragung",
+  "tagline": "Smart Tourism Digital Platform Desa Bantaragung",
+  "description": "Platform digital resmi Desa Wisata Bantaragung yang menyajikan informasi wisata, kampung herbal, peta digital, pusat pengetahuan, dan branding potensi desa.",
+
+  "location": {
+    "village": "Bantaragung",
+    "district": "",
+    "regency": "",
+    "province": "Jawa Barat",
+    "country": "Indonesia",
+    "latitude": -6.0,
+    "longitude": 108.0
+  },
+
+  "contact": {
+    "address": "Desa Bantaragung",
+    "whatsapp": "628xxxxxxxxxx",
+    "email": "",
+    "googleMapsUrl": ""
+  },
+
+  "socials": {
+    "instagram": "",
+    "facebook": "",
+    "youtube": "",
+    "tiktok": ""
+  },
+
+  "modules": {
+    "wisata": true,
+    "b2h": true,
+    "bmc": true,
+    "bic": true,
+    "bdb": true
+  }
+}
