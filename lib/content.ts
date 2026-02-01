@@ -105,3 +105,38 @@ export function getAllHerbal(): Herbal[] {
 export function getHerbalBySlug(slug: string): Herbal {
     return loadJSON<Herbal>(`b2h/katalog-tanaman/${slug}.json`);
 }
+
+export interface Article {
+    slug: string;
+    title: string;
+    excerpt: string;
+    date: string;
+    category: string;
+    cover: string;
+    gallery: string[];
+    content: string[];
+}
+
+export function getAllArticles(): Article[] {
+    const dir = path.join(CONTENT_DIR, "bic/artikel");
+    const files = fs.readdirSync(dir);
+
+    return files.map((file) => {
+        const raw = fs.readFileSync(path.join(dir, file), "utf-8");
+        return JSON.parse(raw);
+    });
+}
+
+export function getArticleBySlug(slug: string): Article | null {
+    const dir = path.join(CONTENT_DIR, "bic/artikel");
+    const files = fs.readdirSync(dir);
+
+    const file = files.find((f) => {
+        const data = JSON.parse(fs.readFileSync(path.join(dir, f), "utf-8"));
+        return data.slug === slug;
+    });
+
+    if (!file) return null;
+
+    return JSON.parse(fs.readFileSync(path.join(dir, file), "utf-8"));
+}
