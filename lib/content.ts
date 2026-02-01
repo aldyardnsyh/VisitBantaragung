@@ -50,3 +50,32 @@ export function getSiteSettings(): SiteSettings {
 export function getSeoSettings() {
     return loadJSON("settings/seo.json");
 }
+
+export interface Wisata {
+    slug: string;
+    title: string;
+    excerpt: string;
+    description: string;
+    cover: string;
+    gallery: string[];
+    location: {
+        lat: number;
+        lng: number;
+    };
+    facilities: string[];
+    activities: string[];
+}
+
+export function getAllWisata(): Wisata[] {
+    const dir = path.join(CONTENT_DIR, "wisata");
+    const files = fs.readdirSync(dir);
+
+    return files.map((file) => {
+        const raw = fs.readFileSync(path.join(dir, file), "utf-8");
+        return JSON.parse(raw);
+    });
+}
+
+export function getWisataBySlug(slug: string): Wisata {
+    return loadJSON<Wisata>(`wisata/${slug}.json`);
+}
