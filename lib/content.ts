@@ -140,3 +140,29 @@ export function getArticleBySlug(slug: string): Article | null {
 
     return JSON.parse(fs.readFileSync(path.join(dir, file), "utf-8"));
 }
+
+export interface Location {
+    slug: string;
+    name: string;
+    category: string;
+    lat: number;
+    lng: number;
+    excerpt: string;
+    cover: string;
+}
+
+export function getAllLocations(): Location[] {
+    const dir = path.join(CONTENT_DIR, "bmc/lokasi");
+    const files = fs.readdirSync(dir);
+
+    return files.map((file) => {
+        const raw = fs.readFileSync(path.join(dir, file), "utf-8");
+        return JSON.parse(raw);
+    });
+}
+
+export function getLocationBySlug(slug: string): Location {
+    return loadJSON<Location>(`bmc/lokasi/${slug}.json`);
+}
+
+
