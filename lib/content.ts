@@ -165,4 +165,57 @@ export function getLocationBySlug(slug: string): Location {
     return loadJSON<Location>(`bmc/lokasi/${slug}.json`);
 }
 
+export interface UMKM {
+    slug: string;
+    name: string;
+    excerpt: string;
+    description: string;
+    cover: string;
+    gallery: string[];
+    contact: {
+        whatsapp: string;
+    };
+}
+
+export function getAllUMKM(): UMKM[] {
+    const dir = path.join(CONTENT_DIR, "bdb/umkm");
+    const files = fs.readdirSync(dir);
+
+    return files.map((file) => {
+        const raw = fs.readFileSync(path.join(dir, file), "utf-8");
+        return JSON.parse(raw);
+    });
+}
+
+export function getUMKMBySlug(slug: string): UMKM {
+    return loadJSON<UMKM>(`bdb/umkm/${slug}.json`);
+}
+
+export interface Homestay {
+    slug: string;
+    name: string;
+    excerpt: string;
+    description: string;
+    cover: string;
+    gallery: string[];
+    capacity: number;
+    facilities: string[];
+    contact: {
+        whatsapp: string;
+    };
+}
+
+export function getAllHomestay(): Homestay[] {
+    const dir = path.join(CONTENT_DIR, "bdb/homestay");
+    const files = fs.readdirSync(dir);
+
+    return files.map((file) => {
+        const raw = fs.readFileSync(path.join(dir, file), "utf-8");
+        return JSON.parse(raw);
+    });
+}
+
+export function getHomestayBySlug(slug: string): Homestay {
+    return loadJSON<Homestay>(`bdb/homestay/${slug}.json`);
+}
 

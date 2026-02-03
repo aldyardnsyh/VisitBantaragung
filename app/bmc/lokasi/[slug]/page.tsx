@@ -1,7 +1,7 @@
 import { getLocationBySlug } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
 
-export default async function LocationDetail({ params }: any) {
+export default async function LocationDetail({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const data = getLocationBySlug(slug);
 
