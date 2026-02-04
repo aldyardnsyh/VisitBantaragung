@@ -9,7 +9,7 @@ export default async function HomestayDetail({ params }: { params: Promise<{ slu
         <main className="max-w-5xl mx-auto px-6 py-16 space-y-12">
 
             <section className="space-y-5">
-                <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1 text-xs uppercase tracking-widest text-emerald-700">
+                <div className="inline-flex items-center gap-2 rounded-full bg-[#102440]/10 px-4 py-1 text-xs uppercase tracking-widest text-[#e7c277]">
                     Homestay
                 </div>
                 <div className="space-y-2">
@@ -17,16 +17,16 @@ export default async function HomestayDetail({ params }: { params: Promise<{ slu
                     <p className="text-slate-600 max-w-2xl">{data.excerpt}</p>
                 </div>
                 <div className="flex flex-wrap gap-3 text-xs text-slate-600">
-                    <span className="rounded-full bg-white px-3 py-1 border border-emerald-100 shadow-sm">
+                    <span className="rounded-full bg-white px-3 py-1 border border-[#e7c277]/40 shadow-sm">
                         Kapasitas {data.capacity}
                     </span>
-                    <span className="rounded-full bg-white px-3 py-1 border border-emerald-100 shadow-sm">
+                    <span className="rounded-full bg-white px-3 py-1 border border-[#e7c277]/40 shadow-sm">
                         {data.facilities.length} Fasilitas
                     </span>
                 </div>
             </section>
 
-            <section className="relative overflow-hidden rounded-3xl shadow-lg border border-emerald-100/70">
+            <section className="relative overflow-hidden rounded-3xl shadow-lg border border-[#e7c277]/40">
                 <img
                     src={assetUrl(data.cover)}
                     alt={data.name}
@@ -45,21 +45,21 @@ export default async function HomestayDetail({ params }: { params: Promise<{ slu
                     <p>{data.description}</p>
                 </div>
                 <div className="space-y-4">
-                    <div className="rounded-3xl bg-white border border-emerald-100/70 p-6 shadow-sm space-y-3">
+                    <div className="rounded-3xl bg-white border border-[#e7c277]/40 p-6 shadow-sm space-y-3">
                         <h3 className="font-semibold">Fasilitas Utama</h3>
                         <ul className="space-y-2 text-sm text-slate-700">
                             {data.facilities.map((f: string) => (
                                 <li key={f} className="flex items-center gap-2">
-                                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                                    <span className="h-2 w-2 rounded-full bg-[#e7c277]" />
                                     {f}
                                 </li>
                             ))}
                         </ul>
                         <p className="text-sm text-slate-600">Kapasitas: {data.capacity}</p>
                     </div>
-                    <div className="rounded-3xl bg-emerald-50 p-6 space-y-3">
-                        <h4 className="font-semibold text-emerald-900">Pengalaman Live-in</h4>
-                        <p className="text-sm text-emerald-900/80">
+                    <div className="rounded-3xl bg-[#102440]/10 p-6 space-y-3">
+                        <h4 className="font-semibold text-[#102440]">Pengalaman Live-in</h4>
+                        <p className="text-sm text-[#102440]/80">
                             Nikmati suasana pedesaan, kuliner lokal, dan aktivitas bersama warga.
                         </p>
                     </div>
@@ -85,7 +85,7 @@ export default async function HomestayDetail({ params }: { params: Promise<{ slu
             </section>
 
             {/* CTA */}
-            <section className="bg-emerald-700 text-white rounded-3xl p-10 text-center space-y-4 shadow-lg">
+            <section className="bg-[#0b1a2f] text-white rounded-3xl p-10 text-center space-y-4 shadow-lg">
                 <h3 className="text-2xl font-semibold">Booking Homestay</h3>
                 <p className="text-white/80 max-w-2xl mx-auto">
                     Hubungi pengelola untuk jadwal ketersediaan dan paket live-in.
@@ -95,7 +95,7 @@ export default async function HomestayDetail({ params }: { params: Promise<{ slu
                     href={`https://wa.me/${data.contact.whatsapp}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 bg-white text-emerald-700 px-6 py-3 rounded-full font-semibold shadow hover:scale-105 transition"
+                    className="inline-flex items-center gap-2 bg-white text-[#e7c277] px-6 py-3 rounded-full font-semibold shadow hover:scale-105 transition"
                 >
                     Hubungi via WhatsApp
                     <span aria-hidden>→</span>

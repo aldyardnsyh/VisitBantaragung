@@ -12,7 +12,7 @@ export default async function ArtikelDetail({ params }: { params: Promise<{ slug
 
             {/* Header */}
             <section className="space-y-5">
-                <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1 text-xs uppercase tracking-widest text-emerald-700">
+                <div className="inline-flex items-center gap-2 rounded-full bg-[#102440]/10 px-4 py-1 text-xs uppercase tracking-widest text-[#e7c277]">
                     Artikel Desa
                 </div>
                 <div className="space-y-2">
@@ -28,7 +28,7 @@ export default async function ArtikelDetail({ params }: { params: Promise<{ slug
             </section>
 
             {/* Cover */}
-            <section className="relative overflow-hidden rounded-3xl shadow-lg border border-emerald-100/70">
+            <section className="relative overflow-hidden rounded-3xl shadow-lg border border-[#e7c277]/40">
                 <img
                     src={assetUrl(data.cover)}
                     alt={data.title}
@@ -49,20 +49,20 @@ export default async function ArtikelDetail({ params }: { params: Promise<{ slug
                     ))}
                 </article>
                 <aside className="space-y-4">
-                    <div className="rounded-3xl bg-white border border-emerald-100/70 p-6 shadow-sm space-y-3">
+                    <div className="rounded-3xl bg-white border border-[#e7c277]/40 p-6 shadow-sm space-y-3">
                         <h3 className="font-semibold">Ringkasan</h3>
                         <p className="text-sm text-slate-600">
                             Dokumentasi kegiatan terbaru untuk memperkuat potensi wisata dan edukasi desa.
                         </p>
-                        <div className="flex flex-wrap gap-2 text-xs text-emerald-700">
-                            <span className="rounded-full bg-emerald-50 px-3 py-1">Kegiatan</span>
-                            <span className="rounded-full bg-emerald-50 px-3 py-1">Edukasi</span>
-                            <span className="rounded-full bg-emerald-50 px-3 py-1">Komunitas</span>
+                        <div className="flex flex-wrap gap-2 text-xs text-[#e7c277]">
+                            <span className="rounded-full bg-[#102440]/10 px-3 py-1">Kegiatan</span>
+                            <span className="rounded-full bg-[#102440]/10 px-3 py-1">Edukasi</span>
+                            <span className="rounded-full bg-[#102440]/10 px-3 py-1">Komunitas</span>
                         </div>
                     </div>
-                    <div className="rounded-3xl bg-emerald-50 p-6 space-y-3">
-                        <h4 className="font-semibold text-emerald-900">Baca juga</h4>
-                        <p className="text-sm text-emerald-900/80">
+                    <div className="rounded-3xl bg-[#102440]/10 p-6 space-y-3">
+                        <h4 className="font-semibold text-[#102440]">Baca juga</h4>
+                        <p className="text-sm text-[#102440]/80">
                             Temukan artikel lain seputar budaya, UMKM, dan wisata unggulan Bantaragung.
                         </p>
                     </div>

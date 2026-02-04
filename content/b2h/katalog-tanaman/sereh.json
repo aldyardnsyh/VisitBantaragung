@@ -1,0 +1,20 @@
+{
+  "slug": "sereh",
+  "name": "Sereh",
+  "latin": "Cymbopogon citratus",
+  "excerpt": "Sereh merupakan tanaman herbal yang dimanfaatkan bagian batang dan daun.",
+  "description": "Serai adalah tanaman rumput beraroma segar dengan batang memanjang. Bagian yang dimanfaatkan adalah batang dan daun.",
+  "cover": "b2h/katalog-tanaman/sereh/cover.jpg",
+  "gallery": [
+    "b2h/katalog-tanaman/sereh/01.jpg",
+    "b2h/katalog-tanaman/sereh/02.jpg"
+  ],
+  "benefits": [
+    "Menghangatkan tubuh",
+    "Meredakan masuk angin"
+  ],
+  "usage": [
+    "Digeprek untuk bumbu masakan",
+    "Direbus sebagai minuman"
+  ]
+}

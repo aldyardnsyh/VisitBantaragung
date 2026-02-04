@@ -1,0 +1,22 @@
+{
+  "slug": "daun-mint",
+  "name": "Daun Mint",
+  "latin": "Mentha piperita",
+  "excerpt": "Daun Mint merupakan tanaman herbal yang dimanfaatkan bagian daun.",
+  "description": "Mint adalah tanaman herba aromatik dengan daun hijau bergerigi yang mengeluarkan aroma segar khas. Bagian yang dimanfaatkan adalah daun.",
+  "cover": "b2h/katalog-tanaman/daun-mint/cover.jpg",
+  "gallery": [
+    "b2h/katalog-tanaman/daun-mint/01.jpg",
+    "b2h/katalog-tanaman/daun-mint/02.jpg"
+  ],
+  "benefits": [
+    "Meredakan gangguan pencernaan",
+    "Mengurangi mual",
+    "Menyegarkan pernapasan"
+  ],
+  "usage": [
+    "Diseduh sebagai teh herbal",
+    "Campuran minuman dan makanan",
+    "Diolah menjadi aromaterapi"
+  ]
+}

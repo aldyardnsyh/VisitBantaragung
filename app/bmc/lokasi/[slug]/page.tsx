@@ -9,7 +9,7 @@ export default async function LocationDetail({ params }: { params: Promise<{ slu
         <main className="max-w-5xl mx-auto px-6 py-16 space-y-12">
 
             <section className="space-y-5">
-                <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1 text-xs uppercase tracking-widest text-emerald-700">
+                <div className="inline-flex items-center gap-2 rounded-full bg-[#102440]/10 px-4 py-1 text-xs uppercase tracking-widest text-[#e7c277]">
                     Lokasi {data.category}
                 </div>
                 <div className="space-y-2">
@@ -17,13 +17,13 @@ export default async function LocationDetail({ params }: { params: Promise<{ slu
                     <p className="text-slate-600 max-w-2xl">{data.excerpt}</p>
                 </div>
                 <div className="flex flex-wrap gap-3 text-xs text-slate-600">
-                    <span className="rounded-full bg-white px-3 py-1 border border-emerald-100 shadow-sm">
+                    <span className="rounded-full bg-white px-3 py-1 border border-[#e7c277]/40 shadow-sm">
                         Koordinat: {data.lat}, {data.lng}
                     </span>
                 </div>
             </section>
 
-            <section className="relative overflow-hidden rounded-3xl shadow-lg border border-emerald-100/70">
+            <section className="relative overflow-hidden rounded-3xl shadow-lg border border-[#e7c277]/40">
                 <img
                     src={assetUrl(data.cover)}
                     alt={data.name}
@@ -38,7 +38,7 @@ export default async function LocationDetail({ params }: { params: Promise<{ slu
 
             {/* Map */}
             <section className="grid lg:grid-cols-[1.2fr_0.8fr] gap-8">
-                <div className="rounded-3xl overflow-hidden shadow-lg border border-emerald-100/70 h-[380px] bg-white">
+                <div className="rounded-3xl overflow-hidden shadow-lg border border-[#e7c277]/40 h-[380px] bg-white">
                     <iframe
                         className="w-full h-full"
                         loading="lazy"
@@ -47,19 +47,19 @@ export default async function LocationDetail({ params }: { params: Promise<{ slu
                     />
                 </div>
                 <div className="space-y-4">
-                    <div className="rounded-3xl bg-white border border-emerald-100/70 p-6 shadow-sm space-y-3">
+                    <div className="rounded-3xl bg-white border border-[#e7c277]/40 p-6 shadow-sm space-y-3">
                         <h3 className="font-semibold">Informasi Lokasi</h3>
                         <p className="text-sm text-slate-600">
                             Titik ini merupakan bagian dari jalur wisata dan edukasi Desa Bantaragung.
                         </p>
-                        <div className="flex flex-wrap gap-2 text-xs text-emerald-700">
-                            <span className="rounded-full bg-emerald-50 px-3 py-1">Akses Mudah</span>
-                            <span className="rounded-full bg-emerald-50 px-3 py-1">Ramah Keluarga</span>
+                        <div className="flex flex-wrap gap-2 text-xs text-[#e7c277]">
+                            <span className="rounded-full bg-[#102440]/10 px-3 py-1">Akses Mudah</span>
+                            <span className="rounded-full bg-[#102440]/10 px-3 py-1">Ramah Keluarga</span>
                         </div>
                     </div>
-                    <div className="rounded-3xl bg-emerald-50 p-6 space-y-3">
-                        <h4 className="font-semibold text-emerald-900">Panduan Kunjungan</h4>
-                        <p className="text-sm text-emerald-900/80">
+                    <div className="rounded-3xl bg-[#102440]/10 p-6 space-y-3">
+                        <h4 className="font-semibold text-[#102440]">Panduan Kunjungan</h4>
+                        <p className="text-sm text-[#102440]/80">
                             Gunakan peta digital untuk menemukan rute terbaik dan titik parkir terdekat.
                         </p>
                     </div>
@@ -67,7 +67,7 @@ export default async function LocationDetail({ params }: { params: Promise<{ slu
                         href={`https://www.google.com/maps?q=${data.lat},${data.lng}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-full font-semibold shadow hover:bg-emerald-700 transition"
+                        className="inline-flex items-center gap-2 bg-[#102440] text-white px-6 py-3 rounded-full font-semibold shadow hover:bg-[#0b1a2f] transition"
                     >
                         Buka di Google Maps
                         <span aria-hidden>→</span>

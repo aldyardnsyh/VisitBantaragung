@@ -9,7 +9,7 @@ export default function BICLanding() {
     <main className="max-w-6xl mx-auto px-6 py-16 space-y-12">
 
       {/* Header */}
-      <section className="rounded-3xl bg-gradient-to-br from-slate-900 to-emerald-900 text-white p-10 md:p-12 space-y-4 shadow-lg">
+      <section className="rounded-3xl bg-gradient-to-br from-[#102440] to-[#1b3b6f] text-white p-10 md:p-12 space-y-4 shadow-lg">
         <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1 text-xs uppercase tracking-widest">
           Pusat Informasi
         </div>
@@ -26,7 +26,7 @@ export default function BICLanding() {
       <section className="grid md:grid-cols-3 gap-8">
         {articles.map((a: any) => (
           <Link key={a.slug} href={`/bic/artikel/${a.slug}`}>
-            <article className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition border border-emerald-100/70">
+            <article className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition border border-[#e7c277]/40">
               <div className="relative">
                 <img
                   src={assetUrl(a.cover)}
@@ -41,7 +41,7 @@ export default function BICLanding() {
               <div className="p-5 space-y-3">
                 <h3 className="font-semibold leading-snug">{a.title}</h3>
                 <p className="text-sm text-gray-600 line-clamp-2">{a.excerpt}</p>
-                <span className="inline-flex items-center gap-1 text-emerald-700 text-sm font-medium">
+                <span className="inline-flex items-center gap-1 text-[#e7c277] text-sm font-medium">
                   Baca selengkapnya
                   <span aria-hidden>→</span>
                 </span>
@@ -55,7 +55,7 @@ export default function BICLanding() {
       <section className="text-center">
         <Link
           href="/bic/artikel"
-          className="inline-flex items-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-full shadow hover:bg-emerald-700 transition"
+          className="inline-flex items-center gap-2 bg-[#102440] text-white px-6 py-3 rounded-full shadow hover:bg-[#0b1a2f] transition"
         >
           Lihat Semua Artikel
           <span aria-hidden>→</span>
