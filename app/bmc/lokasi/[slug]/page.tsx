@@ -6,24 +6,39 @@ export default async function LocationDetail({ params }: { params: Promise<{ slu
     const data = getLocationBySlug(slug);
 
     return (
-        <main style={{ padding: 32 }}>
-            <h1>{data.name}</h1>
+        <main className="max-w-4xl mx-auto px-6 py-16 space-y-10">
 
-            <img src={assetUrl(data.cover)} alt={data.name} width={500} />
+            <section className="space-y-3">
+                <h1 className="text-3xl md:text-4xl font-bold">{data.name}</h1>
+                <p className="text-gray-600">{data.excerpt}</p>
+            </section>
 
-            <p>{data.excerpt}</p>
+            <img
+                src={assetUrl(data.cover)}
+                alt={data.name}
+                className="w-full h-[350px] object-cover rounded-2xl shadow"
+            />
 
-            <h4>Koordinat</h4>
-            <p>
-                {data.lat}, {data.lng}
-            </p>
+            {/* Map */}
+            <div className="rounded-2xl overflow-hidden shadow h-[350px]">
+                <iframe
+                    className="w-full h-full"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    src={`https://www.google.com/maps?q=${data.lat},${data.lng}&z=16&output=embed`}
+                />
+            </div>
 
-            <a
-                href={`https://www.google.com/maps?q=${data.lat},${data.lng}`}
-                target="_blank"
-            >
-                Buka di Google Maps
-            </a>
+            <section className="text-center">
+                <a
+                    href={`https://www.google.com/maps?q=${data.lat},${data.lng}`}
+                    target="_blank"
+                    className="inline-block bg-green-700 text-white px-6 py-3 rounded-xl"
+                >
+                    Buka di Google Maps
+                </a>
+            </section>
+
         </main>
     );
 }
