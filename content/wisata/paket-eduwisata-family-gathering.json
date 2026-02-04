@@ -1,0 +1,29 @@
+{
+  "slug": "paket-eduwisata-family-gathering",
+  "title": "Paket Eduwisata Family Gathering",
+  "excerpt": "Paket kebersamaan keluarga dengan rangkaian aktivitas edukatif di Desa Bantaragung.",
+  "description": "Paket Eduwisata Family Gathering dirancang untuk keluarga atau instansi yang ingin kegiatan bersama di alam terbuka. Program ini mencakup sesi edukasi budaya, permainan outbound ringan, serta pengalaman kuliner lokal. Rangkaian kegiatan disusun agar interaktif dan nyaman untuk semua usia.",
+  "cover": "wisata/paket-eduwisata-family-gathering/cover.jpg",
+  "gallery": [
+    "wisata/paket-eduwisata-family-gathering/01.jpg",
+    "wisata/paket-eduwisata-family-gathering/02.jpg"
+  ],
+  "location": {
+    "lat": -6.0,
+    "lng": 108.0
+  },
+  "facilities": [
+    "Kamar mandi umum",
+    "Kesenian dan budaya",
+    "Musholla",
+    "Selfie area",
+    "Tempat makan",
+    "Wifi area"
+  ],
+  "activities": [
+    "Edukasi budaya",
+    "Outbound keluarga",
+    "Kuliner desa",
+    "Kegiatan komunitas"
+  ]
+}

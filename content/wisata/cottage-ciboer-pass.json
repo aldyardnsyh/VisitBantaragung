@@ -1,0 +1,26 @@
+{
+  "slug": "cottage-ciboer-pass",
+  "title": "Cottage Ciboer Pass",
+  "excerpt": "Penginapan cottage dengan suasana alam terbuka di kawasan Ciboer Pass.",
+  "description": "Cottage Ciboer Pass menawarkan pengalaman menginap nyaman dengan pemandangan persawahan dan udara sejuk. Lokasinya dekat dengan destinasi wisata terasering sehingga cocok untuk wisata keluarga maupun staycation singkat. Tersedia fasilitas dasar untuk menunjang kenyamanan wisatawan.",
+  "cover": "wisata/cottage-ciboer-pass/cover.jpg",
+  "gallery": [
+    "wisata/cottage-ciboer-pass/01.jpg",
+    "wisata/cottage-ciboer-pass/02.jpg"
+  ],
+  "location": {
+    "lat": -6.0,
+    "lng": 108.0
+  },
+  "facilities": [
+    "Kamar mandi umum",
+    "Musholla",
+    "Selfie area",
+    "Persewaan alat"
+  ],
+  "activities": [
+    "Staycation",
+    "Menikmati panorama",
+    "Kuliner lokal"
+  ]
+}

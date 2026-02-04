@@ -1,26 +1,32 @@
 {
   "slug": "curug-cipeuteuy",
   "title": "Curug Cipeuteuy",
-  "excerpt": "Air terjun alami di Desa Bantaragung dengan suasana sejuk dan panorama hutan pinus.",
-  "description": "Curug Cipeuteuy merupakan salah satu daya tarik utama Desa Wisata Bantaragung. Air terjun ini dikelilingi hutan pinus yang asri dan cocok untuk wisata keluarga, edukasi alam, maupun fotografi.",
+  "excerpt": "Air terjun alami di Desa Bantaragung dengan panorama hutan pinus, cocok untuk keluarga dan pecinta alam.",
+  "description": "Curug Cipeuteuy merupakan ikon wisata alam Desa Bantaragung yang dikelola oleh masyarakat melalui koperasi. Suasana hutan pinus yang sejuk, aliran air jernih, serta jalur trekking ringan menjadikannya destinasi favorit untuk liburan keluarga, edukasi alam, hingga fotografi. Wisatawan dapat menikmati kuliner lokal, area camping, serta wahana outbound yang tersedia di sekitar kawasan.",
   "cover": "wisata/curug-cipeuteuy/cover.jpg",
   "gallery": [
     "wisata/curug-cipeuteuy/01.jpg",
-    "wisata/curug-cipeuteuy/02.jpg"
+    "wisata/curug-cipeuteuy/02.jpg",
+    "wisata/curug-cipeuteuy/03.jpg"
   ],
   "location": {
     "lat": -6.0,
     "lng": 108.0
   },
   "facilities": [
-    "Area parkir",
-    "Toilet",
-    "Warung lokal",
-    "Spot foto"
+    "Areal parkir",
+    "Kamar mandi umum",
+    "Musholla",
+    "Selfie area",
+    "Tempat makan",
+    "Wifi area",
+    "Persewaan alat"
   ],
   "activities": [
-    "Wisata alam",
-    "Fotografi",
-    "Edukasi lingkungan"
+    "Wisata air terjun",
+    "Camping",
+    "Hiking ringan",
+    "Outbound keluarga",
+    "Kuliner lokal"
   ]
 }
