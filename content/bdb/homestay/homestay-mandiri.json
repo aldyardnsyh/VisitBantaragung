@@ -1,0 +1,24 @@
+{
+    "slug": "homestay-mandiri",
+    "name": "Homestay Mandiri",
+    "excerpt": "Homestay nyaman dengan fasilitas lengkap termasuk TV dan WiFi di Desa Wisata Bantaragung.",
+    "description": "Homestay Mandiri menyediakan pengalaman tinggal bersama warga lokal dengan suasana pedesaan yang asri. Dilengkapi dengan berbagai fasilitas modern untuk kenyamanan Anda.",
+    "cover": "bdb/homestay/homestay-mandiri/cover.jpg",
+    "gallery": [
+        "bdb/homestay/homestay-mandiri/01.jpg",
+        "bdb/homestay/homestay-mandiri/02.jpg"
+    ],
+    "capacity": "4 orang",
+    "address": "Desa Wisata Bantaragung",
+    "facilities": [
+        "Kamar Mandi Pribadi",
+        "Kipas Angin",
+        "Perlengkapan Mandi",
+        "Sarapan Pagi",
+        "Televisi",
+        "Wifi Area"
+    ],
+    "contact": {
+        "whatsapp": "6281384996974"
+    }
+}

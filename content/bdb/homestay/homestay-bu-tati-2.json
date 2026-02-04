@@ -1,0 +1,20 @@
+{
+    "slug": "homestay-bu-tati-2",
+    "name": "Homestay Bu Tati 2",
+    "excerpt": "Homestay nyaman dengan fasilitas dasar di Jalan Lokapraja.",
+    "description": "Homestay Bu Tati 2 menyediakan pengalaman tinggal bersama warga lokal dengan suasana pedesaan yang asri. Dilengkapi dengan fasilitas dasar untuk kenyamanan Anda.",
+    "cover": "bdb/homestay/homestay-bu-tati-2/cover.jpg",
+    "gallery": [
+        "bdb/homestay/homestay-bu-tati-2/01.jpg",
+        "bdb/homestay/homestay-bu-tati-2/02.jpg"
+    ],
+    "capacity": "4 orang",
+    "address": "Jalan Lokapraja Desa Bantaragung, Kecamatan Sindangwangi, Kabupaten Majalengka, Provinsi Jawa Barat",
+    "facilities": [
+        "Kamar Mandi Pribadi",
+        "Kipas Angin"
+    ],
+    "contact": {
+        "whatsapp": "6281384996974"
+    }
+}
