@@ -6,25 +6,59 @@ export default async function HomestayDetail({ params }: { params: Promise<{ slu
     const data = getHomestayBySlug(slug);
 
     return (
-        <main style={{ padding: 32 }}>
-            <h1>{data.name}</h1>
+        <main className="max-w-4xl mx-auto px-6 py-16 space-y-10">
 
-            <img src={assetUrl(data.cover)} alt={data.name} width={500} />
+            <section className="space-y-3">
+                <h1 className="text-3xl md:text-4xl font-bold">{data.name}</h1>
+                <p className="text-gray-600">{data.excerpt}</p>
+            </section>
 
-            <p>{data.description}</p>
+            <img
+                src={assetUrl(data.cover)}
+                alt={data.name}
+                className="w-full h-[350px] object-cover rounded-2xl shadow"
+            />
 
-            <p>Kapasitas: {data.capacity}</p>
+            <section className="prose max-w-none">
+                <p>{data.description}</p>
+            </section>
 
-            <h4>Fasilitas</h4>
-            <ul>
-                {data.facilities.map((f: string) => (
-                    <li key={f}>{f}</li>
+            <section>
+                <h3 className="font-semibold mb-2">Fasilitas</h3>
+                <ul className="list-disc list-inside text-gray-700">
+                    {data.facilities.map((f: string) => (
+                        <li key={f}>{f}</li>
+                    ))}
+                </ul>
+
+                <p className="mt-3">Kapasitas: {data.capacity}</p>
+            </section>
+
+            {/* Gallery */}
+            <section className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {data.gallery.map((g: string) => (
+                    <img
+                        key={g}
+                        src={assetUrl(g)}
+                        alt=""
+                        className="h-40 w-full object-cover rounded-xl"
+                    />
                 ))}
-            </ul>
+            </section>
 
-            <a href={`https://wa.me/${data.contact.whatsapp}`} target="_blank">
-                Booking via WhatsApp
-            </a>
+            {/* CTA */}
+            <section className="bg-green-700 text-white rounded-2xl p-8 text-center space-y-4">
+                <h3 className="text-xl font-semibold">Booking Homestay</h3>
+
+                <a
+                    href={`https://wa.me/${data.contact.whatsapp}`}
+                    target="_blank"
+                    className="inline-block bg-white text-green-700 px-6 py-3 rounded-xl"
+                >
+                    Hubungi via WhatsApp
+                </a>
+            </section>
+
         </main>
     );
 }
