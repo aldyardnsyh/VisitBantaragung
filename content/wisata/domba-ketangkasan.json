@@ -1,0 +1,25 @@
+{
+  "slug": "domba-ketangkasan",
+  "title": "Domba Ketangkasan",
+  "excerpt": "Atraksi tradisional yang menampilkan ketangkasan domba sebagai bagian budaya lokal.",
+  "description": "Domba Ketangkasan merupakan atraksi budaya yang menonjolkan ketangkasan domba dalam rangkaian pertunjukan tradisional. Acara ini biasanya digelar pada momen tertentu dan menjadi hiburan yang menarik bagi wisatawan. Selain menikmati atraksi, pengunjung dapat berinteraksi dengan peternak lokal.",
+  "cover": "wisata/domba-ketangkasan/cover.jpg",
+  "gallery": [
+    "wisata/domba-ketangkasan/01.jpg",
+    "wisata/domba-ketangkasan/02.jpg"
+  ],
+  "location": {
+    "lat": -6.0,
+    "lng": 108.0
+  },
+  "facilities": [
+    "Areal parkir",
+    "Musholla",
+    "Selfie area"
+  ],
+  "activities": [
+    "Atraksi budaya",
+    "Edukasi peternakan",
+    "Interaksi komunitas"
+  ]
+}

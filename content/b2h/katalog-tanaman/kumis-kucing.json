@@ -1,0 +1,19 @@
+{
+  "slug": "kumis-kucing",
+  "name": "Kumis Kucing",
+  "latin": "Orthosiphon aristatus",
+  "excerpt": "Kumis Kucing merupakan tanaman herbal yang dimanfaatkan bagian daun.",
+  "description": "Kumis kucing adalah tanaman herba dengan bunga putih dan benang sari panjang menyerupai kumis. Bagian yang dimanfaatkan adalah daun.",
+  "cover": "b2h/katalog-tanaman/kumis-kucing/cover.jpg",
+  "gallery": [
+    "b2h/katalog-tanaman/kumis-kucing/01.jpg",
+    "b2h/katalog-tanaman/kumis-kucing/02.jpg"
+  ],
+  "benefits": [
+    "Melancarkan saluran kemih",
+    "Membantu mengatasi batu ginjal"
+  ],
+  "usage": [
+    "Daun direbus dan diminum"
+  ]
+}

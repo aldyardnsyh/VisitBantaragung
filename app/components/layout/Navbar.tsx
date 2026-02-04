@@ -2,30 +2,47 @@ import Link from "next/link";
 
 export default function Navbar() {
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b">
-      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-[#e7c277]/40 shadow-sm">
+      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
 
         {/* Logo / Brand */}
-        <Link href="/" className="font-bold text-xl text-green-700">
-          Visit Bantaragung
+        <Link href="/" className="flex items-center gap-3">
+          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#102440] text-white text-lg shadow-md">
+            VB
+          </span>
+          <span className="flex flex-col">
+            <span className="font-bold text-lg text-[#e7c277]">Visit Bantaragung</span>
+            <span className="text-xs text-slate-500">Desa Wisata &amp; Edukasi</span>
+          </span>
         </Link>
 
         {/* Menu */}
-        <nav className="hidden md:flex gap-6 text-sm font-medium">
-          <Link href="/wisata" className="hover:text-green-700">Wisata</Link>
-          <Link href="/b2h" className="hover:text-green-700">B2H</Link>
-          <Link href="/bmc" className="hover:text-green-700">BMC</Link>
-          <Link href="/bic" className="hover:text-green-700">BIC</Link>
-          <Link href="/bdb" className="hover:text-green-700">BDB</Link>
-          <Link href="/kontak" className="hover:text-green-700">Kontak</Link>
+        <nav className="hidden md:flex items-center gap-2 text-sm font-medium text-slate-600">
+          {[
+            { href: "/wisata", label: "Wisata" },
+            { href: "/b2h", label: "B2H" },
+            { href: "/bmc", label: "BMC" },
+            { href: "/bic", label: "BIC" },
+            { href: "/bdb", label: "BDB" },
+            { href: "/kontak", label: "Kontak" },
+          ].map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="px-3 py-2 rounded-full hover:bg-[#102440]/10 hover:text-[#e7c277] transition"
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
         {/* CTA */}
         <Link
           href="/wisata"
-          className="hidden md:inline-block bg-green-700 text-white px-4 py-2 rounded-xl text-sm hover:bg-green-800 transition"
+          className="hidden md:inline-flex items-center gap-2 bg-[#102440] text-white px-4 py-2 rounded-full text-sm font-semibold shadow-md hover:bg-[#0b1a2f] transition"
         >
           Jelajah
+          <span aria-hidden>→</span>
         </Link>
 
       </div>

@@ -1,0 +1,22 @@
+{
+  "slug": "lidah-buaya",
+  "name": "Lidah Buaya",
+  "latin": "Aloe vera",
+  "excerpt": "Lidah Buaya merupakan tanaman herbal yang dimanfaatkan bagian daun.",
+  "description": "Lidah buaya merupakan tanaman sukulen dengan daun tebal berisi gel bening. Tanaman ini mudah tumbuh di pekarangan dan tidak memerlukan perawatan intensif. Bagian yang dimanfaatkan adalah daun.",
+  "cover": "b2h/katalog-tanaman/lidah-buaya/cover.jpg",
+  "gallery": [
+    "b2h/katalog-tanaman/lidah-buaya/01.jpg",
+    "b2h/katalog-tanaman/lidah-buaya/02.jpg"
+  ],
+  "benefits": [
+    "Menjaga kesehatan kulit",
+    "Membantu pencernaan",
+    "Merawat rambut"
+  ],
+  "usage": [
+    "Gel daun digunakan langsung",
+    "Diolah menjadi minuman",
+    "Digunakan sebagai obat luar"
+  ]
+}
