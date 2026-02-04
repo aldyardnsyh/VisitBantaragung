@@ -23,6 +23,12 @@ export default async function ArtikelDetail({ params }: { params: Promise<{ slug
                         <span>{data.date}</span>
                         <span className="h-1 w-1 rounded-full bg-slate-400" />
                         <span className="uppercase tracking-wide">{data.category}</span>
+                        {data.author && (
+                            <>
+                                <span className="h-1 w-1 rounded-full bg-slate-400" />
+                                <span>Oleh: {data.author}</span>
+                            </>
+                        )}
                     </div>
                 </div>
             </section>

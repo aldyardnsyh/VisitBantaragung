@@ -1,0 +1,18 @@
+{
+    "slug": "bantaragung-information-center-bic",
+    "title": "Bantaragung Information Center (BIC): Pusat Dokumentasi Digital Bantaragung",
+    "excerpt": "Program pengembangan pusat dokumentasi digital untuk artikel dan informasi Desa Bantaragung.",
+    "date": "2026-02-05",
+    "category": "teknologi",
+    "author": "Aldy Ardiansyah",
+    "cover": "bic/artikel/bantaragung-information-center-bic/cover.jpg",
+    "gallery": [
+        "bic/artikel/bantaragung-information-center-bic/01.jpg",
+        "bic/artikel/bantaragung-information-center-bic/02.jpg"
+    ],
+    "content": [
+        "Program BIC mengembangkan pusat dokumentasi digital untuk artikel dan informasi Desa Bantaragung.",
+        "Platform ini menyimpan dokumentasi kegiatan, artikel edukasi, dan informasi penting desa.",
+        "Kegiatan ini mempermudah akses informasi dan melestarikan dokumentasi desa."
+    ]
+}

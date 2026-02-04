@@ -1,0 +1,18 @@
+{
+    "slug": "inventarisasi-data-spasial-kampung-herbal",
+    "title": "Inventarisasi Data Spasial Kampung Herbal",
+    "excerpt": "Program pendataan spasial untuk memetakan lokasi tanaman herbal dan fasilitas di Kampung Herbal.",
+    "date": "2026-02-01",
+    "category": "teknologi",
+    "author": "Evan Sebastian Afrero",
+    "cover": "bic/artikel/inventarisasi-data-spasial-kampung-herbal/cover.jpg",
+    "gallery": [
+        "bic/artikel/inventarisasi-data-spasial-kampung-herbal/01.jpg",
+        "bic/artikel/inventarisasi-data-spasial-kampung-herbal/02.jpg"
+    ],
+    "content": [
+        "Program ini melakukan inventarisasi data spasial untuk memetakan lokasi tanaman herbal dan fasilitas.",
+        "Data spasial digunakan untuk pengembangan peta digital dan navigasi wisata.",
+        "Kegiatan ini mendukung pengelolaan Kampung Herbal yang lebih terstruktur."
+    ]
+}

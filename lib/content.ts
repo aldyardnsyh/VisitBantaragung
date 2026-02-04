@@ -119,6 +119,7 @@ export interface Article {
     excerpt: string;
     date: string;
     category: string;
+    author?: string;
     cover: string;
     gallery: string[];
     content: string[];

@@ -1,0 +1,18 @@
+{
+    "slug": "kompas-menu",
+    "title": "KOMPAS MENU",
+    "excerpt": "Program penyusunan menu kuliner khas untuk homestay dan restoran desa wisata.",
+    "date": "2026-01-20",
+    "category": "wisata",
+    "author": "Anindya Najwa",
+    "cover": "bic/artikel/kompas-menu/cover.jpg",
+    "gallery": [
+        "bic/artikel/kompas-menu/01.jpg",
+        "bic/artikel/kompas-menu/02.jpg"
+    ],
+    "content": [
+        "Program KOMPAS MENU menyusun menu kuliner khas untuk homestay dan restoran di desa wisata.",
+        "Menu dirancang dengan mempertimbangkan bahan lokal dan cita rasa tradisional.",
+        "Kegiatan ini memperkaya pengalaman kuliner wisatawan dan mempromosikan makanan lokal."
+    ]
+}
