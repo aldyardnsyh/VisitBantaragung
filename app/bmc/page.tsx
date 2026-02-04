@@ -6,14 +6,17 @@ export default function BMCPage() {
   const locations = getAllLocations();
 
   return (
-    <main className="max-w-6xl mx-auto px-6 py-16 space-y-10">
+    <main className="max-w-6xl mx-auto px-6 py-16 space-y-12">
 
       {/* Header */}
-      <section className="space-y-2">
+      <section className="rounded-3xl bg-gradient-to-br from-emerald-600 to-teal-500 text-white p-10 md:p-12 space-y-4 shadow-lg">
+        <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1 text-xs uppercase tracking-widest">
+          Peta Digital
+        </div>
         <h1 className="text-3xl md:text-4xl font-bold">
           Bantaragung Map Center
         </h1>
-        <p className="text-gray-600">
+        <p className="text-white/90 max-w-2xl">
           Peta digital lokasi wisata, kampung herbal, UMKM, dan titik edukasi Desa Bantaragung.
         </p>
       </section>
@@ -22,7 +25,7 @@ export default function BMCPage() {
       <section className="grid md:grid-cols-2 gap-8">
 
         {/* MAP */}
-        <div className="rounded-2xl overflow-hidden shadow h-[450px]">
+        <div className="rounded-3xl overflow-hidden shadow-lg border border-emerald-100/70 h-[450px] bg-white">
           <iframe
             className="w-full h-full"
             loading="lazy"
@@ -36,18 +39,20 @@ export default function BMCPage() {
 
           {locations.map((loc: any) => (
             <Link key={loc.slug} href={`/bmc/lokasi/${loc.slug}`}>
-              <div className="flex gap-4 bg-white rounded-xl shadow hover:shadow-lg transition p-4">
+              <div className="group flex gap-4 bg-white rounded-2xl border border-emerald-100/70 shadow-sm hover:shadow-lg transition p-4">
 
                 <img
                   src={assetUrl(loc.cover)}
                   alt={loc.name}
-                  className="w-24 h-24 object-cover rounded-lg"
+                  className="w-24 h-24 object-cover rounded-xl group-hover:scale-105 transition duration-300"
                 />
 
-                <div>
+                <div className="space-y-1">
                   <h4 className="font-semibold">{loc.name}</h4>
-                  <small className="text-gray-500">{loc.category}</small>
-                  <p className="text-sm text-gray-600">{loc.excerpt}</p>
+                  <small className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-xs text-emerald-700">
+                    {loc.category}
+                  </small>
+                  <p className="text-sm text-gray-600 line-clamp-2">{loc.excerpt}</p>
                 </div>
 
               </div>
