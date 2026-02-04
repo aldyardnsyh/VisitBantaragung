@@ -6,56 +6,99 @@ export default async function HomestayDetail({ params }: { params: Promise<{ slu
     const data = getHomestayBySlug(slug);
 
     return (
-        <main className="max-w-4xl mx-auto px-6 py-16 space-y-10">
+        <main className="max-w-5xl mx-auto px-6 py-16 space-y-12">
 
-            <section className="space-y-3">
-                <h1 className="text-3xl md:text-4xl font-bold">{data.name}</h1>
-                <p className="text-gray-600">{data.excerpt}</p>
+            <section className="space-y-5">
+                <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1 text-xs uppercase tracking-widest text-emerald-700">
+                    Homestay
+                </div>
+                <div className="space-y-2">
+                    <h1 className="text-3xl md:text-4xl font-bold">{data.name}</h1>
+                    <p className="text-slate-600 max-w-2xl">{data.excerpt}</p>
+                </div>
+                <div className="flex flex-wrap gap-3 text-xs text-slate-600">
+                    <span className="rounded-full bg-white px-3 py-1 border border-emerald-100 shadow-sm">
+                        Kapasitas {data.capacity}
+                    </span>
+                    <span className="rounded-full bg-white px-3 py-1 border border-emerald-100 shadow-sm">
+                        {data.facilities.length} Fasilitas
+                    </span>
+                </div>
             </section>
 
-            <img
-                src={assetUrl(data.cover)}
-                alt={data.name}
-                className="w-full h-[350px] object-cover rounded-2xl shadow"
-            />
-
-            <section className="prose max-w-none">
-                <p>{data.description}</p>
+            <section className="relative overflow-hidden rounded-3xl shadow-lg border border-emerald-100/70">
+                <img
+                    src={assetUrl(data.cover)}
+                    alt={data.name}
+                    className="w-full h-[380px] object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                <div className="absolute bottom-6 left-6 text-white">
+                    <p className="text-xs uppercase tracking-widest text-white/80">Penginapan</p>
+                    <p className="text-2xl font-semibold">{data.name}</p>
+                </div>
             </section>
 
-            <section>
-                <h3 className="font-semibold mb-2">Fasilitas</h3>
-                <ul className="list-disc list-inside text-gray-700">
-                    {data.facilities.map((f: string) => (
-                        <li key={f}>{f}</li>
-                    ))}
-                </ul>
-
-                <p className="mt-3">Kapasitas: {data.capacity}</p>
+            <section className="grid lg:grid-cols-[1.2fr_0.8fr] gap-8">
+                <div className="prose max-w-none">
+                    <h3>Deskripsi</h3>
+                    <p>{data.description}</p>
+                </div>
+                <div className="space-y-4">
+                    <div className="rounded-3xl bg-white border border-emerald-100/70 p-6 shadow-sm space-y-3">
+                        <h3 className="font-semibold">Fasilitas Utama</h3>
+                        <ul className="space-y-2 text-sm text-slate-700">
+                            {data.facilities.map((f: string) => (
+                                <li key={f} className="flex items-center gap-2">
+                                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                                    {f}
+                                </li>
+                            ))}
+                        </ul>
+                        <p className="text-sm text-slate-600">Kapasitas: {data.capacity}</p>
+                    </div>
+                    <div className="rounded-3xl bg-emerald-50 p-6 space-y-3">
+                        <h4 className="font-semibold text-emerald-900">Pengalaman Live-in</h4>
+                        <p className="text-sm text-emerald-900/80">
+                            Nikmati suasana pedesaan, kuliner lokal, dan aktivitas bersama warga.
+                        </p>
+                    </div>
+                </div>
             </section>
 
             {/* Gallery */}
-            <section className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {data.gallery.map((g: string) => (
-                    <img
-                        key={g}
-                        src={assetUrl(g)}
-                        alt=""
-                        className="h-40 w-full object-cover rounded-xl"
-                    />
-                ))}
+            <section className="space-y-4">
+                <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-xl">Galeri Homestay</h3>
+                    <span className="text-sm text-slate-500">{data.gallery.length} foto</span>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {data.gallery.map((g: string) => (
+                        <img
+                            key={g}
+                            src={assetUrl(g)}
+                            alt=""
+                            className="h-40 w-full object-cover rounded-2xl"
+                        />
+                    ))}
+                </div>
             </section>
 
             {/* CTA */}
-            <section className="bg-green-700 text-white rounded-2xl p-8 text-center space-y-4">
-                <h3 className="text-xl font-semibold">Booking Homestay</h3>
+            <section className="bg-emerald-700 text-white rounded-3xl p-10 text-center space-y-4 shadow-lg">
+                <h3 className="text-2xl font-semibold">Booking Homestay</h3>
+                <p className="text-white/80 max-w-2xl mx-auto">
+                    Hubungi pengelola untuk jadwal ketersediaan dan paket live-in.
+                </p>
 
                 <a
                     href={`https://wa.me/${data.contact.whatsapp}`}
                     target="_blank"
-                    className="inline-block bg-white text-green-700 px-6 py-3 rounded-xl"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 bg-white text-emerald-700 px-6 py-3 rounded-full font-semibold shadow hover:scale-105 transition"
                 >
                     Hubungi via WhatsApp
+                    <span aria-hidden>→</span>
                 </a>
             </section>
 
