@@ -1,0 +1,25 @@
+{
+  "slug": "edukasi-tradisi-apem-syafar",
+  "title": "Edukasi Tradisi Apem Syafar",
+  "excerpt": "Tradisi pembuatan apem syafar secara udunan yang sarat makna kebersamaan.",
+  "description": "Tradisi Apem Syafar dilakukan masyarakat Bantaragung sebagai bentuk doa dan kebersamaan. Wisatawan dapat belajar proses pembuatan apem tradisional, mencicipi hasilnya, serta memahami nilai filosofi di balik ritual ini. Kegiatan ini cocok untuk wisata budaya dan edukasi kuliner.",
+  "cover": "wisata/edukasi-tradisi-apem-syafar/cover.jpg",
+  "gallery": [
+    "wisata/edukasi-tradisi-apem-syafar/01.jpg",
+    "wisata/edukasi-tradisi-apem-syafar/02.jpg"
+  ],
+  "location": {
+    "lat": -6.0,
+    "lng": 108.0
+  },
+  "facilities": [
+    "Balai pertemuan",
+    "Musholla",
+    "Tempat makan"
+  ],
+  "activities": [
+    "Ritual budaya",
+    "Edukasi kuliner",
+    "Interaksi warga"
+  ]
+}

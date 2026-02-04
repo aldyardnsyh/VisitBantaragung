@@ -1,0 +1,27 @@
+{
+  "slug": "batu-asahan",
+  "title": "Batu Asahan",
+  "excerpt": "Wisata ekologi dengan hamparan bebatuan alami dan aliran sungai yang menenangkan.",
+  "description": "Batu Asahan merupakan destinasi ekologi yang menyuguhkan panorama bebatuan alami di aliran sungai. Suasananya teduh dengan pepohonan rindang, cocok untuk relaksasi, piknik keluarga, dan edukasi lingkungan. Area ini sering dijadikan lokasi kegiatan komunitas serta wisata edukasi tentang ekosistem sungai.",
+  "cover": "wisata/batu-asahan/cover.jpg",
+  "gallery": [
+    "wisata/batu-asahan/01.jpg",
+    "wisata/batu-asahan/02.jpg"
+  ],
+  "location": {
+    "lat": -6.0,
+    "lng": 108.0
+  },
+  "facilities": [
+    "Areal parkir",
+    "Kamar mandi umum",
+    "Spot foto",
+    "Selfie area"
+  ],
+  "activities": [
+    "Wisata alam",
+    "Piknik keluarga",
+    "Edukasi lingkungan",
+    "Fotografi"
+  ]
+}
