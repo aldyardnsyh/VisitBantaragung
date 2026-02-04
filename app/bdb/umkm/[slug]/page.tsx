@@ -40,18 +40,18 @@ export default async function UMKMDetail({ params }: { params: Promise<{ slug: s
           <div className="rounded-3xl bg-white border border-[#e7c277]/40 p-6 shadow-sm space-y-3">
             <h3 className="font-semibold">Sorotan UMKM</h3>
             <p className="text-sm text-slate-600">
-              Produk dibuat oleh perajin lokal dengan bahan pilihan dan motif khas Bantaragung.
+              UMKM lokal yang melayani kebutuhan warga Desa Bantaragung dengan produk berkualitas dan harga terjangkau.
             </p>
             <div className="flex flex-wrap gap-2 text-xs text-[#e7c277]">
-              <span className="rounded-full bg-[#102440]/10 px-3 py-1">Produk Handmade</span>
-              <span className="rounded-full bg-[#102440]/10 px-3 py-1">Bahan Alami</span>
-              <span className="rounded-full bg-[#102440]/10 px-3 py-1">Oleh-oleh</span>
+              <span className="rounded-full bg-[#102440]/10 px-3 py-1">Produk Lokal</span>
+              <span className="rounded-full bg-[#102440]/10 px-3 py-1">Harga Terjangkau</span>
+              <span className="rounded-full bg-[#102440]/10 px-3 py-1">Pelayanan Ramah</span>
             </div>
           </div>
           <div className="rounded-3xl bg-[#102440]/10 p-6 space-y-3">
-            <h4 className="font-semibold text-[#102440]">Tips Pembelian</h4>
+            <h4 className="font-semibold text-[#102440]">Informasi</h4>
             <p className="text-sm text-[#102440]/80">
-              Pesan lebih awal untuk produk custom, dan tanyakan pilihan motif terbaru.
+              Hubungi langsung untuk informasi ketersediaan produk, harga, dan jam operasional.
             </p>
           </div>
         </div>

@@ -1,0 +1,14 @@
+{
+    "slug": "yuto-mart",
+    "name": "Yuto Mart",
+    "excerpt": "Toko kelontong modern dengan berbagai kebutuhan sehari-hari di Desa Bantaragung.",
+    "description": "Yuto Mart adalah toko kelontong modern yang menyediakan berbagai kebutuhan sehari-hari dan sembako untuk warga Desa Bantaragung dengan pelayanan yang cepat dan ramah.",
+    "cover": "bdb/umkm/yuto-mart/cover.jpg",
+    "gallery": [
+        "bdb/umkm/yuto-mart/01.jpg",
+        "bdb/umkm/yuto-mart/02.jpg"
+    ],
+    "contact": {
+        "whatsapp": "6281384996974"
+    }
+}

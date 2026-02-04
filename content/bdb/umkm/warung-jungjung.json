@@ -1,0 +1,14 @@
+{
+    "slug": "warung-jungjung",
+    "name": "Warung Jungjung",
+    "excerpt": "Warung kelontong dengan berbagai kebutuhan sehari-hari di Desa Bantaragung.",
+    "description": "Warung Jungjung menyediakan berbagai kebutuhan sehari-hari dan sembako untuk warga Desa Bantaragung dengan pelayanan yang ramah.",
+    "cover": "bdb/umkm/warung-jungjung/cover.jpg",
+    "gallery": [
+        "bdb/umkm/warung-jungjung/01.jpg",
+        "bdb/umkm/warung-jungjung/02.jpg"
+    ],
+    "contact": {
+        "whatsapp": "6281384996974"
+    }
+}
