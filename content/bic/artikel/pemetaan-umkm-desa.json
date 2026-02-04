@@ -5,10 +5,10 @@
     "date": "2026-02-01",
     "category": "ekonomi",
     "author": "Gabriella Divanka Utri Tambunan",
-    "cover": "bic/artikel/pemetaan-umkm-desa/cover.jpg",
+    "cover": "bic/artikel/pemetaan-umkm-desa/cover.png",
     "gallery": [
-        "bic/artikel/pemetaan-umkm-desa/01.jpg",
-        "bic/artikel/pemetaan-umkm-desa/02.jpg"
+        "bic/artikel/pemetaan-umkm-desa/01.png",
+        "bic/artikel/pemetaan-umkm-desa/02.png"
     ],
     "content": [
         "Program ini melakukan pemetaan UMKM di Desa Bantaragung untuk pendataan yang komprehensif.",

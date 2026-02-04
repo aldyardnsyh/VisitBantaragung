@@ -3,10 +3,10 @@
   "name": "Homestay Bu Ani",
   "excerpt": "Homestay nyaman untuk pengalaman live-in Desa Wisata Bantaragung.",
   "description": "Homestay Bu Ani menyediakan pengalaman tinggal bersama warga lokal dengan suasana pedesaan yang asri.",
-  "cover": "bdb/homestay/homestay-bu-ani/cover.jpg",
+  "cover": "bdb/homestay/homestay-bu-ani/cover.png",
   "gallery": [
-    "bdb/homestay/homestay-bu-ani/01.jpg",
-    "bdb/homestay/homestay-bu-ani/02.jpg"
+    "bdb/homestay/homestay-bu-ani/01.png",
+    "bdb/homestay/homestay-bu-ani/02.png"
   ],
   "capacity": "6 orang",
   "facilities": ["Kamar tidur", "Kamar mandi", "Sarapan"],

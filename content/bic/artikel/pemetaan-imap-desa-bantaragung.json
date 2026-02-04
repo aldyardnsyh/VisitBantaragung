@@ -5,10 +5,10 @@
     "date": "2026-02-03",
     "category": "teknologi",
     "author": "Evan Sebastian Afrero",
-    "cover": "bic/artikel/pemetaan-imap-desa-bantaragung/cover.jpg",
+    "cover": "bic/artikel/pemetaan-imap-desa-bantaragung/cover.png",
     "gallery": [
-        "bic/artikel/pemetaan-imap-desa-bantaragung/01.jpg",
-        "bic/artikel/pemetaan-imap-desa-bantaragung/02.jpg"
+        "bic/artikel/pemetaan-imap-desa-bantaragung/01.png",
+        "bic/artikel/pemetaan-imap-desa-bantaragung/02.png"
     ],
     "content": [
         "Program ini melakukan pemetaan IMAP untuk mengidentifikasi permasalahan dan menganalisis potensi desa.",

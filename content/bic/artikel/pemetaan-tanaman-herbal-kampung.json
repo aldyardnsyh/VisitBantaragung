@@ -5,10 +5,10 @@
     "date": "2026-01-28",
     "category": "teknologi",
     "author": "Evan Sebastian Afrero",
-    "cover": "bic/artikel/pemetaan-tanaman-herbal-kampung/cover.jpg",
+    "cover": "bic/artikel/pemetaan-tanaman-herbal-kampung/cover.png",
     "gallery": [
-        "bic/artikel/pemetaan-tanaman-herbal-kampung/01.jpg",
-        "bic/artikel/pemetaan-tanaman-herbal-kampung/02.jpg"
+        "bic/artikel/pemetaan-tanaman-herbal-kampung/01.png",
+        "bic/artikel/pemetaan-tanaman-herbal-kampung/02.png"
     ],
     "content": [
         "Program ini memetakan lokasi dan jenis tanaman herbal yang ada di Kampung Herbal.",
