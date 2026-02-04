@@ -1,0 +1,30 @@
+{
+  "slug": "buper-awilega",
+  "title": "Bumi Perkemahan Awilega",
+  "excerpt": "Bumi perkemahan bernuansa hutan pinus dengan kapasitas hingga 2000 orang.",
+  "description": "Bumi Perkemahan Awilega menawarkan pengalaman camping di tengah hutan pinus yang sejuk. Area perkemahan luas dengan kapasitas besar menjadikannya pilihan favorit untuk kegiatan pramuka, gathering komunitas, hingga acara keluarga. Tersedia area api unggun, spot selfie, serta fasilitas pendukung kenyamanan pengunjung.",
+  "cover": "wisata/buper-awilega/cover.jpg",
+  "gallery": [
+    "wisata/buper-awilega/01.jpg",
+    "wisata/buper-awilega/02.jpg",
+    "wisata/buper-awilega/03.jpg"
+  ],
+  "location": {
+    "lat": -6.0,
+    "lng": 108.0
+  },
+  "facilities": [
+    "Areal parkir",
+    "Kamar mandi umum",
+    "Musholla",
+    "Selfie area",
+    "Tempat makan",
+    "Wifi area"
+  ],
+  "activities": [
+    "Camping",
+    "Api unggun",
+    "Outbound",
+    "Family gathering"
+  ]
+}

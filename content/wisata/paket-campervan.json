@@ -1,0 +1,26 @@
+{
+  "slug": "paket-campervan",
+  "title": "Paket Campervan",
+  "excerpt": "Paket wisata campervan untuk menikmati alam Bantaragung dengan pengalaman menginap yang unik.",
+  "description": "Paket Campervan menawarkan pengalaman menginap di alam terbuka dengan fasilitas campervan yang nyaman. Wisatawan dapat menikmati panorama pegunungan, jalur wisata alam, dan udara segar sepanjang hari. Paket ini cocok untuk pasangan maupun keluarga kecil yang ingin pengalaman berbeda di desa wisata.",
+  "cover": "wisata/paket-campervan/cover.jpg",
+  "gallery": [
+    "wisata/paket-campervan/01.jpg",
+    "wisata/paket-campervan/02.jpg"
+  ],
+  "location": {
+    "lat": -6.0,
+    "lng": 108.0
+  },
+  "facilities": [
+    "Areal parkir",
+    "Kamar mandi umum",
+    "Selfie area",
+    "Wifi area"
+  ],
+  "activities": [
+    "Campervan",
+    "Menikmati panorama",
+    "Kuliner lokal"
+  ]
+}
