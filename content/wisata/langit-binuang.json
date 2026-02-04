@@ -3,10 +3,10 @@
   "title": "Langit Binuang",
   "excerpt": "Spot wisata alam dengan pemandangan langit terbuka dan udara sejuk pegunungan.",
   "description": "Langit Binuang menjadi salah satu spot favorit untuk menikmati panorama alam terbuka. Tempat ini cocok untuk bersantai, menikmati udara segar, dan berburu foto lanskap. Suasananya tenang dan sering dijadikan tempat berkumpul komunitas fotografi maupun wisata keluarga.",
-  "cover": "wisata/langit-binuang/cover.jpg",
+  "cover": "wisata/langit-binuang/cover.png",
   "gallery": [
-    "wisata/langit-binuang/01.jpg",
-    "wisata/langit-binuang/02.jpg"
+    "wisata/langit-binuang/01.png",
+    "wisata/langit-binuang/02.png"
   ],
   "location": {
     "lat": -6.0,

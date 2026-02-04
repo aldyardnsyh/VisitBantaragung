@@ -5,10 +5,10 @@
     "date": "2026-02-01",
     "category": "teknologi",
     "author": "Evan Sebastian Afrero",
-    "cover": "bic/artikel/inventarisasi-data-spasial-kampung-herbal/cover.jpg",
+    "cover": "bic/artikel/inventarisasi-data-spasial-kampung-herbal/cover.png",
     "gallery": [
-        "bic/artikel/inventarisasi-data-spasial-kampung-herbal/01.jpg",
-        "bic/artikel/inventarisasi-data-spasial-kampung-herbal/02.jpg"
+        "bic/artikel/inventarisasi-data-spasial-kampung-herbal/01.png",
+        "bic/artikel/inventarisasi-data-spasial-kampung-herbal/02.png"
     ],
     "content": [
         "Program ini melakukan inventarisasi data spasial untuk memetakan lokasi tanaman herbal dan fasilitas.",

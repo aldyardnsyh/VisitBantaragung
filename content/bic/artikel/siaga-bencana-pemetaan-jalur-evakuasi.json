@@ -5,10 +5,10 @@
     "date": "2026-02-01",
     "category": "kebencanaan",
     "author": "Anindya Najwa",
-    "cover": "bic/artikel/siaga-bencana-pemetaan-jalur-evakuasi/cover.jpg",
+    "cover": "bic/artikel/siaga-bencana-pemetaan-jalur-evakuasi/cover.png",
     "gallery": [
-        "bic/artikel/siaga-bencana-pemetaan-jalur-evakuasi/01.jpg",
-        "bic/artikel/siaga-bencana-pemetaan-jalur-evakuasi/02.jpg"
+        "bic/artikel/siaga-bencana-pemetaan-jalur-evakuasi/01.png",
+        "bic/artikel/siaga-bencana-pemetaan-jalur-evakuasi/02.png"
     ],
     "content": [
         "Program ini memetakan titik kumpul dan jalur evakuasi untuk kesiapsiagaan bencana.",

@@ -3,10 +3,10 @@
     "name": "Naura Homestay",
     "excerpt": "Homestay nyaman dengan fasilitas lengkap di Desa Wisata Bantaragung.",
     "description": "Naura Homestay menyediakan pengalaman tinggal bersama warga lokal dengan suasana pedesaan yang asri. Dilengkapi dengan berbagai fasilitas untuk kenyamanan Anda.",
-    "cover": "bdb/homestay/naura-homestay/cover.jpg",
+    "cover": "bdb/homestay/naura-homestay/cover.png",
     "gallery": [
-        "bdb/homestay/naura-homestay/01.jpg",
-        "bdb/homestay/naura-homestay/02.jpg"
+        "bdb/homestay/naura-homestay/01.png",
+        "bdb/homestay/naura-homestay/02.png"
     ],
     "capacity": "4 orang",
     "price": "Rp 200,000",

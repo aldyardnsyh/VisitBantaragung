@@ -5,10 +5,10 @@
     "date": "2026-02-04",
     "category": "pertanian",
     "author": "Ahmad Fathur Rizqi",
-    "cover": "bic/artikel/penanaman-pakan-ternak/cover.jpg",
+    "cover": "bic/artikel/penanaman-pakan-ternak/cover.png",
     "gallery": [
-        "bic/artikel/penanaman-pakan-ternak/01.jpg",
-        "bic/artikel/penanaman-pakan-ternak/02.jpg"
+        "bic/artikel/penanaman-pakan-ternak/01.png",
+        "bic/artikel/penanaman-pakan-ternak/02.png"
     ],
     "content": [
         "Program ini menanam berbagai jenis tanaman pakan ternak untuk ketersediaan pakan yang berkelanjutan.",
