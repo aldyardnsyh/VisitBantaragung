@@ -47,8 +47,15 @@ export function getSiteSettings(): SiteSettings {
     return loadJSON<SiteSettings>("settings/site.json");
 }
 
-export function getSeoSettings() {
-    return loadJSON("settings/seo.json");
+export interface SeoSettings {
+    defaultTitle: string;
+    titleTemplate: string;
+    defaultDescription: string;
+    ogImage: string;
+}
+
+export function getSeoSettings(): SeoSettings {
+    return loadJSON<SeoSettings>("settings/seo.json");
 }
 
 export interface Wisata {
