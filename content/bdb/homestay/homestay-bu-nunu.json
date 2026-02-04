@@ -1,0 +1,21 @@
+{
+    "slug": "homestay-bu-nunu",
+    "name": "Homestay Bu Nunu",
+    "excerpt": "Homestay nyaman dengan fasilitas dasar di Jalan Lokapraja.",
+    "description": "Homestay Bu Nunu menyediakan pengalaman tinggal bersama warga lokal dengan suasana pedesaan yang asri. Dilengkapi dengan fasilitas dasar untuk kenyamanan Anda.",
+    "cover": "bdb/homestay/homestay-bu-nunu/cover.jpg",
+    "gallery": [
+        "bdb/homestay/homestay-bu-nunu/01.jpg",
+        "bdb/homestay/homestay-bu-nunu/02.jpg"
+    ],
+    "capacity": "4 orang",
+    "address": "Jalan Lokapraja Desa Bantaragung, Kecamatan Sindangwangi, Kabupaten Majalengka, Provinsi Jawa Barat",
+    "facilities": [
+        "Kamar Mandi Pribadi",
+        "Kipas Angin",
+        "Perlengkapan Mandi"
+    ],
+    "contact": {
+        "whatsapp": "6281384996974"
+    }
+}

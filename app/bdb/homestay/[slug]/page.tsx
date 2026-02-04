@@ -15,6 +15,9 @@ export default async function HomestayDetail({ params }: { params: Promise<{ slu
                 <div className="space-y-2">
                     <h1 className="text-3xl md:text-4xl font-bold">{data.name}</h1>
                     <p className="text-slate-600 max-w-2xl">{data.excerpt}</p>
+                    {data.price && (
+                        <p className="text-2xl font-semibold text-[#e7c277]">{data.price}</p>
+                    )}
                 </div>
                 <div className="flex flex-wrap gap-3 text-xs text-slate-600">
                     <span className="rounded-full bg-white px-3 py-1 border border-[#e7c277]/40 shadow-sm">
@@ -24,6 +27,12 @@ export default async function HomestayDetail({ params }: { params: Promise<{ slu
                         {data.facilities.length} Fasilitas
                     </span>
                 </div>
+                {data.address && (
+                    <div className="flex items-start gap-2 text-sm text-slate-600">
+                        <span className="text-[#e7c277]">📍</span>
+                        <span>{data.address}</span>
+                    </div>
+                )}
             </section>
 
             <section className="relative overflow-hidden rounded-3xl shadow-lg border border-[#e7c277]/40">
@@ -91,15 +100,26 @@ export default async function HomestayDetail({ params }: { params: Promise<{ slu
                     Hubungi pengelola untuk jadwal ketersediaan dan paket live-in.
                 </p>
 
-                <a
-                    href={`https://wa.me/${data.contact.whatsapp}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 bg-white text-[#e7c277] px-6 py-3 rounded-full font-semibold shadow hover:scale-105 transition"
-                >
-                    Hubungi via WhatsApp
-                    <span aria-hidden>→</span>
-                </a>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                    <a
+                        href={`https://wa.me/${data.contact.whatsapp}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 bg-white text-[#e7c277] px-6 py-3 rounded-full font-semibold shadow hover:scale-105 transition"
+                    >
+                        Hubungi via WhatsApp
+                        <span aria-hidden>→</span>
+                    </a>
+                    {data.contact.email && (
+                        <a
+                            href={`mailto:${data.contact.email}`}
+                            className="inline-flex items-center gap-2 bg-white/10 text-white px-6 py-3 rounded-full font-semibold shadow hover:scale-105 transition border border-white/20"
+                        >
+                            Email
+                            <span aria-hidden>✉</span>
+                        </a>
+                    )}
+                </div>
             </section>
 
         </main>

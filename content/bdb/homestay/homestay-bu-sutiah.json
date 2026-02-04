@@ -1,0 +1,19 @@
+{
+    "slug": "homestay-bu-sutiah",
+    "name": "Homestay Bu Sutiah",
+    "excerpt": "Homestay nyaman dengan fasilitas dasar di Jalan Lokapraja.",
+    "description": "Homestay Bu Sutiah menyediakan pengalaman tinggal bersama warga lokal dengan suasana pedesaan yang asri. Dilengkapi dengan fasilitas dasar untuk kenyamanan Anda.",
+    "cover": "bdb/homestay/homestay-bu-sutiah/cover.jpg",
+    "gallery": [
+        "bdb/homestay/homestay-bu-sutiah/01.jpg",
+        "bdb/homestay/homestay-bu-sutiah/02.jpg"
+    ],
+    "capacity": "4 orang",
+    "address": "Jalan Lokapraja Desa Bantaragung, Kecamatan Sindangwangi, Kabupaten Majalengka, Provinsi Jawa Barat",
+    "facilities": [
+        "Kamar Mandi Pribadi"
+    ],
+    "contact": {
+        "whatsapp": "6281384996974"
+    }
+}

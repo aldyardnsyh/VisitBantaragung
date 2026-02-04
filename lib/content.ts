@@ -207,8 +207,11 @@ export interface Homestay {
     gallery: string[];
     capacity: number;
     facilities: string[];
+    price?: string;
+    address?: string;
     contact: {
         whatsapp: string;
+        email?: string;
     };
 }
 

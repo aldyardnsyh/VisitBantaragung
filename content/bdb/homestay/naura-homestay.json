@@ -1,0 +1,24 @@
+{
+    "slug": "naura-homestay",
+    "name": "Naura Homestay",
+    "excerpt": "Homestay nyaman dengan fasilitas lengkap di Desa Wisata Bantaragung.",
+    "description": "Naura Homestay menyediakan pengalaman tinggal bersama warga lokal dengan suasana pedesaan yang asri. Dilengkapi dengan berbagai fasilitas untuk kenyamanan Anda.",
+    "cover": "bdb/homestay/naura-homestay/cover.jpg",
+    "gallery": [
+        "bdb/homestay/naura-homestay/01.jpg",
+        "bdb/homestay/naura-homestay/02.jpg"
+    ],
+    "capacity": "4 orang",
+    "price": "Rp 200,000",
+    "address": "Desa Wisata Bantaragung Kecamatan Sindangwangi Kabupaten Majalengka",
+    "facilities": [
+        "Kamar Mandi Pribadi",
+        "Kipas Angin",
+        "Perlengkapan Mandi",
+        "Sarapan Pagi"
+    ],
+    "contact": {
+        "whatsapp": "6281384990974",
+        "email": "koperasiagunglestari@gmail.com"
+    }
+}
