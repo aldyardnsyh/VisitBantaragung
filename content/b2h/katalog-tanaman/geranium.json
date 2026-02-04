@@ -1,0 +1,21 @@
+{
+  "slug": "geranium",
+  "name": "Geranium",
+  "latin": "Pelargonium graveolens",
+  "excerpt": "Geranium merupakan tanaman herbal yang dimanfaatkan bagian daun.",
+  "description": "Geranium adalah tanaman hias beraroma wangi dengan daun berlekuk. Bagian yang dimanfaatkan adalah daun.",
+  "cover": "b2h/katalog-tanaman/geranium/cover.jpg",
+  "gallery": [
+    "b2h/katalog-tanaman/geranium/01.jpg",
+    "b2h/katalog-tanaman/geranium/02.jpg"
+  ],
+  "benefits": [
+    "Menenangkan",
+    "Antiseptik ringan"
+  ],
+  "usage": [
+    "Diseduh",
+    "Aromaterapi",
+    "Minyak atsiri"
+  ]
+}

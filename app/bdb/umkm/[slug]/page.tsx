@@ -9,7 +9,7 @@ export default async function UMKMDetail({ params }: { params: Promise<{ slug: s
     <main className="max-w-5xl mx-auto px-6 py-16 space-y-12">
 
       <section className="space-y-5">
-        <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1 text-xs uppercase tracking-widest text-emerald-700">
+        <div className="inline-flex items-center gap-2 rounded-full bg-[#102440]/10 px-4 py-1 text-xs uppercase tracking-widest text-[#e7c277]">
           UMKM Unggulan
         </div>
         <div className="space-y-2">
@@ -18,7 +18,7 @@ export default async function UMKMDetail({ params }: { params: Promise<{ slug: s
         </div>
       </section>
 
-      <section className="relative overflow-hidden rounded-3xl shadow-lg border border-emerald-100/70">
+      <section className="relative overflow-hidden rounded-3xl shadow-lg border border-[#e7c277]/40">
         <img
           src={assetUrl(data.cover)}
           alt={data.name}
@@ -37,20 +37,20 @@ export default async function UMKMDetail({ params }: { params: Promise<{ slug: s
           <p>{data.description}</p>
         </div>
         <div className="space-y-4">
-          <div className="rounded-3xl bg-white border border-emerald-100/70 p-6 shadow-sm space-y-3">
+          <div className="rounded-3xl bg-white border border-[#e7c277]/40 p-6 shadow-sm space-y-3">
             <h3 className="font-semibold">Sorotan UMKM</h3>
             <p className="text-sm text-slate-600">
               Produk dibuat oleh perajin lokal dengan bahan pilihan dan motif khas Bantaragung.
             </p>
-            <div className="flex flex-wrap gap-2 text-xs text-emerald-700">
-              <span className="rounded-full bg-emerald-50 px-3 py-1">Produk Handmade</span>
-              <span className="rounded-full bg-emerald-50 px-3 py-1">Bahan Alami</span>
-              <span className="rounded-full bg-emerald-50 px-3 py-1">Oleh-oleh</span>
+            <div className="flex flex-wrap gap-2 text-xs text-[#e7c277]">
+              <span className="rounded-full bg-[#102440]/10 px-3 py-1">Produk Handmade</span>
+              <span className="rounded-full bg-[#102440]/10 px-3 py-1">Bahan Alami</span>
+              <span className="rounded-full bg-[#102440]/10 px-3 py-1">Oleh-oleh</span>
             </div>
           </div>
-          <div className="rounded-3xl bg-emerald-50 p-6 space-y-3">
-            <h4 className="font-semibold text-emerald-900">Tips Pembelian</h4>
-            <p className="text-sm text-emerald-900/80">
+          <div className="rounded-3xl bg-[#102440]/10 p-6 space-y-3">
+            <h4 className="font-semibold text-[#102440]">Tips Pembelian</h4>
+            <p className="text-sm text-[#102440]/80">
               Pesan lebih awal untuk produk custom, dan tanyakan pilihan motif terbaru.
             </p>
           </div>
@@ -76,7 +76,7 @@ export default async function UMKMDetail({ params }: { params: Promise<{ slug: s
       </section>
 
       {/* CTA */}
-      <section className="bg-emerald-700 text-white rounded-3xl p-10 text-center space-y-4 shadow-lg">
+      <section className="bg-[#0b1a2f] text-white rounded-3xl p-10 text-center space-y-4 shadow-lg">
         <h3 className="text-2xl font-semibold">Tertarik dengan produk ini?</h3>
         <p className="text-white/80 max-w-2xl mx-auto">
           Hubungi pengelola UMKM untuk informasi harga, katalog, dan pemesanan.
@@ -86,7 +86,7 @@ export default async function UMKMDetail({ params }: { params: Promise<{ slug: s
           href={`https://wa.me/${data.contact.whatsapp}`}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-2 bg-white text-emerald-700 px-6 py-3 rounded-full font-semibold shadow hover:scale-105 transition"
+          className="inline-flex items-center gap-2 bg-white text-[#e7c277] px-6 py-3 rounded-full font-semibold shadow hover:scale-105 transition"
         >
           Hubungi via WhatsApp
           <span aria-hidden>→</span>

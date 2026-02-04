@@ -15,7 +15,7 @@ export default function Home() {
     <main className="space-y-24">
 
       {/* HERO */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-700 via-emerald-600 to-teal-500 text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#102440] via-[#1b3b6f] to-[#1b3b6f] text-white">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute -top-16 -right-16 h-64 w-64 rounded-full bg-white/30 blur-3xl" />
           <div className="absolute -bottom-20 -left-16 h-72 w-72 rounded-full bg-black/20 blur-3xl" />
@@ -35,7 +35,7 @@ export default function Home() {
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/wisata"
-              className="inline-flex items-center gap-2 bg-white text-emerald-700 px-6 py-3 rounded-full font-semibold shadow-lg hover:scale-105 transition"
+              className="inline-flex items-center gap-2 bg-white text-[#e7c277] px-6 py-3 rounded-full font-semibold shadow-lg hover:scale-105 transition"
             >
               Jelajahi Wisata
               <span aria-hidden>→</span>
@@ -59,7 +59,7 @@ export default function Home() {
               Destinasi favorit dengan panorama alam dan pengalaman edukatif.
             </p>
           </div>
-          <Link href="/wisata" className="text-green-700 font-medium">
+          <Link href="/wisata" className="text-[#e7c277] font-medium">
             Lihat semua →
           </Link>
         </div>
@@ -67,7 +67,7 @@ export default function Home() {
         <div className="grid md:grid-cols-3 gap-6">
           {wisata.map((w: any) => (
             <Link key={w.slug} href={`/wisata/${w.slug}`}>
-              <div className="group rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-emerald-100/60">
+              <div className="group rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-[#e7c277]/40/60">
                 <div className="relative">
                   <img
                     src={assetUrl(w.cover)}
@@ -79,7 +79,7 @@ export default function Home() {
                 <div className="p-5 space-y-2">
                   <h4 className="font-semibold">{w.title}</h4>
                   <p className="text-sm text-gray-600 line-clamp-2">{w.excerpt}</p>
-                  <span className="inline-flex items-center gap-1 text-emerald-700 text-sm font-medium">
+                  <span className="inline-flex items-center gap-1 text-[#e7c277] text-sm font-medium">
                     Jelajahi
                     <span aria-hidden>→</span>
                   </span>
@@ -99,7 +99,7 @@ export default function Home() {
               Ragam tanaman obat dan edukasi kesehatan alami.
             </p>
           </div>
-          <Link href="/b2h" className="text-green-700 font-medium">
+          <Link href="/b2h" className="text-[#e7c277] font-medium">
             Masuk B2H →
           </Link>
         </div>
@@ -107,7 +107,7 @@ export default function Home() {
         <div className="grid md:grid-cols-3 gap-6">
           {herbal.map((h: any) => (
             <Link key={h.slug} href={`/b2h/katalog/${h.slug}`}>
-              <div className="group rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-emerald-100/60">
+              <div className="group rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-[#e7c277]/40/60">
                 <img
                   src={assetUrl(h.cover)}
                   alt={h.name}
@@ -116,7 +116,7 @@ export default function Home() {
                 <div className="p-5 space-y-2">
                   <h4 className="font-semibold">{h.name}</h4>
                   <p className="text-sm text-gray-600 line-clamp-2">{h.excerpt}</p>
-                  <span className="inline-flex items-center gap-1 text-emerald-700 text-sm font-medium">
+                  <span className="inline-flex items-center gap-1 text-[#e7c277] text-sm font-medium">
                     Lihat manfaat
                     <span aria-hidden>→</span>
                   </span>
@@ -136,7 +136,7 @@ export default function Home() {
               Cerita, berita, dan dokumentasi kegiatan desa terbaru.
             </p>
           </div>
-          <Link href="/bic/artikel" className="text-green-700 font-medium">
+          <Link href="/bic/artikel" className="text-[#e7c277] font-medium">
             Semua artikel →
           </Link>
         </div>
@@ -144,7 +144,7 @@ export default function Home() {
         <div className="grid md:grid-cols-3 gap-6">
           {articles.map((a: any) => (
             <Link key={a.slug} href={`/bic/artikel/${a.slug}`}>
-              <div className="group rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-emerald-100/60">
+              <div className="group rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-[#e7c277]/40/60">
                 <img
                   src={assetUrl(a.cover)}
                   alt={a.title}
@@ -153,7 +153,7 @@ export default function Home() {
                 <div className="p-5 space-y-2">
                   <h4 className="font-semibold line-clamp-2">{a.title}</h4>
                   <p className="text-sm text-gray-600 line-clamp-2">{a.excerpt}</p>
-                  <span className="inline-flex items-center gap-1 text-emerald-700 text-sm font-medium">
+                  <span className="inline-flex items-center gap-1 text-[#e7c277] text-sm font-medium">
                     Baca artikel
                     <span aria-hidden>→</span>
                   </span>
@@ -165,7 +165,7 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="bg-emerald-50/70">
+      <section className="bg-[#102440]/15">
         <div className="max-w-6xl mx-auto px-6 py-16 text-center space-y-6">
           <h2 className="text-3xl font-bold">Jelajahi Desa Bantaragung</h2>
           <p className="text-slate-600 max-w-2xl mx-auto">

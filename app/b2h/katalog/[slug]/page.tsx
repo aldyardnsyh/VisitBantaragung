@@ -10,7 +10,7 @@ export default async function HerbalDetail({ params }: { params: Promise<{ slug:
 
             {/* Header */}
             <section className="space-y-5">
-                <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1 text-xs uppercase tracking-widest text-emerald-700">
+                <div className="inline-flex items-center gap-2 rounded-full bg-[#102440]/10 px-4 py-1 text-xs uppercase tracking-widest text-[#e7c277]">
                     Herbal Unggulan
                 </div>
                 <div className="space-y-2">
@@ -19,17 +19,17 @@ export default async function HerbalDetail({ params }: { params: Promise<{ slug:
                     <p className="text-slate-600 max-w-2xl">{data.excerpt}</p>
                 </div>
                 <div className="flex flex-wrap gap-3 text-xs text-slate-600">
-                    <span className="rounded-full bg-white px-3 py-1 border border-emerald-100 shadow-sm">
+                    <span className="rounded-full bg-white px-3 py-1 border border-[#e7c277]/40 shadow-sm">
                         {data.benefits.length} Manfaat
                     </span>
-                    <span className="rounded-full bg-white px-3 py-1 border border-emerald-100 shadow-sm">
+                    <span className="rounded-full bg-white px-3 py-1 border border-[#e7c277]/40 shadow-sm">
                         {data.usage.length} Cara Pemanfaatan
                     </span>
                 </div>
             </section>
 
             {/* Cover */}
-            <section className="relative overflow-hidden rounded-3xl shadow-lg border border-emerald-100/70">
+            <section className="relative overflow-hidden rounded-3xl shadow-lg border border-[#e7c277]/40">
                 <img
                     src={assetUrl(data.cover)}
                     alt={data.name}
@@ -48,9 +48,9 @@ export default async function HerbalDetail({ params }: { params: Promise<{ slug:
                     <h3>Deskripsi</h3>
                     <p>{data.description}</p>
                 </div>
-                <div className="rounded-3xl bg-emerald-50 p-6 space-y-4">
-                    <h4 className="font-semibold text-emerald-900">Tips Pemanfaatan</h4>
-                    <ul className="text-sm text-emerald-900/80 space-y-2">
+                <div className="rounded-3xl bg-[#102440]/10 p-6 space-y-4">
+                    <h4 className="font-semibold text-[#102440]">Tips Pemanfaatan</h4>
+                    <ul className="text-sm text-[#102440]/80 space-y-2">
                         <li>Gunakan bahan segar untuk hasil terbaik.</li>
                         <li>Campurkan dengan rempah lain agar rasa lebih seimbang.</li>
                         <li>Simpan di tempat kering dan sejuk.</li>
@@ -61,24 +61,24 @@ export default async function HerbalDetail({ params }: { params: Promise<{ slug:
             {/* Benefits & Usage */}
             <section className="grid md:grid-cols-2 gap-8">
 
-                <div className="rounded-3xl bg-white border border-emerald-100/70 p-6 shadow-sm">
+                <div className="rounded-3xl bg-white border border-[#e7c277]/40 p-6 shadow-sm">
                     <h3 className="font-semibold mb-4">Manfaat</h3>
                     <ul className="space-y-2 text-slate-700 text-sm">
                         {data.benefits.map((b: string) => (
                             <li key={b} className="flex items-center gap-2">
-                                <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                                <span className="h-2 w-2 rounded-full bg-[#e7c277]" />
                                 {b}
                             </li>
                         ))}
                     </ul>
                 </div>
 
-                <div className="rounded-3xl bg-white border border-emerald-100/70 p-6 shadow-sm">
+                <div className="rounded-3xl bg-white border border-[#e7c277]/40 p-6 shadow-sm">
                     <h3 className="font-semibold mb-4">Cara Pemanfaatan</h3>
                     <ul className="space-y-2 text-slate-700 text-sm">
                         {data.usage.map((u: string) => (
                             <li key={u} className="flex items-center gap-2">
-                                <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                                <span className="h-2 w-2 rounded-full bg-[#e7c277]" />
                                 {u}
                             </li>
                         ))}

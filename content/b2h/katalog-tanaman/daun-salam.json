@@ -1,0 +1,20 @@
+{
+  "slug": "daun-salam",
+  "name": "Daun Salam",
+  "latin": "Syzygium polyanthum",
+  "excerpt": "Daun Salam merupakan tanaman herbal yang dimanfaatkan bagian daun.",
+  "description": "Salam adalah pohon dengan daun lonjong berwarna hijau tua yang beraroma lembut. Bagian yang dimanfaatkan adalah daun.",
+  "cover": "b2h/katalog-tanaman/daun-salam/cover.jpg",
+  "gallery": [
+    "b2h/katalog-tanaman/daun-salam/01.jpg",
+    "b2h/katalog-tanaman/daun-salam/02.jpg"
+  ],
+  "benefits": [
+    "Membantu menurunkan gula darah",
+    "Menurunkan kolesterol"
+  ],
+  "usage": [
+    "Daun direbus untuk diminum",
+    "Digunakan sebagai bumbu masakan"
+  ]
+}
