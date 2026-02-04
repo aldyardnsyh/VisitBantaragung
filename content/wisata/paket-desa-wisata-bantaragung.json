@@ -1,0 +1,29 @@
+{
+  "slug": "paket-desa-wisata-bantaragung",
+  "title": "Paket Desa Wisata Bantaragung",
+  "excerpt": "Paket wisata lengkap untuk menjelajah destinasi unggulan, budaya lokal, dan kuliner khas desa.",
+  "description": "Paket Desa Wisata Bantaragung menghadirkan pengalaman all-in untuk wisatawan yang ingin menikmati alam, budaya, dan kegiatan desa dalam satu rangkaian perjalanan. Program ini menggabungkan kunjungan ke spot alam, pertunjukan budaya, hingga interaksi langsung dengan masyarakat. Cocok untuk rombongan, sekolah, maupun instansi.",
+  "cover": "wisata/paket-desa-wisata-bantaragung/cover.jpg",
+  "gallery": [
+    "wisata/paket-desa-wisata-bantaragung/01.jpg",
+    "wisata/paket-desa-wisata-bantaragung/02.jpg"
+  ],
+  "location": {
+    "lat": -6.0,
+    "lng": 108.0
+  },
+  "facilities": [
+    "Balai pertemuan",
+    "Kesenian dan budaya",
+    "Musholla",
+    "Selfie area",
+    "Tempat makan",
+    "Wifi area"
+  ],
+  "activities": [
+    "Tour desa",
+    "Pertunjukan budaya",
+    "Kuliner lokal",
+    "Edukasi wisata"
+  ]
+}

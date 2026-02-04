@@ -1,0 +1,20 @@
+{
+  "slug": "kunyit",
+  "name": "Kunyit",
+  "latin": "Curcuma longa",
+  "excerpt": "Kunyit merupakan tanaman herbal yang dimanfaatkan bagian rimpang.",
+  "description": "Kunyit adalah tanaman rimpang berwarna kuning jingga dengan aroma khas. Bagian yang dimanfaatkan adalah rimpang.",
+  "cover": "b2h/katalog-tanaman/kunyit/cover.jpg",
+  "gallery": [
+    "b2h/katalog-tanaman/kunyit/01.jpg",
+    "b2h/katalog-tanaman/kunyit/02.jpg"
+  ],
+  "benefits": [
+    "Antiradang",
+    "Melancarkan pencernaan"
+  ],
+  "usage": [
+    "Diparut lalu direbus",
+    "Digunakan sebagai bumbu masakan"
+  ]
+}

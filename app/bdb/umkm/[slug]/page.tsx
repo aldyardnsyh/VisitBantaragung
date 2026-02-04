@@ -6,45 +6,90 @@ export default async function UMKMDetail({ params }: { params: Promise<{ slug: s
   const data = getUMKMBySlug(slug);
 
   return (
-    <main className="max-w-4xl mx-auto px-6 py-16 space-y-10">
+    <main className="max-w-5xl mx-auto px-6 py-16 space-y-12">
 
-      <section className="space-y-3">
-        <h1 className="text-3xl md:text-4xl font-bold">{data.name}</h1>
-        <p className="text-gray-600">{data.excerpt}</p>
+      <section className="space-y-5">
+        <div className="inline-flex items-center gap-2 rounded-full bg-[#102440]/10 px-4 py-1 text-xs uppercase tracking-widest text-[#e7c277]">
+          UMKM Unggulan
+        </div>
+        <div className="space-y-2">
+          <h1 className="text-3xl md:text-4xl font-bold">{data.name}</h1>
+          <p className="text-slate-600 max-w-2xl">{data.excerpt}</p>
+        </div>
       </section>
 
-      <img
-        src={assetUrl(data.cover)}
-        alt={data.name}
-        className="w-full h-[350px] object-cover rounded-2xl shadow"
-      />
+      <section className="relative overflow-hidden rounded-3xl shadow-lg border border-[#e7c277]/40">
+        <img
+          src={assetUrl(data.cover)}
+          alt={data.name}
+          className="w-full h-[380px] object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+        <div className="absolute bottom-6 left-6 text-white">
+          <p className="text-xs uppercase tracking-widest text-white/80">Produk Lokal</p>
+          <p className="text-2xl font-semibold">{data.name}</p>
+        </div>
+      </section>
 
-      <section className="prose max-w-none">
-        <p>{data.description}</p>
+      <section className="grid lg:grid-cols-[1.2fr_0.8fr] gap-8">
+        <div className="prose max-w-none">
+          <h3>Deskripsi</h3>
+          <p>{data.description}</p>
+        </div>
+        <div className="space-y-4">
+          <div className="rounded-3xl bg-white border border-[#e7c277]/40 p-6 shadow-sm space-y-3">
+            <h3 className="font-semibold">Sorotan UMKM</h3>
+            <p className="text-sm text-slate-600">
+              Produk dibuat oleh perajin lokal dengan bahan pilihan dan motif khas Bantaragung.
+            </p>
+            <div className="flex flex-wrap gap-2 text-xs text-[#e7c277]">
+              <span className="rounded-full bg-[#102440]/10 px-3 py-1">Produk Handmade</span>
+              <span className="rounded-full bg-[#102440]/10 px-3 py-1">Bahan Alami</span>
+              <span className="rounded-full bg-[#102440]/10 px-3 py-1">Oleh-oleh</span>
+            </div>
+          </div>
+          <div className="rounded-3xl bg-[#102440]/10 p-6 space-y-3">
+            <h4 className="font-semibold text-[#102440]">Tips Pembelian</h4>
+            <p className="text-sm text-[#102440]/80">
+              Pesan lebih awal untuk produk custom, dan tanyakan pilihan motif terbaru.
+            </p>
+          </div>
+        </div>
       </section>
 
       {/* Gallery */}
-      <section className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        {data.gallery.map((g: string) => (
-          <img
-            key={g}
-            src={assetUrl(g)}
-            alt=""
-            className="h-40 w-full object-cover rounded-xl"
-          />
-        ))}
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="font-semibold text-xl">Galeri Produk</h3>
+          <span className="text-sm text-slate-500">{data.gallery.length} foto</span>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {data.gallery.map((g: string) => (
+            <img
+              key={g}
+              src={assetUrl(g)}
+              alt=""
+              className="h-40 w-full object-cover rounded-2xl"
+            />
+          ))}
+        </div>
       </section>
 
       {/* CTA */}
-      <section className="bg-green-700 text-white rounded-2xl p-8 text-center space-y-4">
-        <h3 className="text-xl font-semibold">Tertarik dengan produk ini?</h3>
+      <section className="bg-[#0b1a2f] text-white rounded-3xl p-10 text-center space-y-4 shadow-lg">
+        <h3 className="text-2xl font-semibold">Tertarik dengan produk ini?</h3>
+        <p className="text-white/80 max-w-2xl mx-auto">
+          Hubungi pengelola UMKM untuk informasi harga, katalog, dan pemesanan.
+        </p>
 
         <a
           href={`https://wa.me/${data.contact.whatsapp}`}
           target="_blank"
-          className="inline-block bg-white text-green-700 px-6 py-3 rounded-xl"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 bg-white text-[#e7c277] px-6 py-3 rounded-full font-semibold shadow hover:scale-105 transition"
         >
           Hubungi via WhatsApp
+          <span aria-hidden>→</span>
         </a>
       </section>
 
