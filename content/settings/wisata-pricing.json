@@ -1,0 +1,271 @@
+{
+  "contacts": [
+    {
+      "slug": "curug-cipeuteuy",
+      "name": "Curug Cipeuteuy",
+      "priceFrom": "Rp 15.000",
+      "contact": {
+        "organization": "Desa Wisata Bantaragung",
+        "phone": "081384990974",
+        "email": "koperasiagunglestari@gmail.com",
+        "address": "Blok Pasir Desa Bantaragung Kecamatan Sindangwangi Kabupaten Majalengka, Jawa Barat"
+      },
+      "facilities": [
+        "ATV, trail, paintball, panahan",
+        "Kamar mandi umum",
+        "Kesenian dan budaya",
+        "Musholla",
+        "Persewaan alat",
+        "Selfie area",
+        "Tempat makan",
+        "Wifi area"
+      ]
+    },
+    {
+      "slug": "terasering-ciboer",
+      "name": "Terasering Ciboer",
+      "priceFrom": "Rp 5.000",
+      "contact": {
+        "organization": "Desa Wisata Bantaragung",
+        "phone": "081384990974",
+        "email": "deswitabantaragung@gmail.com",
+        "address": "Blok Desa Bantaragung, Kec. Sindangwangi, Kab. Majalengka"
+      },
+      "facilities": [
+        "Kamar mandi umum",
+        "Musholla",
+        "Persewaan alat",
+        "Selfie area",
+        "Tempat makan",
+        "Wifi area"
+      ]
+    },
+    {
+      "slug": "buper-awilega",
+      "name": "Bumi Perkemahan Awilega",
+      "priceFrom": "Rp 15.000",
+      "contact": {
+        "organization": "Desa Wisata Bantaragung",
+        "phone": "081384990974",
+        "email": "koperasiagunglestari@gmail.com",
+        "address": "Blok Babakan Desa Bantaragung Kec. Sindangwangi Kab. Majalengka, Jawa Barat"
+      },
+      "facilities": [
+        "Kamar mandi umum",
+        "Musholla",
+        "Persewaan alat",
+        "Selfie area",
+        "Tempat makan",
+        "Wifi area"
+      ]
+    },
+    {
+      "slug": "paket-desa-wisata-bantaragung",
+      "name": "Paket Desa Wisata Bantaragung",
+      "priceFrom": "Rp 100.000",
+      "contact": {
+        "organization": "Desa Wisata Bantaragung",
+        "phone": "081384990974",
+        "email": "koperasiagunglestari@gmail.com",
+        "address": "Jl. Lp. Cakra Jaya No. 01 Blok Desa Bantaragung Kec. Sindangwangi Kab. Majalengka"
+      },
+      "facilities": [
+        "Kamar mandi umum",
+        "Kesenian dan budaya",
+        "Musholla",
+        "Persewaan alat",
+        "Selfie area",
+        "Tempat makan",
+        "Wifi area"
+      ]
+    },
+    {
+      "slug": "paket-eduwisata-family-gathering",
+      "name": "Paket Eduwisata Family Gathering",
+      "priceFrom": "Rp 85.000",
+      "contact": {
+        "organization": "Desa Wisata Bantaragung",
+        "phone": "081384990974",
+        "email": "koperasiagunglestari@gmail.com",
+        "address": "Jl. Lp. Cakra Jaya No. 01 Blok Desa Bantaragung Kec. Sindangwangi Kab. Majalengka"
+      },
+      "facilities": [
+        "Kamar mandi umum",
+        "Kesenian dan budaya",
+        "Musholla",
+        "Persewaan alat",
+        "Selfie area",
+        "Tempat makan",
+        "Wifi area"
+      ]
+    },
+    {
+      "slug": "paket-campervan",
+      "name": "Paket Campervan",
+      "priceFrom": "Rp 1.000.000",
+      "contact": {
+        "organization": "Desa Wisata Bantaragung",
+        "phone": "081384990974",
+        "email": "desawisatabantaragung@gmail.com",
+        "address": "Desa Bantaragung Kecamatan Sindangwangi Kabupaten Majalengka"
+      },
+      "facilities": [
+        "Kamar mandi umum",
+        "Selfie area",
+        "Wifi area"
+      ]
+    },
+    {
+      "slug": "langit-binuang",
+      "name": "Langit Binuang",
+      "priceFrom": "Rp 10.000",
+      "contact": {
+        "organization": "Desa Wisata Bantaragung",
+        "phone": "081384996974",
+        "email": "",
+        "address": "Desa Bantaragung"
+      },
+      "facilities": []
+    },
+    {
+      "slug": "penanaman-pohon-endemik",
+      "name": "Penanaman Pohon Endemik",
+      "priceFrom": "Rp 15.000",
+      "contact": {
+        "organization": "Desa Wisata Bantaragung",
+        "phone": "081384990974",
+        "email": "koperasiagunglestari@gmail.com",
+        "address": "Curug Cipeuteuy Desa Bantaragung"
+      },
+      "facilities": []
+    },
+    {
+      "slug": "atraksi-genjring-kuda-jaya",
+      "name": "Atraksi Genjring Kuda Jaya",
+      "priceFrom": "Rp 50.000",
+      "contact": {
+        "organization": "Desa Wisata Bantaragung",
+        "phone": "081384990974",
+        "email": "koperasiagunglestari@gmail.com",
+        "address": "Blok Burujul Desa Bantaragung Kec. Sindangwangi Kab. Majalengka"
+      },
+      "facilities": [
+        "Musholla",
+        "Selfie area",
+        "Wifi area"
+      ]
+    },
+    {
+      "slug": "nyura",
+      "name": "Nyura",
+      "priceFrom": "Rp 20.000",
+      "contact": {
+        "organization": "Desa Wisata Bantaragung",
+        "phone": "081384990974",
+        "email": "koperasiagunglestari@gmail.com",
+        "address": "Desa Wisata Bantaragung"
+      },
+      "facilities": []
+    },
+    {
+      "slug": "edukasi-tradisi-apem-syafar",
+      "name": "Edukasi Tradisi Apem Syafar",
+      "priceFrom": "Rp 20.000",
+      "contact": {
+        "organization": "Desa Wisata Bantaragung",
+        "phone": "081384990974",
+        "email": "koperasiagunglestari@gmail.com",
+        "address": "Desa Wisata Bantaragung"
+      },
+      "facilities": []
+    },
+    {
+      "slug": "domba-ketangkasan",
+      "name": "Domba Ketangkasan",
+      "priceFrom": "Rp 20.000",
+      "contact": {
+        "organization": "Desa Wisata Bantaragung",
+        "phone": "081384996974",
+        "email": "",
+        "address": "Desa Wisata Bantaragung"
+      },
+      "facilities": []
+    },
+    {
+      "slug": "pertanian-organik",
+      "name": "Pertanian Organik",
+      "priceFrom": "Rp 45.000",
+      "contact": {
+        "organization": "Desa Wisata Bantaragung",
+        "phone": "083806392370",
+        "email": "",
+        "address": "Ciboer Desa Bantaragung"
+      },
+      "facilities": []
+    },
+    {
+      "slug": "live-in-umkm-emping-melinjo",
+      "name": "Live In UMKM Emping Melinjo",
+      "priceFrom": "Rp 15.000",
+      "contact": {
+        "organization": "Desa Wisata Bantaragung",
+        "phone": "083806392370",
+        "email": "koperasiagunglestari@gmail.com",
+        "address": "Blok Desa Bantaragung"
+      },
+      "facilities": [
+        "Musholla",
+        "Persewaan alat",
+        "Wifi area"
+      ]
+    },
+    {
+      "slug": "cottage-ciboer-pass",
+      "name": "Cottage Ciboer Pass",
+      "priceFrom": "Rp 600.000",
+      "contact": {
+        "organization": "Desa Wisata Bantaragung",
+        "phone": "083806392370",
+        "email": "desawisatabantaragung@gmail.com",
+        "address": "Blok Desa Bantaragung Kec. Sindangwangi Kab. Majalengka"
+      },
+      "facilities": [
+        "Kamar mandi umum",
+        "Musholla",
+        "Persewaan alat",
+        "Selfie area"
+      ]
+    },
+    {
+      "slug": "villa-gardenstone",
+      "name": "Villa Gardenstone",
+      "priceFrom": "Rp 1.500.000",
+      "contact": {
+        "organization": "Desa Wisata Bantaragung",
+        "phone": "083806392370",
+        "email": "desawisatabantaragung@gmail.com",
+        "address": "Blok Desa Wisata Bantaragung"
+      },
+      "facilities": [
+        "Kamar mandi umum",
+        "Musholla",
+        "Persewaan alat",
+        "Selfie area",
+        "Tempat makan",
+        "Wifi area"
+      ]
+    },
+    {
+      "slug": "pencak-silat",
+      "name": "Pencak Silat",
+      "priceFrom": "Rp 30.000",
+      "contact": {
+        "organization": "Desa Wisata Bantaragung",
+        "phone": "081384990974",
+        "email": "koperasiagunglestari@gmail.com",
+        "address": "Desa Wisata Bantaragung"
+      },
+      "facilities": []
+    }
+  ]
+}

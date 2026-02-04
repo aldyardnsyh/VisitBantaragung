@@ -1,0 +1,25 @@
+{
+  "slug": "bukit-batu-semar",
+  "title": "Bukit Batu Semar",
+  "excerpt": "Puncak bukit dengan panorama pegunungan yang memanjakan mata.",
+  "description": "Bukit Batu Semar menyuguhkan panorama perbukitan dan hamparan hijau Desa Bantaragung dari ketinggian. Trekking ringan menuju puncak akan terbayar dengan pemandangan sunrise dan sunset yang memukau. Destinasi ini cocok untuk pencinta alam dan penggemar fotografi.",
+  "cover": "wisata/bukit-batu-semar/cover.jpg",
+  "gallery": [
+    "wisata/bukit-batu-semar/01.jpg",
+    "wisata/bukit-batu-semar/02.jpg"
+  ],
+  "location": {
+    "lat": -6.0,
+    "lng": 108.0
+  },
+  "facilities": [
+    "Areal parkir",
+    "Spot foto",
+    "Selfie area"
+  ],
+  "activities": [
+    "Trekking",
+    "Fotografi lanskap",
+    "Menikmati sunrise/sunset"
+  ]
+}
