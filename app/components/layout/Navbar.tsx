@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { assetUrl } from "@/lib/asset";
 
 export default function Navbar() {
   return (
@@ -7,9 +8,11 @@ export default function Navbar() {
 
         {/* Logo / Brand */}
         <Link href="/" className="flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#102440] text-white text-lg shadow-md">
-            VB
-          </span>
+          <img
+            src={assetUrl("_brand/logo/LogoVisitBantaragung.png")}
+            alt="Visit Bantaragung Logo"
+            className="h-12 w-auto"
+          />
           <span className="flex flex-col">
             <span className="font-bold text-lg text-[#e7c277]">Visit Bantaragung</span>
             <span className="text-xs text-slate-500">Desa Wisata &amp; Edukasi</span>
@@ -24,7 +27,7 @@ export default function Navbar() {
             { href: "/bmc", label: "BMC" },
             { href: "/bic", label: "BIC" },
             { href: "/bdb", label: "BDB" },
-            { href: "/kontak", label: "Kontak" },
+            { href: "/galeri", label: "Galeri" },
           ].map((item) => (
             <Link
               key={item.href}
