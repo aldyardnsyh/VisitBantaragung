@@ -1,16 +1,18 @@
 // Asset version for cache busting
-// Increment this version number whenever you update images in CDN
-// Example: '1.0.0' -> '1.0.1' -> '1.1.0' etc.
-const ASSET_VERSION = '1.0.1';
+// This timestamp ensures images are ALWAYS fresh when updated in CDN
+// Format: YYYYMMDDHHMMSS (e.g., 20260210023000 = Feb 10, 2026, 02:30:00)
+// UPDATE THIS TIMESTAMP EVERY TIME YOU UPLOAD NEW IMAGES TO CDN!
+const ASSET_VERSION = '20260210024130';
 
 export function assetUrl(path: string) {
   const base = process.env.NEXT_PUBLIC_ASSET_BASE_URL;
   if (!base) return path;
 
-  const url = `${base}/${path}`.replace(/([^:])\/+/g, "$1/");
+  const url = `${base}/${path}`.replace(/([^:])\/\//g, "$1/");
 
-  // Add cache busting for CDN images
-  // This forces browser to reload images when version changes
+  // Add cache busting with static timestamp
+  // This forces CDN and browser to reload images when version changes
+  // Using static version to avoid hydration mismatch between server and client
   const separator = url.includes('?') ? '&' : '?';
   return `${url}${separator}v=${ASSET_VERSION}`;
 }
