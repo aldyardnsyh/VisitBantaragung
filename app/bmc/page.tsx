@@ -1,106 +1,81 @@
 import Link from "next/link";
-import { getAllLocations } from "@/lib/content";
-import { assetUrl } from "@/lib/asset";
+import { getMapsConfig } from "@/lib/content";
+import MapGalleryClient from "./MapGalleryClient";
+import BackgroundPattern from "@/app/components/ui/BackgroundPattern";
 
-export default async function BMCPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ page?: string }>;
-}) {
-  const { page } = await searchParams;
-  const locations = getAllLocations();
-  const perPage = 6;
-  const currentPage = Math.max(1, Number(page ?? "1") || 1);
-  const totalPages = Math.max(1, Math.ceil(locations.length / perPage));
-  const safePage = Math.min(currentPage, totalPages);
-  const pagedLocations = locations.slice((safePage - 1) * perPage, safePage * perPage);
+export default function BMCPage() {
+  const mapsConfig = getMapsConfig();
 
   return (
-    <main className="max-w-6xl mx-auto px-6 py-16 space-y-12">
-
+    <main className="max-w-7xl mx-auto px-6 py-16 space-y-12">
       {/* Header */}
-      <section className="rounded-3xl bg-gradient-to-br from-[#102440] to-[#1b3b6f] text-white p-10 md:p-12 space-y-4 shadow-lg">
-        <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1 text-xs uppercase tracking-widest">
+      <section className="relative rounded-3xl bg-gradient-to-br from-[#102440] to-[#1b3b6f] text-white p-10 md:p-12 space-y-4 shadow-lg">
+        <BackgroundPattern variant="geometric" opacity={0.04} className="text-white" />
+        <div className="inline-flex items-center gap-2 rounded-full badge-dark px-4 py-1 text-xs uppercase tracking-widest">
           Peta Digital
         </div>
         <h1 className="text-3xl md:text-4xl font-bold">
           Bantaragung Map Center
         </h1>
-        <p className="text-white/90 max-w-2xl">
-          Peta digital lokasi wisata, kampung herbal, UMKM, dan titik edukasi Desa Bantaragung.
+        <p className="text-white/80 max-w-3xl">
+          Galeri peta digital Desa Bantaragung hasil mapping untuk transparansi informasi wilayah,
+          wisata, infrastruktur, dan data spasial lainnya. Semua peta dapat dilihat detail dan diunduh
+          untuk keperluan edukasi dan perencanaan.
         </p>
-      </section>
 
-      {/* Map + List */}
-      <section className="grid md:grid-cols-2 gap-8">
-
-        {/* MAP */}
-        <div className="rounded-3xl overflow-hidden shadow-lg border border-[#e7c277]/40 h-[450px] bg-white">
-          <iframe
-            className="w-full h-full"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            src="https://www.google.com/maps?q=-6.0,108.0&z=14&output=embed"
-          />
-        </div>
-
-        {/* LIST */}
-        <div className="space-y-4 max-h-[450px] overflow-y-auto pr-2">
-
-          {pagedLocations.map((loc: any) => (
-            <Link key={loc.slug} href={`/bmc/lokasi/${loc.slug}`}>
-              <div className="group flex gap-4 bg-white rounded-2xl border border-[#e7c277]/40 shadow-sm hover:shadow-lg transition p-4">
-
-                <img
-                  src={assetUrl(loc.cover)}
-                  alt={loc.name}
-                  className="w-24 h-24 object-cover rounded-xl group-hover:scale-105 transition duration-300"
-                />
-
-                <div className="space-y-1">
-                  <h4 className="font-semibold">{loc.name}</h4>
-                  <small className="inline-flex items-center gap-1 rounded-full bg-[#102440]/10 px-2 py-0.5 text-xs text-[#e7c277]">
-                    {loc.category}
-                  </small>
-                  <p className="text-sm text-gray-600 line-clamp-2">{loc.excerpt}</p>
-                </div>
-
+        {/* Stats */}
+        <div className="flex flex-wrap gap-6 pt-4">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center w-10 h-10 rounded-full badge-dark">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
+            </div>
+            <div>
+              <div className="text-2xl font-bold">
+                {mapsConfig.categories.reduce((sum, cat) => sum + cat.maps.length, 0)}
               </div>
-            </Link>
-          ))}
-
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-sm">
-            <span className="text-slate-500">
-              Halaman {safePage} dari {totalPages}
-            </span>
-            <div className="flex items-center gap-2">
-              <Link
-                href={`/bmc?page=${Math.max(1, safePage - 1)}`}
-                className={`px-3 py-2 rounded-full border border-[#e7c277]/40 ${
-                  safePage === 1
-                    ? "pointer-events-none text-slate-400"
-                    : "text-[#102440] hover:bg-[#102440]/10"
-                }`}
-              >
-                ← Sebelumnya
-              </Link>
-              <Link
-                href={`/bmc?page=${Math.min(totalPages, safePage + 1)}`}
-                className={`px-3 py-2 rounded-full border border-[#e7c277]/40 ${
-                  safePage === totalPages
-                    ? "pointer-events-none text-slate-400"
-                    : "text-[#102440] hover:bg-[#102440]/10"
-                }`}
-              >
-                Berikutnya →
-              </Link>
+              <div className="text-xs text-white/60">Total Peta</div>
             </div>
           </div>
-
+          <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center w-10 h-10 rounded-full badge-dark">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+              </svg>
+            </div>
+            <div>
+              <div className="text-2xl font-bold">{mapsConfig.categories.length}</div>
+              <div className="text-xs text-white/60">Kategori</div>
+            </div>
+          </div>
         </div>
+      </section>
 
+      {/* Map Gallery */}
+      <MapGalleryClient mapsConfig={mapsConfig} />
+
+      {/* Info Section */}
+      <section className="bg-slate-50 rounded-3xl p-8 border border-[#e7c277]/20">
+        <h2 className="text-xl font-bold mb-4 text-[#102440] flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Informasi Peta
+        </h2>
+        <div className="space-y-3 text-sm text-slate-600">
+          <p>
+            <strong>Sumber Data:</strong> Peta-peta ini merupakan hasil mapping dan digitalisasi
+            wilayah Desa Bantaragung untuk mendukung transparansi informasi dan perencanaan pembangunan desa.
+          </p>
+          <p>
+            <strong>Lisensi:</strong> Peta-peta ini dapat digunakan untuk keperluan edukasi, penelitian,
+            dan perencanaan dengan tetap mencantumkan sumber dari Desa Bantaragung.
+          </p>
+        </div>
       </section>
 
     </main>
   );
 }
+

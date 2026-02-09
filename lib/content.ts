@@ -58,6 +58,31 @@ export function getSeoSettings(): SeoSettings {
     return loadJSON<SeoSettings>("settings/seo.json");
 }
 
+// BMC Maps Configuration
+export interface MapItem {
+    id: string;
+    title: string;
+    image: string;
+    description: string;
+}
+
+export interface MapCategory {
+    id: string;
+    name: string;
+    description: string;
+    icon: string;
+    maps: MapItem[];
+}
+
+export interface MapsConfig {
+    categories: MapCategory[];
+}
+
+export function getMapsConfig(): MapsConfig {
+    return loadJSON<MapsConfig>("bmc/maps-config.json");
+}
+
+
 export interface Wisata {
     slug: string;
     title: string;

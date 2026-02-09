@@ -53,20 +53,31 @@ export default async function WisataDetail({ params }: { params: Promise<{ slug:
                     <p>{data.description}</p>
                 </div>
                 <div className="space-y-4">
-                    <div className="rounded-3xl bg-white border border-[#e7c277]/40 p-6 shadow-sm space-y-3">
-                        <h3 className="font-semibold">Ringkasan Kunjungan</h3>
-                        <div className="space-y-2 text-sm text-slate-600">
-                            <p>Lokasi: {data.location?.lat}, {data.location?.lng}</p>
-                            <p>Karakter: Alam, edukasi, fotografi</p>
-                            <p>Waktu terbaik: pagi hingga sore</p>
+                    <div className="rounded-3xl bg-white border border-[#e7c277]/40 p-6 shadow-sm space-y-4">
+                        <h3 className="font-semibold">Informasi Wisata</h3>
+                        <div className="space-y-3 text-sm">
+                            <div className="flex items-start gap-3">
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#e7c277] mt-1.5"></div>
+                                <div>
+                                    <p className="font-medium text-slate-700">Aktivitas</p>
+                                    <p className="text-slate-600">{data.activities.length} pilihan aktivitas</p>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#e7c277] mt-1.5"></div>
+                                <div>
+                                    <p className="font-medium text-slate-700">Fasilitas</p>
+                                    <p className="text-slate-600">{data.facilities.length} fasilitas tersedia</p>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#e7c277] mt-1.5"></div>
+                                <div>
+                                    <p className="font-medium text-slate-700">Waktu Kunjungan</p>
+                                    <p className="text-slate-600">Pagi hingga sore hari</p>
+                                </div>
+                            </div>
                         </div>
-                        <Link
-                            href="/bmc"
-                            className="inline-flex items-center gap-2 text-[#e7c277] text-sm font-semibold"
-                        >
-                            Lihat di peta digital
-                            <span aria-hidden>→</span>
-                        </Link>
                     </div>
                     <div className="rounded-3xl bg-[#102440]/10 p-6 space-y-3">
                         <h4 className="font-semibold text-[#102440]">Tips Wisata</h4>
@@ -108,25 +119,6 @@ export default async function WisataDetail({ params }: { params: Promise<{ slug:
 
             </section>
 
-            {/* Gallery */}
-            <section className="space-y-4">
-                <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-xl">Galeri</h3>
-                    <span className="text-sm text-slate-500">{data.gallery.length} foto</span>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {data.gallery.map((g: string) => (
-                        <img
-                            key={g}
-                            src={assetUrl(g)}
-                            alt=""
-                            className="h-40 w-full object-cover rounded-2xl"
-                        />
-                    ))}
-                </div>
-            </section>
-
             {/* CTA */}
             <section className="bg-[#0b1a2f] text-white rounded-3xl p-10 text-center space-y-4 shadow-lg">
                 <h3 className="text-2xl font-semibold">
@@ -137,7 +129,7 @@ export default async function WisataDetail({ params }: { params: Promise<{ slug:
                 </p>
 
                 <a
-                    href="https://wa.me/628xxxxxxxxxx"
+                    href="https://wa.me/6281384990974"
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex items-center gap-2 bg-white text-[#e7c277] px-6 py-3 rounded-full font-semibold shadow hover:scale-105 transition"

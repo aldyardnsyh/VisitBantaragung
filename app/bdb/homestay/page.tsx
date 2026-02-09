@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getAllHomestay } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
+import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";
+import BackgroundPattern from "@/app/components/ui/BackgroundPattern";
 
 export default async function HomestayList({
   searchParams,
@@ -18,8 +20,17 @@ export default async function HomestayList({
   return (
     <main className="max-w-6xl mx-auto px-6 py-16 space-y-12">
 
-      <section className="rounded-3xl bg-gradient-to-br from-[#102440] to-[#1b3b6f] text-white p-10 md:p-12 space-y-4 shadow-lg">
-        <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1 text-xs uppercase tracking-widest">
+      {/* Back Navigation */}
+      <Link
+        href="/bdb"
+        className="inline-flex items-center gap-2 text-[#102440] hover:text-[#e7c277] transition"
+      >
+        ← Kembali ke BDB
+      </Link>
+
+      <section className="relative rounded-3xl bg-gradient-to-br from-[#102440] to-[#1b3b6f] text-white p-10 md:p-12 space-y-4 shadow-lg">
+        <BackgroundPattern variant="geometric" opacity={0.04} className="text-white" />
+        <div className="inline-flex items-center gap-2 rounded-full badge-dark px-4 py-1 text-xs uppercase tracking-widest">
           Homestay
         </div>
         <h1 className="text-3xl md:text-4xl font-bold">Homestay Desa Bantaragung</h1>
@@ -33,7 +44,7 @@ export default async function HomestayList({
           <Link key={h.slug} href={`/bdb/homestay/${h.slug}`}>
             <div className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition border border-[#e7c277]/40">
               <div className="relative">
-                <img
+                <ImageWithSkeleton
                   src={assetUrl(h.cover)}
                   alt={h.name}
                   className="h-48 w-full object-cover group-hover:scale-105 transition duration-300"
@@ -58,11 +69,10 @@ export default async function HomestayList({
       <nav className="flex flex-wrap items-center justify-center gap-2 text-sm">
         <Link
           href={`/bdb/homestay?page=${Math.max(1, safePage - 1)}`}
-          className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${
-            safePage === 1
-              ? "pointer-events-none text-slate-400"
-              : "text-[#102440] hover:bg-[#102440]/10"
-          }`}
+          className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${safePage === 1
+            ? "pointer-events-none text-slate-400"
+            : "text-[#102440] hover:bg-[#102440]/10"
+            }`}
         >
           ← Sebelumnya
         </Link>
@@ -71,11 +81,10 @@ export default async function HomestayList({
           <Link
             key={page}
             href={`/bdb/homestay?page=${page}`}
-            className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${
-              page === safePage
-                ? "bg-[#102440] text-white"
-                : "text-[#102440] hover:bg-[#102440]/10"
-            }`}
+            className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${page === safePage
+              ? "bg-[#102440] text-white"
+              : "text-[#102440] hover:bg-[#102440]/10"
+              }`}
           >
             {page}
           </Link>
@@ -83,11 +92,10 @@ export default async function HomestayList({
 
         <Link
           href={`/bdb/homestay?page=${Math.min(totalPages, safePage + 1)}`}
-          className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${
-            safePage === totalPages
-              ? "pointer-events-none text-slate-400"
-              : "text-[#102440] hover:bg-[#102440]/10"
-          }`}
+          className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${safePage === totalPages
+            ? "pointer-events-none text-slate-400"
+            : "text-[#102440] hover:bg-[#102440]/10"
+            }`}
         >
           Berikutnya →
         </Link>

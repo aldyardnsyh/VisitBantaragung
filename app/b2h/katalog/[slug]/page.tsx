@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getHerbalBySlug } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
 
@@ -7,6 +8,14 @@ export default async function HerbalDetail({ params }: { params: Promise<{ slug:
 
     return (
         <main className="max-w-5xl mx-auto px-6 py-16 space-y-12">
+
+            {/* Back Navigation */}
+            <Link
+                href="/b2h/katalog"
+                className="inline-flex items-center gap-2 text-[#102440] hover:text-[#e7c277] transition"
+            >
+                ← Kembali ke Katalog
+            </Link>
 
             {/* Header */}
             <section className="space-y-5">

@@ -5,6 +5,8 @@ import {
   getAllHerbal,
   getAllArticles,
 } from "@/lib/content";
+import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";
+import BackgroundPattern from "@/app/components/ui/BackgroundPattern";
 
 export default function Home() {
   const wisata = getAllWisata().slice(0, 3);
@@ -28,7 +30,7 @@ export default function Home() {
 
         {/* Hero Content */}
         <div className="relative max-w-6xl mx-auto px-6 py-24 text-white space-y-8">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-sm px-4 py-1 text-xs uppercase tracking-widest">
+          <div className="inline-flex items-center gap-2 rounded-full badge-dark backdrop-blur-sm px-4 py-1 text-xs uppercase tracking-widest">
             Desa Wisata Digital
           </div>
           <h1 className="text-5xl md:text-7xl font-bold leading-tight max-w-3xl">
@@ -71,8 +73,10 @@ export default function Home() {
 
         <div className="grid md:grid-cols-3 gap-8">
           <div className="text-center space-y-3 p-6 rounded-3xl bg-gradient-to-br from-[#102440]/5 to-[#e7c277]/5 border border-[#e7c277]/20">
-            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[#102440] text-white text-2xl mx-auto">
-              🏔️
+            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[#102440] mx-auto">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21l7-7 4 4 7-7M5 10l5-5 4 4 6-6" />
+              </svg>
             </div>
             <h3 className="font-bold text-xl">Lokasi Strategis</h3>
             <p className="text-sm text-slate-600">
@@ -81,8 +85,10 @@ export default function Home() {
           </div>
 
           <div className="text-center space-y-3 p-6 rounded-3xl bg-gradient-to-br from-[#102440]/5 to-[#e7c277]/5 border border-[#e7c277]/20">
-            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[#102440] text-white text-2xl mx-auto">
-              🌿
+            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[#102440] mx-auto">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
             </div>
             <h3 className="font-bold text-xl">Kampung Herbal</h3>
             <p className="text-sm text-slate-600">
@@ -91,8 +97,10 @@ export default function Home() {
           </div>
 
           <div className="text-center space-y-3 p-6 rounded-3xl bg-gradient-to-br from-[#102440]/5 to-[#e7c277]/5 border border-[#e7c277]/20">
-            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[#102440] text-white text-2xl mx-auto">
-              🏆
+            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[#102440] mx-auto">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
             </div>
             <h3 className="font-bold text-xl">Berprestasi</h3>
             <p className="text-sm text-slate-600">
@@ -103,8 +111,9 @@ export default function Home() {
       </section>
 
       {/* KEARIFAN LOKAL */}
-      <section className="bg-gradient-to-br from-[#102440]/5 to-white py-20">
-        <div className="max-w-6xl mx-auto px-6 space-y-12">
+      <section className="relative bg-gradient-to-br from-[#102440]/5 to-white py-20">
+        <BackgroundPattern variant="leaves" opacity={0.04} className="text-[#102440]" />
+        <div className="relative max-w-6xl mx-auto px-6 space-y-12">
           <div className="text-center space-y-4">
             <h2 className="text-3xl md:text-4xl font-bold">Kearifan Lokal & Budaya</h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
@@ -114,13 +123,47 @@ export default function Home() {
 
           <div className="grid md:grid-cols-4 gap-6">
             {[
-              { icon: "🎭", title: "Ritual Nyura", desc: "Tradisi budaya leluhur" },
-              { icon: "🎪", title: "Festival Safar", desc: "Perayaan tradisional" },
-              { icon: "🥋", title: "Pencak Silat", desc: "Seni bela diri tradisional" },
-              { icon: "🎵", title: "Musik Tradisional", desc: "Jaipong dan gamelan" },
+              {
+                title: "Ritual Nyura",
+                desc: "Tradisi budaya leluhur",
+                svg: (
+                  <svg className="w-10 h-10 text-[#102440]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                  </svg>
+                )
+              },
+              {
+                title: "Festival Safar",
+                desc: "Perayaan tradisional",
+                svg: (
+                  <svg className="w-10 h-10 text-[#102440]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                  </svg>
+                )
+              },
+              {
+                title: "Pencak Silat",
+                desc: "Seni bela diri tradisional",
+                svg: (
+                  <svg className="w-10 h-10 text-[#102440]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                )
+              },
+              {
+                title: "Musik Tradisional",
+                desc: "Jaipong dan gamelan",
+                svg: (
+                  <svg className="w-10 h-10 text-[#102440]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                  </svg>
+                )
+              },
             ].map((item, i) => (
               <div key={i} className="text-center space-y-3 p-6 rounded-2xl bg-white shadow-sm hover:shadow-md transition">
-                <div className="text-4xl">{item.icon}</div>
+                <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[#e7c277]/10 mx-auto">
+                  {item.svg}
+                </div>
                 <h4 className="font-semibold">{item.title}</h4>
                 <p className="text-sm text-slate-600">{item.desc}</p>
               </div>
@@ -148,7 +191,7 @@ export default function Home() {
             <Link key={w.slug} href={`/wisata/${w.slug}`}>
               <div className="group rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-[#e7c277]/20">
                 <div className="relative">
-                  <img
+                  <ImageWithSkeleton
                     src={assetUrl(w.cover)}
                     alt={w.title}
                     className="h-56 w-full object-cover group-hover:scale-105 transition duration-300"
@@ -170,8 +213,9 @@ export default function Home() {
       </section>
 
       {/* KAMPUNG HERBAL */}
-      <section className="bg-gradient-to-br from-green-50 to-white py-20">
-        <div className="max-w-6xl mx-auto px-6 space-y-8">
+      <section className="relative bg-gradient-to-br from-green-50 to-white py-20">
+        <BackgroundPattern variant="leaves" opacity={0.03} className="text-green-600" />
+        <div className="relative max-w-6xl mx-auto px-6 space-y-8">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             <div>
               <h2 className="text-3xl font-bold">Kampung Herbal Bantaragung</h2>
@@ -188,7 +232,7 @@ export default function Home() {
             {herbal.map((h: any) => (
               <Link key={h.slug} href={`/b2h/katalog/${h.slug}`}>
                 <div className="group rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-green-200">
-                  <img
+                  <ImageWithSkeleton
                     src={assetUrl(h.cover)}
                     alt={h.name}
                     className="h-48 w-full object-cover group-hover:scale-105 transition duration-300"
@@ -254,7 +298,7 @@ export default function Home() {
             {articles.map((a: any) => (
               <Link key={a.slug} href={`/bic/artikel/${a.slug}`}>
                 <div className="group rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white">
-                  <img
+                  <ImageWithSkeleton
                     src={assetUrl(a.cover)}
                     alt={a.title}
                     className="h-48 w-full object-cover group-hover:scale-105 transition duration-300"
