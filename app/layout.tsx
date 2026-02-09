@@ -9,6 +9,7 @@ export const metadata: Metadata = (() => {
   const seo = getSeoSettings();
 
   return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://visitbantaragung.com'),
     title: {
       default: seo.defaultTitle,
       template: seo.titleTemplate,
