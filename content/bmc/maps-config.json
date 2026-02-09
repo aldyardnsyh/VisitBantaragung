@@ -1,0 +1,200 @@
+{
+    "categories": [
+        {
+            "id": "rw",
+            "name": "Peta Wilayah RW",
+            "description": "Peta pembagian wilayah RW (Rukun Warga) Desa Bantaragung",
+            "icon": "🗺️",
+            "maps": [
+                {
+                    "id": "rw-01",
+                    "title": "Peta RW 01",
+                    "image": "bmc/peta/rw/RW01.png",
+                    "description": "Peta wilayah Rukun Warga 01"
+                },
+                {
+                    "id": "rw-02",
+                    "title": "Peta RW 02",
+                    "image": "bmc/peta/rw/RW02.png",
+                    "description": "Peta wilayah Rukun Warga 02"
+                },
+                {
+                    "id": "rw-03",
+                    "title": "Peta RW 03",
+                    "image": "bmc/peta/rw/RW03.png",
+                    "description": "Peta wilayah Rukun Warga 03"
+                },
+                {
+                    "id": "rw-04",
+                    "title": "Peta RW 04",
+                    "image": "bmc/peta/rw/RW04.png",
+                    "description": "Peta wilayah Rukun Warga 04"
+                },
+                {
+                    "id": "rw-05",
+                    "title": "Peta RW 05",
+                    "image": "bmc/peta/rw/RW05.png",
+                    "description": "Peta wilayah Rukun Warga 05"
+                },
+                {
+                    "id": "rw-06",
+                    "title": "Peta RW 06",
+                    "image": "bmc/peta/rw/RW06.png",
+                    "description": "Peta wilayah Rukun Warga 06"
+                },
+                {
+                    "id": "rw-07",
+                    "title": "Peta RW 07",
+                    "image": "bmc/peta/rw/RW07.png",
+                    "description": "Peta wilayah Rukun Warga 07"
+                },
+                {
+                    "id": "rw-08",
+                    "title": "Peta RW 08",
+                    "image": "bmc/peta/rw/RW08.png",
+                    "description": "Peta wilayah Rukun Warga 08"
+                },
+                {
+                    "id": "rw-09",
+                    "title": "Peta RW 09",
+                    "image": "bmc/peta/rw/RW09.png",
+                    "description": "Peta wilayah Rukun Warga 09"
+                },
+                {
+                    "id": "rw-10",
+                    "title": "Peta RW 10",
+                    "image": "bmc/peta/rw/RW10.png",
+                    "description": "Peta wilayah Rukun Warga 10"
+                },
+                {
+                    "id": "rw-11",
+                    "title": "Peta RW 11",
+                    "image": "bmc/peta/rw/RW11.png",
+                    "description": "Peta wilayah Rukun Warga 11"
+                }
+            ]
+        },
+        {
+            "id": "wisata",
+            "name": "Peta Wisata",
+            "description": "Peta lokasi destinasi wisata di Desa Bantaragung",
+            "icon": "🏞️",
+            "maps": [
+                {
+                    "id": "wisata-main",
+                    "title": "Peta Wisata Bantaragung",
+                    "image": "bmc/peta/wisata/PETA_WISATA.png",
+                    "description": "Peta sebaran lokasi wisata di Desa Bantaragung"
+                }
+            ]
+        },
+        {
+            "id": "longsor",
+            "name": "Peta Titik Longsor",
+            "description": "Peta sebaran titik rawan longsor untuk mitigasi bencana",
+            "icon": "⚠️",
+            "maps": [
+                {
+                    "id": "longsor-main",
+                    "title": "Peta Sebaran Titik Longsor",
+                    "image": "bmc/peta/longsor/PETA_SEBARAN_TITIK_LONGSOR.png",
+                    "description": "Peta titik-titik rawan longsor di Desa Bantaragung"
+                }
+            ]
+        },
+        {
+            "id": "homestay",
+            "name": "Peta Homestay",
+            "description": "Peta lokasi homestay untuk wisatawan",
+            "icon": "🏠",
+            "maps": [
+                {
+                    "id": "homestay-01",
+                    "title": "Peta Homestay Area 1",
+                    "image": "bmc/peta/homestay/PETA_HOMESTAY_01.png",
+                    "description": "Peta sebaran homestay area 1"
+                },
+                {
+                    "id": "homestay-02",
+                    "title": "Peta Homestay Area 2",
+                    "image": "bmc/peta/homestay/PETA_HOMESTAY_02.png",
+                    "description": "Peta sebaran homestay area 2"
+                }
+            ]
+        },
+        {
+            "id": "umkm",
+            "name": "Peta UMKM",
+            "description": "Peta lokasi UMKM di Desa Bantaragung",
+            "icon": "🏪",
+            "maps": [
+                {
+                    "id": "umkm-main",
+                    "title": "Peta UMKM Bantaragung",
+                    "image": "bmc/peta/umkm/PETA_UMKM.png",
+                    "description": "Peta sebaran UMKM di Desa Bantaragung"
+                }
+            ]
+        },
+        {
+            "id": "imap",
+            "name": "Peta IMAP PUPR",
+            "description": "Peta infrastruktur dari IMAP PUPR",
+            "icon": "🏗️",
+            "maps": [
+                {
+                    "id": "imap-main",
+                    "title": "Peta IMAP PUPR",
+                    "image": "bmc/peta/imap/PETA_IMAP_PUPR.png",
+                    "description": "Peta infrastruktur IMAP PUPR Desa Bantaragung"
+                }
+            ]
+        },
+        {
+            "id": "dusun",
+            "name": "Peta Dusun",
+            "description": "Peta pembagian wilayah dusun",
+            "icon": "🏘️",
+            "maps": [
+                {
+                    "id": "dusun-tirtawana",
+                    "title": "Peta Dusun Tirtawana",
+                    "image": "bmc/peta/dusun/DUSUN_TIRTAWANA.png",
+                    "description": "Peta wilayah Dusun Tirtawana"
+                },
+                {
+                    "id": "dusun-pasirayu",
+                    "title": "Peta Dusun Pasirayu",
+                    "image": "bmc/peta/dusun/DUSUN_PASIRAYU.png",
+                    "description": "Peta wilayah Dusun Pasirayu"
+                },
+                {
+                    "id": "dusun-mertasela",
+                    "title": "Peta Dusun Mertasela",
+                    "image": "bmc/peta/dusun/DUSUN_MERTASELA.png",
+                    "description": "Peta wilayah Dusun Mertasela"
+                },
+                {
+                    "id": "dusun-lokapraja",
+                    "title": "Peta Dusun Lokapraja",
+                    "image": "bmc/peta/dusun/DUSUN_LOKAPRAJA.png",
+                    "description": "Peta wilayah Dusun Lokapraja"
+                }
+            ]
+        },
+        {
+            "id": "informasi",
+            "name": "Papan Informasi",
+            "description": "Peta papan informasi desa",
+            "icon": "ℹ️",
+            "maps": [
+                {
+                    "id": "info-main",
+                    "title": "Papan Informasi Desa",
+                    "image": "bmc/peta/informasi/PAPAN_INFORMASI.png",
+                    "description": "Peta papan informasi Desa Bantaragung"
+                }
+            ]
+        }
+    ]
+}

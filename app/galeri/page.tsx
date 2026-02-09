@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { assetUrl } from "@/lib/asset";
 import Link from "next/link";
+import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";
+import BackgroundPattern from "@/app/components/ui/BackgroundPattern";
 
-// Sample gallery data - will be replaced with actual photos
+// Sample gallery data - using placeholders
 const galleryItems = [
     { id: 1, title: "Keberangkatan KKN", image: "galeri/keberangkatan.png", size: "large" },
     { id: 2, title: "Penyambutan di Desa", image: "galeri/penyambutan.png", size: "medium" },
@@ -43,7 +45,6 @@ export default function GaleriPage() {
         }
     };
 
-    // Handle keyboard navigation
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === "Escape") closeLightbox();
         if (e.key === "ArrowLeft") goToPrevious();
@@ -52,21 +53,26 @@ export default function GaleriPage() {
 
     return (
         <main className="min-h-screen">
-            {/* HERO */}
-            <section className="relative overflow-hidden bg-gradient-to-br from-[#102440] via-[#1b3b6f] to-[#102440] text-white py-20">
-                <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-0 right-0 h-64 w-64 rounded-full bg-white/20 blur-3xl" />
-                    <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-[#e7c277]/20 blur-3xl" />
+            {/* HERO with Background Image */}
+            <section className="relative overflow-hidden min-h-[500px] flex items-center">
+                {/* Background Image - Penerjunan.png */}
+                <div className="absolute inset-0">
+                    <img
+                        src={assetUrl("galeri/Penerjunan.png")}
+                        alt="Penerjunan KKN"
+                        className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40" />
                 </div>
 
-                <div className="relative max-w-6xl mx-auto px-6 text-center space-y-6">
-                    <div className="inline-flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-sm px-4 py-1 text-xs uppercase tracking-widest">
+                <div className="relative max-w-6xl mx-auto px-6 text-white space-y-6 py-20">
+                    <div className="inline-flex items-center gap-2 rounded-full badge-dark backdrop-blur-sm px-4 py-1 text-xs uppercase tracking-widest">
                         KKN-PPM UGM Periode IV 2025
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold">
                         Galeri Kegiatan KKN
                     </h1>
-                    <p className="text-lg opacity-90 max-w-3xl mx-auto">
+                    <p className="text-lg opacity-90 max-w-3xl">
                         Simfoni Sindangwangi
                     </p>
                 </div>
@@ -74,8 +80,9 @@ export default function GaleriPage() {
 
             {/* PROGRAM INFO */}
             <section className="max-w-6xl mx-auto px-6 py-16 space-y-8">
-                <div className="bg-gradient-to-br from-[#102440]/5 to-[#e7c277]/5 rounded-3xl p-8 md:p-12 border border-[#e7c277]/20">
-                    <div className="space-y-6">
+                <div className="relative bg-gradient-to-br from-[#102440]/5 to-[#e7c277]/5 rounded-3xl p-8 md:p-12 border border-[#e7c277]/20">
+                    <BackgroundPattern variant="subtle" opacity={0.02} className="text-[#102440]" />
+                    <div className="relative space-y-6">
                         <div>
                             <h2 className="text-2xl md:text-3xl font-bold mb-4">Tema Program KKN</h2>
                             <p className="text-lg text-slate-700 leading-relaxed">
@@ -87,8 +94,11 @@ export default function GaleriPage() {
 
                         <div className="grid md:grid-cols-2 gap-6 pt-4">
                             <div className="flex items-start gap-3">
-                                <div className="flex-shrink-0 h-10 w-10 rounded-full bg-[#102440] text-white flex items-center justify-center text-xl">
-                                    📍
+                                <div className="flex-shrink-0 h-10 w-10 rounded-full bg-[#102440] text-white flex items-center justify-center">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
                                 </div>
                                 <div>
                                     <h3 className="font-semibold text-lg mb-1">Lokasi</h3>
@@ -100,8 +110,10 @@ export default function GaleriPage() {
                             </div>
 
                             <div className="flex items-start gap-3">
-                                <div className="flex-shrink-0 h-10 w-10 rounded-full bg-[#102440] text-white flex items-center justify-center text-xl">
-                                    👥
+                                <div className="flex-shrink-0 h-10 w-10 rounded-full bg-[#102440] text-white flex items-center justify-center">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
                                 </div>
                                 <div>
                                     <h3 className="font-semibold text-lg mb-1">Tim</h3>
@@ -134,7 +146,7 @@ export default function GaleriPage() {
                             onClick={() => openLightbox(index)}
                         >
                             <div className="relative overflow-hidden rounded-2xl shadow-md hover:shadow-xl transition-all duration-300">
-                                <img
+                                <ImageWithSkeleton
                                     src={assetUrl(item.image)}
                                     alt={item.title}
                                     className={`w-full object-cover group-hover:scale-105 transition-transform duration-300 ${item.size === "large"
@@ -163,7 +175,6 @@ export default function GaleriPage() {
                     onKeyDown={handleKeyDown}
                     tabIndex={0}
                 >
-                    {/* Close Button */}
                     <button
                         onClick={closeLightbox}
                         className="absolute top-4 right-4 text-white hover:text-[#e7c277] transition z-10"
@@ -173,7 +184,6 @@ export default function GaleriPage() {
                         </svg>
                     </button>
 
-                    {/* Previous Button */}
                     {selectedImage > 0 && (
                         <button
                             onClick={(e) => {
@@ -188,7 +198,6 @@ export default function GaleriPage() {
                         </button>
                     )}
 
-                    {/* Image */}
                     <div
                         className="max-w-5xl max-h-[90vh] mx-4"
                         onClick={(e) => e.stopPropagation()}
@@ -206,7 +215,6 @@ export default function GaleriPage() {
                         </div>
                     </div>
 
-                    {/* Next Button */}
                     {selectedImage < galleryItems.length - 1 && (
                         <button
                             onClick={(e) => {
@@ -259,6 +267,56 @@ export default function GaleriPage() {
                                 className="h-24 w-auto object-contain"
                             />
                             <p className="text-sm text-slate-600 font-medium">Simfoni Sindangwangi</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* SPONSOR SECTION */}
+            <section className="bg-white py-16 border-t border-slate-200">
+                <div className="max-w-6xl mx-auto px-6">
+                    <div className="text-center mb-12">
+                        <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                            Sponsor & Mitra
+                        </h2>
+                        <p className="text-slate-600">Terima kasih atas dukungan dan kerjasamanya</p>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+                        <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-slate-50 hover:bg-slate-100 transition">
+                            <div className="h-20 w-full flex items-center justify-center">
+                                <div className="text-center">
+                                    <p className="font-bold text-lg text-[#102440]">CIMB Niaga</p>
+                                    <p className="text-xs text-slate-500 mt-1">Bank Partner</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-slate-50 hover:bg-slate-100 transition">
+                            <div className="h-20 w-full flex items-center justify-center">
+                                <div className="text-center">
+                                    <p className="font-bold text-lg text-[#102440]">Pupuk Kaltim</p>
+                                    <p className="text-xs text-slate-500 mt-1">Industry Partner</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-slate-50 hover:bg-slate-100 transition">
+                            <div className="h-20 w-full flex items-center justify-center">
+                                <div className="text-center">
+                                    <p className="font-bold text-sm text-[#102440]">Kaltim Methanol Industri</p>
+                                    <p className="text-xs text-slate-500 mt-1">Industry Partner</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-slate-50 hover:bg-slate-100 transition">
+                            <div className="h-20 w-full flex items-center justify-center">
+                                <div className="text-center">
+                                    <p className="font-bold text-lg text-[#102440]">Spesial Sambal SS</p>
+                                    <p className="text-xs text-slate-500 mt-1">UMKM Partner</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getHomestayBySlug } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
 
@@ -7,6 +8,14 @@ export default async function HomestayDetail({ params }: { params: Promise<{ slu
 
     return (
         <main className="max-w-5xl mx-auto px-6 py-16 space-y-12">
+
+            {/* Back Navigation */}
+            <Link
+                href="/bdb/homestay"
+                className="inline-flex items-center gap-2 text-[#102440] hover:text-[#e7c277] transition"
+            >
+                ← Kembali ke Daftar Homestay
+            </Link>
 
             <section className="space-y-5">
                 <div className="inline-flex items-center gap-2 rounded-full bg-[#102440]/10 px-4 py-1 text-xs uppercase tracking-widest text-[#e7c277]">
@@ -29,7 +38,10 @@ export default async function HomestayDetail({ params }: { params: Promise<{ slu
                 </div>
                 {data.address && (
                     <div className="flex items-start gap-2 text-sm text-slate-600">
-                        <span className="text-[#e7c277]">📍</span>
+                        <svg className="w-4 h-4 mt-0.5 text-[#e7c277]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
                         <span>{data.address}</span>
                     </div>
                 )}

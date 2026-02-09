@@ -18,6 +18,14 @@ export default async function HerbalList({
   return (
     <main className="max-w-6xl mx-auto px-6 py-16 space-y-12">
 
+      {/* Back Navigation */}
+      <Link
+        href="/b2h"
+        className="inline-flex items-center gap-2 text-[#102440] hover:text-[#e7c277] transition"
+      >
+        ← Kembali ke B2H
+      </Link>
+
       {/* Header */}
       <section className="rounded-3xl bg-gradient-to-br from-[#102440] to-[#1b3b6f] text-white p-10 md:p-12 space-y-4 shadow-lg">
         <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1 text-xs uppercase tracking-widest">
@@ -64,11 +72,10 @@ export default async function HerbalList({
       <nav className="flex flex-wrap items-center justify-center gap-2 text-sm">
         <Link
           href={`/b2h/katalog?page=${Math.max(1, safePage - 1)}`}
-          className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${
-            safePage === 1
+          className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${safePage === 1
               ? "pointer-events-none text-slate-400"
               : "text-[#102440] hover:bg-[#102440]/10"
-          }`}
+            }`}
         >
           ← Sebelumnya
         </Link>
@@ -77,11 +84,10 @@ export default async function HerbalList({
           <Link
             key={page}
             href={`/b2h/katalog?page=${page}`}
-            className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${
-              page === safePage
+            className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${page === safePage
                 ? "bg-[#102440] text-white"
                 : "text-[#102440] hover:bg-[#102440]/10"
-            }`}
+              }`}
           >
             {page}
           </Link>
@@ -89,11 +95,10 @@ export default async function HerbalList({
 
         <Link
           href={`/b2h/katalog?page=${Math.min(totalPages, safePage + 1)}`}
-          className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${
-            safePage === totalPages
+          className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${safePage === totalPages
               ? "pointer-events-none text-slate-400"
               : "text-[#102440] hover:bg-[#102440]/10"
-          }`}
+            }`}
         >
           Berikutnya →
         </Link>

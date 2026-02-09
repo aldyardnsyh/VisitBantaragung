@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getAllArticles } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
+import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";
+import BackgroundPattern from "@/app/components/ui/BackgroundPattern";
 
 export default function BICLanding() {
   const articles = getAllArticles().slice(0, 3);
@@ -9,8 +11,9 @@ export default function BICLanding() {
     <main className="max-w-6xl mx-auto px-6 py-16 space-y-12">
 
       {/* Header */}
-      <section className="rounded-3xl bg-gradient-to-br from-[#102440] to-[#1b3b6f] text-white p-10 md:p-12 space-y-4 shadow-lg">
-        <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1 text-xs uppercase tracking-widest">
+      <section className="relative rounded-3xl bg-gradient-to-br from-[#102440] to-[#1b3b6f] text-white p-10 md:p-12 space-y-4 shadow-lg">
+        <BackgroundPattern variant="subtle" opacity={0.05} className="text-white" />
+        <div className="inline-flex items-center gap-2 rounded-full badge-dark px-4 py-1 text-xs uppercase tracking-widest">
           Pusat Informasi
         </div>
         <h1 className="text-3xl md:text-4xl font-bold">
@@ -28,7 +31,7 @@ export default function BICLanding() {
           <Link key={a.slug} href={`/bic/artikel/${a.slug}`}>
             <article className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition border border-[#e7c277]/40">
               <div className="relative">
-                <img
+                <ImageWithSkeleton
                   src={assetUrl(a.cover)}
                   alt={a.title}
                   className="h-48 w-full object-cover group-hover:scale-105 transition duration-300"
