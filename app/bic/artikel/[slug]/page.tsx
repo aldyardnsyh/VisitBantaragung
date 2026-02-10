@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getArticleBySlug } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
+import Breadcrumb from "@/app/components/ui/Breadcrumb";
 import type { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -22,16 +23,11 @@ export default async function ArtikelDetail({ params }: { params: Promise<{ slug
     return (
         <main className="max-w-4xl mx-auto px-6 py-16 space-y-12">
 
-            {/* Back Navigation */}
-            <Link
-                href="/bic/artikel"
-                className="inline-flex items-center gap-2 text-[#102440] hover:text-[#e7c277] transition text-sm font-medium"
-            >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-                Kembali ke Daftar Artikel
-            </Link>
+            <Breadcrumb items={[
+                { label: "Pusat Informasi", href: "/bic" },
+                { label: "Artikel", href: "/bic/artikel" },
+                { label: data.title },
+            ]} />
 
             {/* Header */}
             <section className="space-y-5">

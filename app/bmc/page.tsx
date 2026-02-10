@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getMapsConfig } from "@/lib/content";
 import MapGalleryClient from "./MapGalleryClient";
 import BackgroundPattern from "@/app/components/ui/BackgroundPattern";
+import Breadcrumb from "@/app/components/ui/Breadcrumb";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,7 +15,7 @@ export default function BMCPage() {
 
   return (
     <main className="max-w-7xl mx-auto px-6 py-16 space-y-12">
-      {/* Header */}
+      <Breadcrumb items={[{ label: "Peta Digital" }]} />
       <section className="relative rounded-3xl bg-gradient-to-br from-[#102440] to-[#1b3b6f] text-white p-10 md:p-12 space-y-4 shadow-lg">
         <BackgroundPattern variant="geometric" opacity={0.04} className="text-white" />
         <div className="inline-flex items-center gap-2 rounded-full badge-dark px-4 py-1 text-xs uppercase tracking-widest">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 interface ImageWithSkeletonProps {
     src: string;
@@ -17,6 +17,7 @@ export default function ImageWithSkeleton({
 }: ImageWithSkeletonProps) {
     const [isLoaded, setIsLoaded] = useState(false);
     const [hasError, setHasError] = useState(false);
+    const imgRef = useRef<HTMLImageElement>(null);
 
     const aspectRatioClasses = {
         square: "aspect-square",
@@ -24,6 +25,29 @@ export default function ImageWithSkeleton({
         portrait: "aspect-[3/4]",
         auto: "",
     };
+
+    // Handle cached images: if the browser already loaded the image
+    // before React attached onLoad, we detect it here via img.complete
+    useEffect(() => {
+        const img = imgRef.current;
+        if (img && img.complete && img.naturalWidth > 0) {
+            setIsLoaded(true);
+        }
+    }, [src]);
+
+    // Reset states when src changes
+    useEffect(() => {
+        setIsLoaded(false);
+        setHasError(false);
+    }, [src]);
+
+    const handleLoad = useCallback(() => {
+        setIsLoaded(true);
+    }, []);
+
+    const handleError = useCallback(() => {
+        setHasError(true);
+    }, []);
 
     return (
         <div className={`relative overflow-hidden ${className}`}>
@@ -40,12 +64,13 @@ export default function ImageWithSkeleton({
             {/* Actual Image */}
             {!hasError && (
                 <img
+                    ref={imgRef}
                     src={src}
                     alt={alt}
-                    className={`${className} transition-opacity duration-300 ${isLoaded ? "opacity-100" : "opacity-0"
+                    className={`w-full h-full object-cover transition-opacity duration-300 ${isLoaded ? "opacity-100" : "opacity-0"
                         }`}
-                    onLoad={() => setIsLoaded(true)}
-                    onError={() => setHasError(true)}
+                    onLoad={handleLoad}
+                    onError={handleError}
                 />
             )}
 
@@ -73,3 +98,4 @@ export default function ImageWithSkeleton({
         </div>
     );
 }
+

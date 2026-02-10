@@ -20,8 +20,8 @@ export default function Home() {
         "@type": "WebSite",
         "@id": `${process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.com"}/#website`,
         "url": process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.com",
-        "name": "Visit Bantaragung",
-        "description": "Platform Digital Wisata Desa Bantaragung - Jelajahi keindahan alam, kearifan lokal, dan potensi ekonomi kreatif.",
+        "name": "Desa Wisata Bantaragung",
+        "description": "Website resmi Desa Wisata Bantaragung – Wisata alam, edukasi, kampung herbal, dan potensi ekonomi kreatif di Majalengka, Jawa Barat.",
         "publisher": { "@id": `${process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.com"}/#organization` }
       },
       {

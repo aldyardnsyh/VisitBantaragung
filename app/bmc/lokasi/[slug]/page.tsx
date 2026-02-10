@@ -1,5 +1,6 @@
 import { getLocationBySlug } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
+import Breadcrumb from "@/app/components/ui/Breadcrumb";
 import type { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -18,6 +19,10 @@ export default async function LocationDetail({ params }: { params: Promise<{ slu
     return (
         <main className="max-w-5xl mx-auto px-6 py-16 space-y-12">
 
+            <Breadcrumb items={[
+                { label: "Peta Digital", href: "/bmc" },
+                { label: data.name },
+            ]} />
             <section className="space-y-5">
                 <div className="inline-flex items-center gap-2 rounded-full bg-[#102440]/10 px-4 py-1 text-xs uppercase tracking-widest text-[#e7c277]">
                     Lokasi {data.category}
@@ -85,6 +90,6 @@ export default async function LocationDetail({ params }: { params: Promise<{ slu
                 </div>
             </section>
 
-        </main>
+        </main >
     );
 }

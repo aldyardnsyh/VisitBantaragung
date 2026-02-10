@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getWisataBySlug } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
+import Breadcrumb from "@/app/components/ui/Breadcrumb";
 import type { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -21,10 +22,10 @@ export default async function WisataDetail({ params }: { params: Promise<{ slug:
 
             {/* Title */}
             <section className="space-y-6">
-                <Link href="/wisata" className="inline-flex items-center gap-2 text-sm text-[#e7c277] font-medium">
-                    <span aria-hidden>←</span>
-                    Kembali ke daftar wisata
-                </Link>
+                <Breadcrumb items={[
+                    { label: "Wisata", href: "/wisata" },
+                    { label: data.title },
+                ]} />
                 <div className="space-y-3">
                     <div className="inline-flex items-center gap-2 rounded-full bg-[#102440]/10 px-4 py-1 text-xs uppercase tracking-widest text-[#e7c277]">
                         Destinasi Wisata
