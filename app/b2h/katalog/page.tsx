@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { getAllHerbal } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Katalog Tanaman Herbal",
+  description: "Daftar lengkap tanaman obat keluarga yang dibudidayakan di Kampung Herbal Bantaragung, Majalengka.",
+};
 
 export default async function HerbalList({
   searchParams,
@@ -73,8 +79,8 @@ export default async function HerbalList({
         <Link
           href={`/b2h/katalog?page=${Math.max(1, safePage - 1)}`}
           className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${safePage === 1
-              ? "pointer-events-none text-slate-400"
-              : "text-[#102440] hover:bg-[#102440]/10"
+            ? "pointer-events-none text-slate-400"
+            : "text-[#102440] hover:bg-[#102440]/10"
             }`}
         >
           ← Sebelumnya
@@ -85,8 +91,8 @@ export default async function HerbalList({
             key={page}
             href={`/b2h/katalog?page=${page}`}
             className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${page === safePage
-                ? "bg-[#102440] text-white"
-                : "text-[#102440] hover:bg-[#102440]/10"
+              ? "bg-[#102440] text-white"
+              : "text-[#102440] hover:bg-[#102440]/10"
               }`}
           >
             {page}
@@ -96,8 +102,8 @@ export default async function HerbalList({
         <Link
           href={`/b2h/katalog?page=${Math.min(totalPages, safePage + 1)}`}
           className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${safePage === totalPages
-              ? "pointer-events-none text-slate-400"
-              : "text-[#102440] hover:bg-[#102440]/10"
+            ? "pointer-events-none text-slate-400"
+            : "text-[#102440] hover:bg-[#102440]/10"
             }`}
         >
           Berikutnya →

@@ -1,5 +1,11 @@
 import { getAllArticles } from "@/lib/content";
 import ArtikelListClient from "./ArtikelListClient";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Semua Artikel",
+  description: "Kumpulan artikel kegiatan, edukasi, dan publikasi program pengembangan masyarakat Desa Bantaragung.",
+};
 
 export default function ArtikelList() {
   // Fetch data on the server

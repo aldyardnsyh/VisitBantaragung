@@ -3,6 +3,12 @@ import { getAllHomestay, getAllUMKM } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
 import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";
 import BackgroundPattern from "@/app/components/ui/BackgroundPattern";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Branding Desa (BDB)",
+  description: "Bantaragung Digital Branding – Katalog digital UMKM lokal, homestay, dan potensi ekonomi kreatif Desa Bantaragung, Majalengka.",
+};
 
 export default function BDBLanding() {
   const homestays = getAllHomestay().slice(0, 3);

@@ -3,6 +3,12 @@ import { getAllHomestay } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
 import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";
 import BackgroundPattern from "@/app/components/ui/BackgroundPattern";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Homestay Desa Bantaragung",
+  description: "Penginapan warga untuk pengalaman live-in di desa wisata Bantaragung. Nikmati suasana pedesaan dan kuliner lokal.",
+};
 
 export default async function HomestayList({
   searchParams,

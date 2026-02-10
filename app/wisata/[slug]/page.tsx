@@ -1,6 +1,16 @@
 import Link from "next/link";
 import { getWisataBySlug } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
+import type { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+    const data = getWisataBySlug(slug);
+    return {
+        title: data.title,
+        description: data.excerpt,
+    };
+}
 
 export default async function WisataDetail({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
