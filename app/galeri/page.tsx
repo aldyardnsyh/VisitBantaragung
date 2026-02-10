@@ -246,6 +246,8 @@ export default function GaleriPage() {
                             <img
                                 src={assetUrl("_brand/logo/LogoAlmamaterUgm.png")}
                                 alt="Logo UGM"
+                                loading="lazy"
+                                decoding="async"
                                 className="h-24 w-auto object-contain"
                             />
                             <p className="text-sm text-slate-600 font-medium">Universitas Gadjah Mada</p>
@@ -255,6 +257,8 @@ export default function GaleriPage() {
                             <img
                                 src={assetUrl("_brand/logo/LogoKknPpmUgm.png")}
                                 alt="Logo KKN-PPM UGM"
+                                loading="lazy"
+                                decoding="async"
                                 className="h-24 w-auto object-contain"
                             />
                             <p className="text-sm text-slate-600 font-medium">KKN-PPM UGM</p>
@@ -264,6 +268,8 @@ export default function GaleriPage() {
                             <img
                                 src={assetUrl("_brand/logo/LogoSimfoniSindangwangi.png")}
                                 alt="Logo Simfoni Sindangwangi"
+                                loading="lazy"
+                                decoding="async"
                                 className="h-24 w-auto object-contain"
                             />
                             <p className="text-sm text-slate-600 font-medium">Simfoni Sindangwangi</p>
@@ -291,6 +297,8 @@ export default function GaleriPage() {
                                 <img
                                     src={assetUrl("_brand/logo/LogoCimbNiaga.png")}
                                     alt="Logo CIMB Niaga"
+                                    loading="lazy"
+                                    decoding="async"
                                     className="max-h-20 max-w-full object-contain"
                                 />
                             </div>
@@ -302,6 +310,8 @@ export default function GaleriPage() {
                                 <img
                                     src={assetUrl("_brand/logo/LogoPupukKaltim.png")}
                                     alt="Logo Pupuk Kaltim"
+                                    loading="lazy"
+                                    decoding="async"
                                     className="max-h-20 max-w-full object-contain"
                                 />
                             </div>
@@ -313,6 +323,8 @@ export default function GaleriPage() {
                                 <img
                                     src={assetUrl("_brand/logo/LogoKaltimMethanolIndustri.png")}
                                     alt="Logo Kaltim Methanol Industri"
+                                    loading="lazy"
+                                    decoding="async"
                                     className="max-h-20 max-w-full object-contain"
                                 />
                             </div>
@@ -324,6 +336,8 @@ export default function GaleriPage() {
                                 <img
                                     src={assetUrl("_brand/logo/LogoSpesialSambal.png")}
                                     alt="Logo Spesial Sambal SS"
+                                    loading="lazy"
+                                    decoding="async"
                                     className="max-h-20 max-w-full object-contain"
                                 />
                             </div>

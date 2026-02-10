@@ -104,6 +104,7 @@ export default function Home() {
             src={assetUrl("_brand/covers/og-default.png")}
             alt="Desa Wisata Bantaragung"
             className="w-full h-full object-cover"
+            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
         </div>
