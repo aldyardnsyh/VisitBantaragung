@@ -150,10 +150,10 @@ export default function GaleriPage() {
                                     src={assetUrl(item.image)}
                                     alt={item.title}
                                     className={`w-full object-cover group-hover:scale-105 transition-transform duration-300 ${item.size === "large"
-                                            ? "h-80"
-                                            : item.size === "medium"
-                                                ? "h-64"
-                                                : "h-48"
+                                        ? "h-80"
+                                        : item.size === "medium"
+                                            ? "h-64"
+                                            : "h-48"
                                         }`}
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -276,57 +276,59 @@ export default function GaleriPage() {
             <section className="bg-white py-16 border-t border-slate-200">
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="text-center mb-12">
+                        <div className="inline-flex items-center gap-2 rounded-full bg-[#102440]/10 px-4 py-1 text-xs uppercase tracking-widest text-[#e7c277] mb-4">
+                            Special Thanks
+                        </div>
                         <h2 className="text-2xl md:text-3xl font-bold mb-2">
-                            Sponsor & Mitra
+                            Sponsor &amp; Mitra
                         </h2>
-                        <p className="text-slate-600">Terima kasih atas dukungan dan kerjasamanya</p>
+                        <p className="text-slate-600">Terima kasih atas dukungan dan kerjasama yang telah diberikan</p>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-                        <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-slate-50 hover:bg-slate-100 transition">
-                            <div className="h-20 w-full flex items-center justify-center">
-                                <div className="text-center">
-                                    <p className="font-bold text-lg text-[#102440]">CIMB Niaga</p>
-                                    <p className="text-xs text-slate-500 mt-1">Bank Partner</p>
-                                </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+                        <div className="flex flex-col items-center gap-4 p-6 rounded-2xl bg-slate-50 hover:bg-slate-100 hover:shadow-md transition-all duration-300">
+                            <div className="h-24 w-full flex items-center justify-center">
+                                <img
+                                    src={assetUrl("_brand/logo/LogoCimbNiaga.png")}
+                                    alt="Logo CIMB Niaga"
+                                    className="max-h-20 max-w-full object-contain"
+                                />
                             </div>
+                            <p className="text-sm font-semibold text-[#102440] text-center">CIMB Niaga</p>
                         </div>
 
-                        <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-slate-50 hover:bg-slate-100 transition">
-                            <div className="h-20 w-full flex items-center justify-center">
-                                <div className="text-center">
-                                    <p className="font-bold text-lg text-[#102440]">Pupuk Kaltim</p>
-                                    <p className="text-xs text-slate-500 mt-1">Industry Partner</p>
-                                </div>
+                        <div className="flex flex-col items-center gap-4 p-6 rounded-2xl bg-slate-50 hover:bg-slate-100 hover:shadow-md transition-all duration-300">
+                            <div className="h-24 w-full flex items-center justify-center">
+                                <img
+                                    src={assetUrl("_brand/logo/LogoPupukKaltim.png")}
+                                    alt="Logo Pupuk Kaltim"
+                                    className="max-h-20 max-w-full object-contain"
+                                />
                             </div>
+                            <p className="text-sm font-semibold text-[#102440] text-center">Pupuk Kaltim</p>
                         </div>
 
-                        <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-slate-50 hover:bg-slate-100 transition">
-                            <div className="h-20 w-full flex items-center justify-center">
-                                <div className="text-center">
-                                    <p className="font-bold text-sm text-[#102440]">Kaltim Methanol Industri</p>
-                                    <p className="text-xs text-slate-500 mt-1">Industry Partner</p>
-                                </div>
+                        <div className="flex flex-col items-center gap-4 p-6 rounded-2xl bg-slate-50 hover:bg-slate-100 hover:shadow-md transition-all duration-300">
+                            <div className="h-24 w-full flex items-center justify-center">
+                                <img
+                                    src={assetUrl("_brand/logo/LogoKaltimMethanolIndustri.png")}
+                                    alt="Logo Kaltim Methanol Industri"
+                                    className="max-h-20 max-w-full object-contain"
+                                />
                             </div>
+                            <p className="text-sm font-semibold text-[#102440] text-center">Kaltim Methanol Industri</p>
                         </div>
 
-                        <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-slate-50 hover:bg-slate-100 transition">
-                            <div className="h-20 w-full flex items-center justify-center">
-                                <div className="text-center">
-                                    <p className="font-bold text-lg text-[#102440]">Spesial Sambal SS</p>
-                                    <p className="text-xs text-slate-500 mt-1">UMKM Partner</p>
-                                </div>
+                        <div className="flex flex-col items-center gap-4 p-6 rounded-2xl bg-slate-50 hover:bg-slate-100 hover:shadow-md transition-all duration-300">
+                            <div className="h-24 w-full flex items-center justify-center">
+                                <img
+                                    src={assetUrl("_brand/logo/LogoSpesialSambal.png")}
+                                    alt="Logo Spesial Sambal SS"
+                                    className="max-h-20 max-w-full object-contain"
+                                />
                             </div>
+                            <p className="text-sm font-semibold text-[#102440] text-center">Spesial Sambal SS</p>
                         </div>
-                    </div>
-
-                    <div className="mt-12 text-center">
-                        <Link
-                            href="/"
-                            className="inline-flex items-center gap-2 text-[#e7c277] font-medium hover:underline"
-                        >
-                            ← Kembali ke Beranda
-                        </Link>
                     </div>
                 </div>
             </section>

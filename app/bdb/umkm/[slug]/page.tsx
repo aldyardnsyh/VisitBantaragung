@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getUMKMBySlug } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
+import Breadcrumb from "@/app/components/ui/Breadcrumb";
 import type { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -19,13 +20,11 @@ export default async function UMKMDetail({ params }: { params: Promise<{ slug: s
   return (
     <main className="max-w-5xl mx-auto px-6 py-16 space-y-12">
 
-      {/* Back Navigation */}
-      <Link
-        href="/bdb/umkm"
-        className="inline-flex items-center gap-2 text-[#102440] hover:text-[#e7c277] transition"
-      >
-        ← Kembali ke Daftar UMKM
-      </Link>
+      <Breadcrumb items={[
+        { label: "Branding Desa", href: "/bdb" },
+        { label: "UMKM", href: "/bdb/umkm" },
+        { label: data.name },
+      ]} />
 
       <section className="space-y-5">
         <div className="inline-flex items-center gap-2 rounded-full bg-[#102440]/10 px-4 py-1 text-xs uppercase tracking-widest text-[#e7c277]">

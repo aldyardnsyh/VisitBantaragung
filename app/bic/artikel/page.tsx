@@ -1,5 +1,6 @@
 import { getAllArticles } from "@/lib/content";
 import ArtikelListClient from "./ArtikelListClient";
+import Breadcrumb from "@/app/components/ui/Breadcrumb";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,7 +14,10 @@ export default function ArtikelList() {
 
   return (
     <main className="max-w-6xl mx-auto px-6 py-16 space-y-12">
-      {/* Header */}
+      <Breadcrumb items={[
+        { label: "Pusat Informasi", href: "/bic" },
+        { label: "Artikel" },
+      ]} />
       <section className="rounded-3xl bg-gradient-to-br from-[#102440] to-[#1b3b6f] text-white p-10 md:p-12 space-y-4 shadow-lg">
         <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1 text-xs uppercase tracking-widest">
           Publikasi Desa
