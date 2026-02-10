@@ -96,24 +96,6 @@ export default async function HomestayDetail({ params }: { params: Promise<{ slu
                 </div>
             </section>
 
-            {/* Gallery */}
-            <section className="space-y-4">
-                <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-xl">Galeri Homestay</h3>
-                    <span className="text-sm text-slate-500">{data.gallery.length} foto</span>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {data.gallery.map((g: string) => (
-                        <img
-                            key={g}
-                            src={assetUrl(g)}
-                            alt=""
-                            className="h-40 w-full object-cover rounded-2xl"
-                        />
-                    ))}
-                </div>
-            </section>
-
             {/* CTA */}
             <section className="bg-[#0b1a2f] text-white rounded-3xl p-10 text-center space-y-4 shadow-lg">
                 <h3 className="text-2xl font-semibold">Booking Homestay</h3>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { assetUrl } from "@/lib/asset";
+import VisitorCounter from "@/app/components/ui/VisitorCounter";
 import {
   getAllWisata,
   getAllHerbal,
@@ -110,6 +111,8 @@ export default function Home() {
               Lihat Peta Digital
             </Link>
           </div>
+
+          <VisitorCounter />
         </div>
       </section>
 
