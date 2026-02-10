@@ -22,13 +22,15 @@ export default function Home() {
         "@id": `${process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.com"}/#website`,
         "url": process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.com",
         "name": "Desa Wisata Bantaragung",
-        "description": "Website resmi Desa Wisata Bantaragung – Wisata alam, edukasi, kampung herbal, dan potensi ekonomi kreatif di Majalengka, Jawa Barat.",
+        "description": "Website resmi Desa Wisata Bantaragung di kaki Gunung Ciremai, Kecamatan Sindangwangi, Kabupaten Majalengka, Jawa Barat. Peraih penghargaan Surga Tersembunyi Terpopuler API 2017 dan 75 Besar ADWI 2023.",
+        "inLanguage": "id-ID",
         "publisher": { "@id": `${process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.com"}/#organization` }
       },
       {
         "@type": "Organization",
         "@id": `${process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.com"}/#organization`,
-        "name": "Desa Wisata Bantaragung",
+        "name": "Pokdarwis Desa Wisata Bantaragung",
+        "alternateName": "Kelompok Sadar Wisata Bantaragung",
         "url": process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.com",
         "logo": {
           "@type": "ImageObject",
@@ -51,14 +53,38 @@ export default function Home() {
       {
         "@type": "TouristDestination",
         "name": "Desa Wisata Bantaragung",
-        "description": "Desa wisata di kaki Gunung Ciremai dengan atraksi alam Ciboer Pass, Curug Cipeuteuy, dan Terasering Panyaweuyan.",
+        "alternateName": ["Visit Bantaragung", "Bantaragung Village"],
+        "description": "Desa wisata di kaki Gunung Ciremai, Kecamatan Sindangwangi, Kabupaten Majalengka, Jawa Barat, pada ketinggian 500–800 mdpl dengan luas 392,29 hektar dan populasi sekitar 3.953 jiwa. Menawarkan wisata alam, edukasi, budaya, kampung herbal, dan kuliner tradisional. Berdiri sejak tahun 1200-an, dikembangkan sebagai desa wisata profesional sejak 2016. Peraih penghargaan Surga Tersembunyi Terpopuler Anugerah Pesona Indonesia (API) 2017 dan 75 Besar Anugerah Desa Wisata Indonesia (ADWI) 2023.",
         "url": process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.com",
+        "touristType": ["Wisata Alam", "Wisata Edukasi", "Wisata Budaya", "Agrowisata"],
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": -6.8235,
+          "longitude": 108.3112,
+          "elevation": "500-800 mdpl"
+        },
         "address": {
           "@type": "PostalAddress",
-          "addressLocality": "Majalengka",
-          "addressRegion": "Jawa Barat",
+          "streetAddress": "Desa Bantaragung",
+          "addressLocality": "Sindangwangi",
+          "addressRegion": "Majalengka, Jawa Barat",
+          "postalCode": "45461",
           "addressCountry": "ID"
-        }
+        },
+        "containsPlace": [
+          { "@type": "TouristAttraction", "name": "Ciboer Pass (Terasering Sawah)" },
+          { "@type": "TouristAttraction", "name": "Curug Cipeuteuy" },
+          { "@type": "TouristAttraction", "name": "Teras Bumi Pakuwon" },
+          { "@type": "TouristAttraction", "name": "Bukit Batu Semar" },
+          { "@type": "TouristAttraction", "name": "Bumi Perkemahan Awilega" },
+          { "@type": "TouristAttraction", "name": "Kampung Herbal Mertasela" },
+          { "@type": "TouristAttraction", "name": "Batu Asahan" },
+          { "@type": "TouristAttraction", "name": "Puncak Pasir Cariuk" }
+        ],
+        "award": [
+          "Surga Tersembunyi Terpopuler – Anugerah Pesona Indonesia (API) 2017",
+          "75 Besar Anugerah Desa Wisata Indonesia (ADWI) 2023"
+        ]
       }
     ]
   };

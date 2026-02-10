@@ -60,18 +60,28 @@ export const metadata: Metadata = (() => {
       'homestay desa wisata',
       'umkm bantaragung',
       'umkm majalengka',
-      // Penghargaan
+      // Penghargaan & profil
       'adwi 2023',
       'anugerah desa wisata indonesia',
       '75 besar adwi 2023',
+      'surga tersembunyi terpopuler',
+      'anugerah pesona indonesia 2017',
+      'pokdarwis bantaragung',
+      'gunung ciremai majalengka',
       // Umum
       'wisata edukasi jawa barat',
       'desa wisata digital',
       'pariwisata majalengka',
       'peta digital desa',
+      'bukit batu semar',
+      'batu asahan bantaragung',
+      'langit binuang',
     ],
     alternates: {
       canonical: process.env.NEXT_PUBLIC_SITE_URL || 'https://visitbantaragung.com',
+    },
+    icons: {
+      icon: '/favicon.ico',
     },
     openGraph: {
       title: seo.defaultTitle,
