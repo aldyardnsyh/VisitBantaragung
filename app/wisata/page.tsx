@@ -3,6 +3,12 @@ import { getAllWisata } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
 import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";
 import BackgroundPattern from "@/app/components/ui/BackgroundPattern";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Wisata Alam & Edukasi",
+  description: "Jelajahi destinasi wisata alam dan edukasi terbaik di Desa Bantaragung, Majalengka. Ciboer Pass, Curug Cipeuteuy, Terasering Panyaweuyan, dan lainnya.",
+};
 
 export default async function WisataPage({
   searchParams,
@@ -71,8 +77,8 @@ export default async function WisataPage({
         <Link
           href={`/wisata?page=${Math.max(1, safePage - 1)}`}
           className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${safePage === 1
-              ? "pointer-events-none text-slate-400"
-              : "text-[#102440] hover:bg-[#102440]/10"
+            ? "pointer-events-none text-slate-400"
+            : "text-[#102440] hover:bg-[#102440]/10"
             }`}
         >
           ← Sebelumnya
@@ -83,8 +89,8 @@ export default async function WisataPage({
             key={page}
             href={`/wisata?page=${page}`}
             className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${page === safePage
-                ? "bg-[#102440] text-white"
-                : "text-[#102440] hover:bg-[#102440]/10"
+              ? "bg-[#102440] text-white"
+              : "text-[#102440] hover:bg-[#102440]/10"
               }`}
           >
             {page}
@@ -94,8 +100,8 @@ export default async function WisataPage({
         <Link
           href={`/wisata?page=${Math.min(totalPages, safePage + 1)}`}
           className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${safePage === totalPages
-              ? "pointer-events-none text-slate-400"
-              : "text-[#102440] hover:bg-[#102440]/10"
+            ? "pointer-events-none text-slate-400"
+            : "text-[#102440] hover:bg-[#102440]/10"
             }`}
         >
           Berikutnya →

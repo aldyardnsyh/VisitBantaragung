@@ -3,6 +3,12 @@ import { getAllArticles } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
 import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";
 import BackgroundPattern from "@/app/components/ui/BackgroundPattern";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Pusat Informasi (BIC)",
+  description: "Bantaragung Information Center – Artikel kegiatan, edukasi desa, dan publikasi program pengembangan masyarakat Desa Bantaragung.",
+};
 
 export default function BICLanding() {
   const articles = getAllArticles().slice(0, 3);

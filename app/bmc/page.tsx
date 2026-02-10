@@ -2,6 +2,12 @@ import Link from "next/link";
 import { getMapsConfig } from "@/lib/content";
 import MapGalleryClient from "./MapGalleryClient";
 import BackgroundPattern from "@/app/components/ui/BackgroundPattern";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Peta Digital (BMC)",
+  description: "Bantaragung Map Center – Galeri peta digital hasil mapping wilayah, wisata, infrastruktur, dan data spasial Desa Bantaragung.",
+};
 
 export default function BMCPage() {
   const mapsConfig = getMapsConfig();

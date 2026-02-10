@@ -1,6 +1,16 @@
 import Link from "next/link";
 import { getHerbalBySlug } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
+import type { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+    const data = getHerbalBySlug(slug);
+    return {
+        title: `${data.name} – Tanaman Herbal`,
+        description: data.excerpt,
+    };
+}
 
 export default async function HerbalDetail({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;

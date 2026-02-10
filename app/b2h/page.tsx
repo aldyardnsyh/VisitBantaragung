@@ -3,6 +3,12 @@ import { getAllHerbal } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
 import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";
 import BackgroundPattern from "@/app/components/ui/BackgroundPattern";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Kampung Herbal (B2H)",
+  description: "Bantaragung Herbal Hub – Pusat edukasi tanaman obat keluarga yang mengintegrasikan wisata, kesehatan alami, dan pemberdayaan masyarakat.",
+};
 
 export default function B2HLanding() {
   const herbals = getAllHerbal().slice(0, 3);

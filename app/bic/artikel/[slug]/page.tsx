@@ -1,6 +1,17 @@
 import Link from "next/link";
 import { getArticleBySlug } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
+import type { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+    const data = getArticleBySlug(slug);
+    if (!data) return { title: "Artikel Tidak Ditemukan" };
+    return {
+        title: data.title,
+        description: data.excerpt,
+    };
+}
 
 export default async function ArtikelDetail({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;

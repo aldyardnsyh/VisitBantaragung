@@ -3,6 +3,12 @@ import { getAllUMKM } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
 import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";
 import BackgroundPattern from "@/app/components/ui/BackgroundPattern";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "UMKM Desa Bantaragung",
+  description: "Katalog produk unggulan UMKM lokal Desa Bantaragung, Majalengka. Dukung ekonomi kreatif desa wisata.",
+};
 
 export default async function UMKMList({
   searchParams,
