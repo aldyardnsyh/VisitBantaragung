@@ -48,6 +48,7 @@ export default async function WisataDetail({ params }: { params: Promise<{ slug:
                 <img
                     src={assetUrl(data.cover)}
                     alt={data.title}
+                    fetchPriority="high"
                     className="w-full h-[420px] object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />

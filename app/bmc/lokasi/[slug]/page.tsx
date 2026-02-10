@@ -42,6 +42,7 @@ export default async function LocationDetail({ params }: { params: Promise<{ slu
                 <img
                     src={assetUrl(data.cover)}
                     alt={data.name}
+                    fetchPriority="high"
                     className="w-full h-[380px] object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />

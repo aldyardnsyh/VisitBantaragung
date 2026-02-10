@@ -117,6 +117,8 @@ export default function MapGalleryClient({ mapsConfig }: MapGalleryClientProps) 
                             <img
                                 src={assetUrl(map.image)}
                                 alt={map.title}
+                                loading="lazy"
+                                decoding="async"
                                 className="w-full h-auto object-contain group-hover:scale-105 transition duration-300"
                             />
                             <div className="absolute top-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs text-slate-700 shadow flex items-center gap-1">
