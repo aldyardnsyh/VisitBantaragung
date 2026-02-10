@@ -13,8 +13,61 @@ export default function Home() {
   const herbal = getAllHerbal().slice(0, 3);
   const articles = getAllArticles().slice(0, 3);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.com"}/#website`,
+        "url": process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.com",
+        "name": "Visit Bantaragung",
+        "description": "Platform Digital Wisata Desa Bantaragung - Jelajahi keindahan alam, kearifan lokal, dan potensi ekonomi kreatif.",
+        "publisher": { "@id": `${process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.com"}/#organization` }
+      },
+      {
+        "@type": "Organization",
+        "@id": `${process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.com"}/#organization`,
+        "name": "Desa Wisata Bantaragung",
+        "url": process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.com",
+        "logo": {
+          "@type": "ImageObject",
+          "url": assetUrl("_brand/logo/LogoVisitBantaragung.png")
+        },
+        "sameAs": [
+          "https://instagram.com/visitbantaragung",
+          "https://instagram.com/kampungherbalmertasela",
+          "https://instagram.com/desawisata_bantaragung",
+          "https://instagram.com/teras_pakuwon"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+6281384990974",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": "Indonesian"
+        }
+      },
+      {
+        "@type": "TouristDestination",
+        "name": "Desa Wisata Bantaragung",
+        "description": "Desa wisata di kaki Gunung Ciremai dengan atraksi alam Ciboer Pass, Curug Cipeuteuy, dan Terasering Panyaweuyan.",
+        "url": process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.com",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Majalengka",
+          "addressRegion": "Jawa Barat",
+          "addressCountry": "ID"
+        }
+      }
+    ]
+  };
+
   return (
     <main className="space-y-0">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
       {/* HERO with Background Image */}
       <section className="relative overflow-hidden min-h-[600px] flex items-center">
