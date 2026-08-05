@@ -1,7 +1,7 @@
 {
     "slug": "mitigasi-longsor-indigofera",
-    "title": "Mitigasi Bencana Longsor dengan Pengembangan Vegetasi Indigofera di Titik Rawan",
-    "excerpt": "Program penanaman Indigofera untuk mitigasi longsor di area rawan bencana.",
+    "title": "Mitigasi Longsor Melalui Penanaman Indigofera di Titik Rawan",
+    "excerpt": "Program penanaman Indigofera di area rawan longsor bertujuan memperkuat struktur tanah melalui sistem akar yang kuat, sekaligus mendukung pelestarian lingkungan.",
     "date": "2026-02-04",
     "category": "lingkungan",
     "author": "Ahmad Fathur Rizqi",
@@ -11,8 +11,10 @@
         "bic/artikel/mitigasi-longsor-indigofera/02.png"
     ],
     "content": [
-        "Program ini menanam tanaman Indigofera di titik rawan longsor untuk memperkuat struktur tanah.",
-        "Indigofera dipilih karena sistem akarnya yang kuat dan kemampuan adaptasi yang baik.",
-        "Kegiatan ini penting untuk mitigasi bencana longsor dan pelestarian lingkungan."
-    ]
+        "Program ini menanam Indigofera di titik rawan longsor untuk memperkuat struktur tanah. Akar tanaman ini efektif mengikat partikel tanah, mengurangi risiko pergerakan massa.",
+        "Indigofera dipilih karena sistem akarnya yang kuat dan kemampuan adaptasi yang baik terhadap berbagai kondisi lahan. Tanaman ini tumbuh cepat dan mudah dipelihara.",
+        "Kegiatan ini penting untuk mitigasi bencana longsor dan pelestarian lingkungan. Dengan vegetasi yang kokoh, kestabilan lereng meningkat, dan ekosistem sekitar tetap terjaga."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:40:55.045Z"
 }

@@ -1,9 +1,9 @@
 {
-  "slug": "batu-asahan",
-  "name": "Batu Asahan",
-  "category": "wisata-alam",
-  "excerpt": "Wisata ekologi dengan panorama bebatuan alami di aliran sungai.",
-  "lat": -6.0,
-  "lng": 108.0,
-  "cover": "wisata/batu-asahan/cover.png"
+    "slug": "batu-asahan",
+    "name": "Batu Asahan",
+    "category": "wisata-alam",
+    "excerpt": "Wisata ekologi dengan panorama bebatuan alami di aliran sungai.",
+    "lat": -6.841111,
+    "lng": 108.392778,
+    "cover": "wisata/batu-asahan/cover.png"
 }

@@ -1,88 +1,143 @@
-import Link from "next/link";
-import { getMapsConfig } from "@/lib/content";
-import MapGalleryClient from "./MapGalleryClient";
-import BackgroundPattern from "@/app/components/ui/BackgroundPattern";
-import Breadcrumb from "@/app/components/ui/Breadcrumb";
+﻿import Link from "next/link";
 import type { Metadata } from "next";
+import { getMapsConfig, getAllLocations } from "@/lib/content";
+import { assetUrl } from "@/lib/asset";
+import PageHeader from "@/app/components/layout/PageHeader";
+import SectionHeading from "@/app/components/ui/SectionHeading";
+import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";
+import MapGalleryClient from "./MapGalleryClient";
 
 export const metadata: Metadata = {
-  title: "Peta Digital (BMC)",
-  description: "Bantaragung Map Center – Galeri peta digital hasil mapping wilayah, wisata, infrastruktur, dan data spasial Desa Bantaragung.",
+    title: "Peta Digital (BMC)",
+    description:
+        "Bantaragung Map Center  -  Galeri peta digital hasil mapping wilayah, wisata, infrastruktur, dan data spasial Desa Bantaragung.",
+    alternates: { canonical: "/bmc" },
 };
 
 export default function BMCPage() {
-  const mapsConfig = getMapsConfig();
+    const mapsConfig = getMapsConfig();
+    const locations = getAllLocations();
+    const totalMaps = mapsConfig.categories.reduce(
+        (sum, category) => sum + category.maps.length,
+        0
+    );
 
-  return (
-    <main className="max-w-7xl mx-auto px-6 py-16 space-y-12">
-      <Breadcrumb items={[{ label: "Peta Digital" }]} />
-      <section className="relative rounded-3xl bg-gradient-to-br from-[#102440] to-[#1b3b6f] text-white p-10 md:p-12 space-y-4 shadow-lg">
-        <BackgroundPattern variant="geometric" opacity={0.04} className="text-white" />
-        <div className="inline-flex items-center gap-2 rounded-full badge-dark px-4 py-1 text-xs uppercase tracking-widest">
-          Peta Digital
-        </div>
-        <h1 className="text-3xl md:text-4xl font-bold">
-          Bantaragung Map Center
-        </h1>
-        <p className="text-white/80 max-w-3xl">
-          Galeri peta digital Desa Bantaragung hasil mapping untuk transparansi informasi wilayah,
-          wisata, infrastruktur, dan data spasial lainnya. Semua peta dapat dilihat detail dan diunduh
-          untuk keperluan edukasi dan perencanaan.
-        </p>
+    return (
+        <main className="min-h-screen">
+            <PageHeader
+                breadcrumb={[{ label: "Peta Digital" }]}
+                eyebrow="BMC"
+                title="Bantaragung Map Center"
+                subtitle="Galeri peta digital Desa Bantaragung hasil mapping untuk transparansi informasi wilayah, wisata, infrastruktur, dan data spasial lainnya."
+            >
+                <div className="flex flex-wrap gap-4 pt-2">
+                    <div className="bg-white/10 border border-white/15 rounded-2xl px-5 py-3 text-center">
+                        <p className="font-display text-2xl font-bold text-clay-300">
+                            {totalMaps}
+                        </p>
+                        <p className="text-xs text-white/80">Total Peta</p>
+                    </div>
+                    <div className="bg-white/10 border border-white/15 rounded-2xl px-5 py-3 text-center">
+                        <p className="font-display text-2xl font-bold text-clay-300">
+                            {mapsConfig.categories.length}
+                        </p>
+                        <p className="text-xs text-white/80">Kategori</p>
+                    </div>
+                    <div className="bg-white/10 border border-white/15 rounded-2xl px-5 py-3 text-center">
+                        <p className="font-display text-2xl font-bold text-clay-300">
+                            {locations.length}
+                        </p>
+                        <p className="text-xs text-white/80">Titik Lokasi</p>
+                    </div>
+                </div>
+            </PageHeader>
 
-        {/* Stats */}
-        <div className="flex flex-wrap gap-6 pt-4">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center w-10 h-10 rounded-full badge-dark">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-              </svg>
-            </div>
-            <div>
-              <div className="text-2xl font-bold">
-                {mapsConfig.categories.reduce((sum, cat) => sum + cat.maps.length, 0)}
-              </div>
-              <div className="text-xs text-white/60">Total Peta</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center w-10 h-10 rounded-full badge-dark">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-              </svg>
-            </div>
-            <div>
-              <div className="text-2xl font-bold">{mapsConfig.categories.length}</div>
-              <div className="text-xs text-white/60">Kategori</div>
-            </div>
-          </div>
-        </div>
-      </section>
+            <section className="max-w-7xl mx-auto px-6 py-16 md:py-20 space-y-14">
+                <section>
+                    <SectionHeading
+                        eyebrow="Kategori Peta"
+                        title="Jelajahi Peta Berdasarkan Kategori"
+                        subtitle="Peta hasil pemetaan dan digitalisasi wilayah Desa Bantaragung untuk mendukung transparansi informasi dan perencanaan pembangunan desa."
+                    />
+                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3" data-stagger>
+                        {mapsConfig.categories.map((category) => (
+                            <div
+                                key={category.id}
+                                className="rounded-2xl p-6 bg-white/80 border border-forest-200/70 shadow-sm hover:shadow-md transition"
+                            >
+                                <div className="flex items-center gap-3 mb-3">
+                                    <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-forest-100 text-xl">
+                                        {category.icon}
+                                    </span>
+                                    <div>
+                                        <h3 className="font-bold text-forest-800">
+                                            {category.name}
+                                        </h3>
+                                        <p className="text-xs text-slate-500">
+                                            {category.maps.length} peta
+                                        </p>
+                                    </div>
+                                </div>
+                                <p className="text-sm text-slate-600">
+                                    {category.description}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
 
-      {/* Map Gallery */}
-      <MapGalleryClient mapsConfig={mapsConfig} />
+                <section>
+                    <SectionHeading
+                        eyebrow="Galeri"
+                        title="Peta Digital Interaktif"
+                        subtitle="Lihat detail setiap peta, perbesar, dan unduh untuk keperluan edukasi serta perencanaan."
+                    />
+                    <MapGalleryClient mapsConfig={mapsConfig} />
+                </section>
 
-      {/* Info Section */}
-      <section className="bg-slate-50 rounded-3xl p-8 border border-[#e7c277]/20">
-        <h2 className="text-xl font-bold mb-4 text-[#102440] flex items-center gap-2">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Informasi Peta
-        </h2>
-        <div className="space-y-3 text-sm text-slate-600">
-          <p>
-            <strong>Sumber Data:</strong> Peta-peta ini merupakan hasil mapping dan digitalisasi
-            wilayah Desa Bantaragung untuk mendukung transparansi informasi dan perencanaan pembangunan desa.
-          </p>
-          <p>
-            <strong>Lisensi:</strong> Peta-peta ini dapat digunakan untuk keperluan edukasi, penelitian,
-            dan perencanaan dengan tetap mencantumkan sumber dari Desa Bantaragung.
-          </p>
-        </div>
-      </section>
-
-    </main>
-  );
+                <section>
+                    <SectionHeading
+                        eyebrow="Titik Lokasi"
+                        title="Peta Lokasi"
+                        subtitle="Destinasi dan titik penting di Desa Bantaragung beserta koordinat dan peta lokasinya."
+                    />
+                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3" data-stagger>
+                        {locations.map((location) => (
+                            <Link
+                                key={location.slug}
+                                href={`/bmc/lokasi/${location.slug}`}
+                                className="group block h-full"
+                            >
+                                <article className="h-full flex flex-col rounded-2xl overflow-hidden bg-white/80 border border-forest-200/70 shadow-sm hover:shadow-lg hover:-translate-y-1 transition">
+                                    <div className="relative">
+                                        <ImageWithSkeleton
+                                            src={assetUrl(location.cover)}
+                                            alt={location.name}
+                                            aspectRatio="auto"
+                                            className="aspect-[4/3] group-hover:scale-105 transition-transform duration-300"
+                                        />
+                                        <span className="absolute top-3 left-3 rounded-full bg-forest-100 text-forest-700 px-3 py-1 text-xs font-semibold">
+                                            {location.category}
+                                        </span>
+                                    </div>
+                                    <div className="p-5 flex flex-col gap-2 grow">
+                                        <h3 className="font-bold text-forest-800 leading-snug group-hover:text-forest-600 transition-colors">
+                                            {location.name}
+                                        </h3>
+                                        <p className="text-sm text-slate-600 line-clamp-2">
+                                            {location.excerpt}
+                                        </p>
+                                        <span className="mt-auto inline-flex items-center gap-1 text-forest-600 text-sm font-medium pt-1 transition-colors duration-200 group-hover:text-clay-600">
+                                            Lihat Lokasi
+                                            <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
+                                        </span>
+                                    </div>
+                                </article>
+                            </Link>
+                        ))}
+                    </div>
+                </section>
+            </section>
+        </main>
+    );
 }
-

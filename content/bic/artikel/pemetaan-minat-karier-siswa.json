@@ -1,7 +1,7 @@
 {
     "slug": "pemetaan-minat-karier-siswa",
     "title": "Pemetaan Minat dan Bimbingan Perencanaan Karier Siswa SMP",
-    "excerpt": "Program bimbingan karier untuk membantu siswa SMP merencanakan masa depan mereka.",
+    "excerpt": "Program pendidikan yang membantu siswa SMP mengenali minat dan bakat untuk merencanakan karier. Bimbingan mencakup pilihan karier dan jalur pendidikan sesuai potensi.",
     "date": "2026-01-21",
     "category": "pendidikan",
     "author": "Fathia Zahira Huwaida",
@@ -11,8 +11,10 @@
         "bic/artikel/pemetaan-minat-karier-siswa/02.png"
     ],
     "content": [
-        "Program ini membantu siswa SMP dalam memetakan minat dan bakat mereka untuk perencanaan karier.",
-        "Siswa diberikan bimbingan tentang berbagai pilihan karier dan jalur pendidikan yang sesuai dengan minat mereka.",
-        "Kegiatan ini penting untuk membantu siswa membuat keputusan yang tepat tentang masa depan mereka."
-    ]
+        "Program ini dirancang untuk membekali siswa SMP dengan pemahaman mendalam tentang minat dan bakat mereka. Melalui asesmen terstruktur, siswa diajak mengenali potensi diri sebagai fondasi awal perencanaan karier yang matang.",
+        "Dalam sesi bimbingan, siswa diperkenalkan pada beragam pilihan karier dan jalur pendidikan yang tersedia. Pendekatan personal memastikan setiap rekomendasi selaras dengan minat individu, sehingga keputusan yang diambil benar-benar mencerminkan keinginan dan kemampuan siswa.",
+        "Kegiatan ini menjadi langkah strategis dalam membentuk masa depan siswa. Dengan panduan yang tepat sejak dini, siswa dapat menghindari kebingungan saat memasuki jenjang pendidikan lanjutan dan lebih percaya diri menentukan arah karier yang sesuai."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:41:23.682Z"
 }

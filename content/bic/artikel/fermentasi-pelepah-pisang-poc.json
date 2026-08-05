@@ -1,18 +1,20 @@
 {
     "slug": "fermentasi-pelepah-pisang-poc",
     "title": "Penerapan Teknologi Fermentasi Limbah Pelepah Pisang untuk Pembuatan Pupuk Organik Cair",
-    "excerpt": "Program inovasi pembuatan pupuk organik cair dari limbah pelepah pisang.",
+    "excerpt": "Program ini memanfaatkan limbah pelepah pisang melalui teknologi fermentasi untuk menghasilkan pupuk organik cair berkualitas tinggi, mengubah limbah menjadi produk bernilai bagi pertanian.",
     "date": "2026-02-01",
     "category": "lingkungan",
     "author": "Ahmad Fathur Rizqi",
-    "cover": "bic/artikel/fermentasi-pelepah-pisang-poc/cover.png",
+    "cover": "bic/artikel/fermentasi-pelepah-pisang-poc/01.png",
     "gallery": [
         "bic/artikel/fermentasi-pelepah-pisang-poc/01.png",
         "bic/artikel/fermentasi-pelepah-pisang-poc/02.png"
     ],
     "content": [
-        "Program ini memanfaatkan limbah pelepah pisang untuk membuat pupuk organik cair.",
-        "Teknologi fermentasi digunakan untuk menghasilkan POC berkualitas tinggi.",
-        "Kegiatan ini mengubah limbah menjadi produk bernilai untuk pertanian."
-    ]
+        "Limbah pelepah pisang seringkali menjadi masalah lingkungan karena tidak terkelola dengan baik. Melalui program ini, limbah tersebut diolah menggunakan teknologi fermentasi untuk menghasilkan pupuk organik cair (POC). Pendekatan ini tidak hanya mengurangi pencemaran, tetapi juga memberikan solusi berkelanjutan bagi sektor pertanian.",
+        "Proses fermentasi memanfaatkan mikroorganisme untuk mengurai bahan organik dalam pelepah pisang. Hasilnya adalah POC yang kaya nutrisi, siap digunakan untuk meningkatkan kesuburan tanah. Teknologi ini sederhana dan dapat diterapkan oleh petani, menjadikannya alternatif pupuk kimia yang ramah lingkungan.",
+        "Kegiatan ini mengubah limbah pertanian menjadi produk bernilai ekonomi. Dengan demikian, petani dapat menghemat biaya input dan sekaligus mendukung praktik pertanian berkelanjutan. Program ini diharapkan menjadi model pengelolaan limbah yang bermanfaat bagi masyarakat dan lingkungan sekitar."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:39:19.143Z"
 }

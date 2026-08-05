@@ -1,18 +1,20 @@
 {
     "slug": "susu-sehat-badan-kuat",
-    "title": "Susu Sehat, Badan Kuat",
-    "excerpt": "Program edukasi pentingnya konsumsi susu untuk kesehatan dan pertumbuhan anak.",
+    "title": "Susu Sehat, Badan Kuat: Edukasi Gizi untuk Anak",
+    "excerpt": "Program edukasi yang menanamkan pemahaman tentang pentingnya susu bagi kesehatan dan pertumbuhan anak sejak dini.",
     "date": "2026-01-20",
     "category": "kesehatan",
-    "author": "Fauzia Syarahrah Imamia",
+    "author": "Fauzia Isyarah Imamia",
     "cover": "bic/artikel/susu-sehat-badan-kuat/cover.png",
     "gallery": [
         "bic/artikel/susu-sehat-badan-kuat/01.png",
         "bic/artikel/susu-sehat-badan-kuat/02.png"
     ],
     "content": [
-        "Program Susu Sehat, Badan Kuat merupakan kegiatan edukasi tentang pentingnya konsumsi susu untuk kesehatan dan pertumbuhan anak.",
-        "Anak-anak diberikan pemahaman tentang kandungan gizi dalam susu dan manfaatnya bagi tubuh.",
-        "Program ini diharapkan dapat meningkatkan kesadaran akan pentingnya nutrisi yang baik sejak dini."
-    ]
+        "Program Susu Sehat, Badan Kuat hadir sebagai upaya nyata dalam meningkatkan kesadaran gizi anak. Kegiatan ini berfokus pada edukasi tentang peran penting susu dalam menunjang kesehatan dan pertumbuhan optimal.",
+        "Melalui sesi interaktif, anak-anak diajak mengenal kandungan gizi dalam susu, seperti kalsium dan protein, serta manfaatnya bagi tubuh. Pemahaman ini menjadi bekal untuk membangun kebiasaan konsumsi susu yang baik.",
+        "Diharapkan, program ini mampu menumbuhkan kesadaran akan pentingnya nutrisi seimbang sejak dini. Dengan demikian, anak-anak dapat tumbuh sehat dan kuat, siap menghadapi masa depan yang lebih baik."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:42:53.367Z"
 }

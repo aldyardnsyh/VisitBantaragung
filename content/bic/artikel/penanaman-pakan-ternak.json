@@ -1,7 +1,7 @@
 {
     "slug": "penanaman-pakan-ternak",
-    "title": "Program Penanaman tanaman pakan ternak untuk meningkatkan produktivitas ternak",
-    "excerpt": "Program penanaman tanaman pakan ternak untuk meningkatkan produktivitas dan kesehatan ternak.",
+    "title": "Penanaman Tanaman Pakan Ternak untuk Meningkatkan Produktivitas",
+    "excerpt": "Program ini menanam beragam jenis tanaman pakan ternak guna memastikan ketersediaan pakan berkelanjutan, sekaligus membekali peternak dengan keterampilan budidaya yang tepat untuk menekan biaya dan meningkatkan hasil ternak.",
     "date": "2026-02-04",
     "category": "pertanian",
     "author": "Ahmad Fathur Rizqi",
@@ -11,8 +11,11 @@
         "bic/artikel/penanaman-pakan-ternak/02.png"
     ],
     "content": [
-        "Program ini menanam berbagai jenis tanaman pakan ternak untuk ketersediaan pakan yang berkelanjutan.",
-        "Peternak diajarkan cara menanam dan merawat tanaman pakan berkualitas.",
-        "Kegiatan ini meningkatkan produktivitas ternak dan mengurangi biaya pakan."
-    ]
+        "Program penanaman tanaman pakan ternak dirancang untuk menjawab kebutuhan pakan yang konsisten sepanjang tahun. Melalui penanaman berbagai jenis tanaman pakan, ketersediaan hijauan dapat dijaga, sehingga pasokan nutrisi bagi ternak tidak bergantung pada musim atau fluktuasi harga pakan komersial.",
+        "Peternak yang terlibat memperoleh pelatihan praktis mengenai cara menanam dan merawat tanaman pakan berkualitas. Materi mencakup pemilihan bibit unggul, teknik penanaman yang tepat, serta perawatan seperti penyiraman dan pemupukan agar tanaman tumbuh optimal dan bernutrisi tinggi.",
+        "Dengan ketersediaan pakan yang cukup dan berkualitas, produktivitas ternak meningkat secara signifikan. Selain itu, ketergantungan pada pakan pabrikan berkurang, yang berdampak langsung pada penurunan biaya produksi. Hal ini memberikan keuntungan ganda bagi peternak: hasil ternak lebih baik dan pengeluaran lebih efisien.",
+        "Program ini menjadi langkah strategis untuk memperkuat kemandirian pakan lokal. Dengan keterampilan yang dimiliki, peternak dapat melanjutkan budidaya secara mandiri, memastikan keberlanjutan usaha ternak dalam jangka panjang."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:41:34.374Z"
 }

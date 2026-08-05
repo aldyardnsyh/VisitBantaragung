@@ -1,7 +1,7 @@
 {
     "slug": "jamu-sehat-resep-tradisi",
     "title": "Jamu Sehat: Resep Tradisi Nusantara",
-    "excerpt": "Program pelestarian dan pengembangan resep jamu tradisional Nusantara.",
+    "excerpt": "Program kesehatan yang melestarikan resep jamu tradisional Nusantara. Masyarakat diajarkan meracik jamu dari herbal lokal. Kegiatan ini mendukung budaya dan pemanfaatan tanaman obat.",
     "date": "2026-01-06",
     "category": "kesehatan",
     "author": "Jovinka Aldinova Kiranamurti",
@@ -11,8 +11,10 @@
         "bic/artikel/jamu-sehat-resep-tradisi/02.png"
     ],
     "content": [
-        "Program ini melestarikan dan mengembangkan resep jamu tradisional Nusantara.",
-        "Masyarakat diajarkan cara membuat jamu dengan bahan-bahan herbal lokal.",
-        "Kegiatan ini mendukung pelestarian budaya dan pemanfaatan tanaman herbal."
-    ]
+        "Program Jamu Sehat berfokus pada pelestarian dan pengembangan resep jamu tradisional Nusantara. Inisiatif ini hadir sebagai upaya konkret menjaga warisan leluhur di tengah gempuran modernisasi.",
+        "Dalam pelaksanaannya, masyarakat mendapatkan pelatihan langsung cara membuat jamu. Bahan-bahan yang digunakan berasal dari tanaman herbal lokal yang mudah ditemukan di sekitar lingkungan.",
+        "Kegiatan ini tidak hanya menyehatkan, tetapi juga memperkuat identitas budaya. Pemanfaatan tanaman herbal secara berkelanjutan menjadi nilai tambah bagi kesejahteraan warga."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:40:03.803Z"
 }

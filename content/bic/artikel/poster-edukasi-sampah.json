@@ -1,18 +1,20 @@
 {
     "slug": "poster-edukasi-sampah",
     "title": "Poster Edukasi Sampah Bantaragung",
-    "excerpt": "Program pembuatan poster edukasi pengelolaan sampah untuk meningkatkan kesadaran lingkungan.",
+    "excerpt": "Program poster edukasi pengelolaan sampah di Bantaragung. Dipasang di titik strategis untuk tingkatkan kesadaran warga. Dukung lingkungan bersih dan sehat.",
     "date": "2026-02-03",
     "category": "lingkungan",
-    "author": "Amanda Friska",
+    "author": "Amanda Friska Asmara",
     "cover": "bic/artikel/poster-edukasi-sampah/cover.png",
     "gallery": [
         "bic/artikel/poster-edukasi-sampah/01.png",
         "bic/artikel/poster-edukasi-sampah/02.png"
     ],
     "content": [
-        "Program ini membuat poster edukasi tentang pengelolaan sampah yang benar.",
-        "Poster dipasang di tempat-tempat strategis untuk meningkatkan kesadaran masyarakat.",
-        "Kegiatan ini mendukung program lingkungan bersih dan sehat."
-    ]
+        "Program ini menghadirkan poster edukasi tentang cara mengelola sampah yang benar. Materi disusun praktis dan mudah dipahami, menekankan pemilahan serta pengolahan sampah sejak dari rumah. Tujuannya membangun kebiasaan baik yang berkelanjutan di tengah masyarakat.",
+        "Poster dipasang di lokasi strategis seperti balai desa, pos ronda, dan area publik lainnya. Penempatan ini memastikan pesan edukasi menjangkau banyak warga setiap hari. Dengan begitu, informasi tidak hanya tersimpan, tetapi terus dilihat dan diingat.",
+        "Kegiatan ini menjadi bagian dari upaya mewujudkan lingkungan yang bersih dan sehat. Kesadaran warga yang meningkat diharapkan mengurangi timbunan sampah dan mendorong partisipasi aktif dalam menjaga kebersihan desa. Langkah kecil ini membawa dampak nyata bagi kualitas hidup bersama."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:41:53.469Z"
 }

@@ -1,18 +1,20 @@
 {
     "slug": "kebun-mini-sekolah",
     "title": "Kebun Mini Sekolah: Laboratorium Belajar Menanam",
-    "excerpt": "Program pembuatan kebun mini di sekolah sebagai media pembelajaran praktis tentang pertanian.",
+    "excerpt": "Program Kebun Mini Sekolah menghadirkan area tanam di lingkungan sekolah sebagai laboratorium belajar, mengajak siswa memahami proses pertumbuhan tanaman secara langsung.",
     "date": "2026-01-29",
     "category": "lingkungan",
-    "author": "Cicilia Linova",
+    "author": "Cicilia Linova Rizka Pradita",
     "cover": "bic/artikel/kebun-mini-sekolah/cover.png",
     "gallery": [
         "bic/artikel/kebun-mini-sekolah/01.png",
         "bic/artikel/kebun-mini-sekolah/02.png"
     ],
     "content": [
-        "Program Kebun Mini Sekolah membuat area tanam di lingkungan sekolah sebagai laboratorium belajar.",
-        "Siswa belajar menanam dan merawat tanaman secara langsung, memahami proses pertumbuhan tanaman.",
-        "Kegiatan ini menumbuhkan kesadaran lingkungan dan keterampilan praktis dalam bercocok tanam."
-    ]
+        "Program Kebun Mini Sekolah mengubah sebagian lahan sekolah menjadi area tanam yang berfungsi sebagai laboratorium belajar. Siswa terlibat langsung dalam proses menanam dan merawat tanaman, mulai dari penyemaian hingga perawatan harian.",
+        "Melalui kegiatan ini, siswa mengamati tahapan pertumbuhan tanaman secara nyata, bukan sekadar teori di dalam kelas. Pengalaman langsung ini memperkuat pemahaman mereka tentang siklus hidup tumbuhan dan faktor-faktor yang memengaruhinya.",
+        "Lebih dari sekadar keterampilan bercocok tanam, program ini menumbuhkan kesadaran lingkungan sejak dini. Siswa belajar menghargai alam dan memahami pentingnya menjaga keberlanjutan ekosistem melalui praktik sederhana yang mereka lakukan setiap hari."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:40:15.903Z"
 }

@@ -1,117 +1,128 @@
-import Link from "next/link";
-import { getUMKMBySlug } from "@/lib/content";
+﻿import { getAllUMKM, getUMKMBySlug } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
-import Breadcrumb from "@/app/components/ui/Breadcrumb";
+import PageHeader from "@/app/components/layout/PageHeader";
 import type { Metadata } from "next";
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params;
-  const data = getUMKMBySlug(slug);
-  return {
-    title: `${data.name} – UMKM Bantaragung`,
-    description: data.excerpt,
-  };
+export const dynamic = "force-static";
+
+export function generateStaticParams() {
+    return getAllUMKM().map((u) => ({ slug: u.slug }));
 }
 
-export default async function UMKMDetail({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const data = getUMKMBySlug(slug);
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+    const { slug } = await params;
+    const data = getUMKMBySlug(slug);
+    return { title: `${data.name} - UMKM Bantaragung`, description: data.excerpt };
+}
 
-  return (
-    <main className="max-w-5xl mx-auto px-6 py-16 space-y-12">
+function sanitizePhone(raw: string): string {
+    const digits = raw.replace(/\D/g, "");
+    return digits.startsWith("0") ? `62${digits.slice(1)}` : digits;
+}
 
-      <Breadcrumb items={[
-        { label: "Branding Desa", href: "/bdb" },
-        { label: "UMKM", href: "/bdb/umkm" },
-        { label: data.name },
-      ]} />
+export default async function UMKMDetail({
+    params,
+}: {
+    params: Promise<{ slug: string }>;
+}) {
+    const { slug } = await params;
+    const data = getUMKMBySlug(slug);
+    const wa = sanitizePhone(data.contact.whatsapp);
 
-      <section className="space-y-5">
-        <div className="inline-flex items-center gap-2 rounded-full bg-[#102440]/10 px-4 py-1 text-xs uppercase tracking-widest text-[#e7c277]">
-          UMKM Unggulan
-        </div>
-        <div className="space-y-2">
-          <h1 className="text-3xl md:text-4xl font-bold">{data.name}</h1>
-          <p className="text-slate-600 max-w-2xl">{data.excerpt}</p>
-        </div>
-      </section>
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        name: data.name,
+        description: data.excerpt,
+        image: assetUrl(data.cover),
+        address: {
+            "@type": "PostalAddress",
+            addressLocality: "Desa Bantaragung, Kec. Sindangwangi",
+            addressRegion: "Jawa Barat",
+            addressCountry: "ID",
+        },
+        telephone: `+${wa}`,
+    };
 
-      <section className="relative overflow-hidden rounded-3xl shadow-lg border border-[#e7c277]/40">
-        <img
-          src={assetUrl(data.cover)}
-          alt={data.name}
-          fetchPriority="high"
-          className="w-full h-[380px] object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-        <div className="absolute bottom-6 left-6 text-white">
-          <p className="text-xs uppercase tracking-widest text-white/80">Produk Lokal</p>
-          <p className="text-2xl font-semibold">{data.name}</p>
-        </div>
-      </section>
-
-      <section className="grid lg:grid-cols-[1.2fr_0.8fr] gap-8">
-        <div className="prose max-w-none">
-          <h3>Deskripsi</h3>
-          <p>{data.description}</p>
-        </div>
-        <div className="space-y-4">
-          <div className="rounded-3xl bg-white border border-[#e7c277]/40 p-6 shadow-sm space-y-3">
-            <h3 className="font-semibold">Sorotan UMKM</h3>
-            <p className="text-sm text-slate-600">
-              UMKM lokal yang melayani kebutuhan warga Desa Bantaragung dengan produk berkualitas dan harga terjangkau.
-            </p>
-            <div className="flex flex-wrap gap-2 text-xs text-[#e7c277]">
-              <span className="rounded-full bg-[#102440]/10 px-3 py-1">Produk Lokal</span>
-              <span className="rounded-full bg-[#102440]/10 px-3 py-1">Harga Terjangkau</span>
-              <span className="rounded-full bg-[#102440]/10 px-3 py-1">Pelayanan Ramah</span>
-            </div>
-          </div>
-          <div className="rounded-3xl bg-[#102440]/10 p-6 space-y-3">
-            <h4 className="font-semibold text-[#102440]">Informasi</h4>
-            <p className="text-sm text-[#102440]/80">
-              Hubungi langsung untuk informasi ketersediaan produk, harga, dan jam operasional.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Gallery */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-xl">Galeri Produk</h3>
-          <span className="text-sm text-slate-500">{data.gallery.length} foto</span>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {data.gallery.map((g: string) => (
-            <img
-              key={g}
-              src={assetUrl(g)}
-              alt=""
-              className="h-40 w-full object-cover rounded-2xl"
+    return (
+        <main className="min-h-screen">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-          ))}
-        </div>
-      </section>
 
-      {/* CTA */}
-      <section className="bg-[#0b1a2f] text-white rounded-3xl p-10 text-center space-y-4 shadow-lg">
-        <h3 className="text-2xl font-semibold">Tertarik dengan produk ini?</h3>
-        <p className="text-white/80 max-w-2xl mx-auto">
-          Hubungi pengelola UMKM untuk informasi harga, katalog, dan pemesanan.
-        </p>
+            <PageHeader
+                breadcrumb={[
+                    { label: "Branding Desa", href: "/bdb" },
+                    { label: "UMKM", href: "/bdb/umkm" },
+                    { label: data.name },
+                ]}
+                eyebrow="UMKM Unggulan"
+                title={data.name}
+                subtitle={data.excerpt}
+            />
 
-        <a
-          href={`https://wa.me/${data.contact.whatsapp}`}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-2 bg-white text-[#e7c277] px-6 py-3 rounded-full font-semibold shadow hover:scale-105 transition"
-        >
-          Hubungi via WhatsApp
-          <span aria-hidden>→</span>
-        </a>
-      </section>
+            <section className="max-w-5xl mx-auto px-6 py-16 space-y-12">
+                <div className="relative overflow-hidden rounded-2xl shadow-lg">
+                    <img
+                        src={assetUrl(data.cover)}
+                        alt={data.name}
+                        fetchPriority="high"
+                        className="w-full aspect-[16/9] max-h-[30rem] object-cover"
+                    />
+                </div>
 
-    </main>
-  );
+                <section className="prose max-w-none">
+                    <h2 className="font-display text-2xl md:text-3xl font-bold">Deskripsi</h2>
+                    <p className="text-slate-600 leading-relaxed text-lg">{data.description}</p>
+                </section>
+
+                {data.gallery.length > 0 && (
+                    <section className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <h3 className="font-display text-2xl font-bold text-forest-800">
+                                Galeri Produk
+                            </h3>
+                            <span className="text-sm text-slate-500">
+                                {data.gallery.length} foto
+                            </span>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            {data.gallery.map((g) => (
+                                <img
+                                    key={g}
+                                    src={assetUrl(g)}
+                                    alt={`${data.name} - galeri`}
+                                    loading="lazy"
+                                    className="h-40 w-full object-cover rounded-2xl"
+                                />
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                <section className="bg-gradient-to-br from-clay-500 to-clay-600 rounded-2xl p-8 md:p-10 text-center space-y-4 shadow-md">
+                    <h2 className="font-display text-2xl font-bold text-white">
+                        Tertarik dengan {data.name}?
+                    </h2>
+                    <p className="text-white/90 max-w-2xl mx-auto">
+                        Hubungi pengelola UMKM untuk informasi harga, katalog, dan pemesanan.
+                    </p>
+                    <a
+                        href={`https://wa.me/${wa}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 bg-white text-clay-600 rounded-full px-5 py-2.5 font-semibold shadow hover:scale-105 transition"
+                    >
+                        Hubungi via WhatsApp
+                        <span aria-hidden>→</span>
+                    </a>
+                </section>
+            </section>
+        </main>
+    );
 }

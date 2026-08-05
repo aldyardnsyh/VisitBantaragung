@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 export interface BreadcrumbItem {
     label: string;
@@ -7,18 +7,17 @@ export interface BreadcrumbItem {
 
 interface BreadcrumbProps {
     items: BreadcrumbItem[];
+    variant?: "light" | "dark";
 }
 
-export default function Breadcrumb({ items }: BreadcrumbProps) {
+export default function Breadcrumb({ items, variant = "light" }: BreadcrumbProps) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.com";
 
-    // Build full breadcrumb list with Beranda as root
     const fullItems: BreadcrumbItem[] = [
         { label: "Beranda", href: "/" },
         ...items,
     ];
 
-    // JSON-LD BreadcrumbList schema
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
@@ -34,43 +33,33 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
 
     return (
         <>
-            {/* JSON-LD Schema */}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            {/* Visual Breadcrumb */}
             <nav aria-label="Breadcrumb" className="mb-6">
-                <ol className="flex flex-wrap items-center gap-1.5 text-sm text-slate-500">
+                <ol className={`flex flex-wrap items-center gap-1.5 text-sm ${
+                    variant === "dark" ? "text-white/70" : "text-slate-500"
+                }`}>
                     {fullItems.map((item, index) => {
                         const isLast = index === fullItems.length - 1;
 
                         return (
                             <li key={index} className="flex items-center gap-1.5">
-                                {index > 0 && (
-                                    <svg
-                                        className="w-3.5 h-3.5 text-slate-400 flex-shrink-0"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M9 5l7 7-7 7"
-                                        />
-                                    </svg>
-                                )}
+                                {index > 0 && <span aria-hidden>›</span>}
                                 {isLast ? (
-                                    <span className="text-[#102440] font-medium truncate max-w-[200px]">
+                                    <span className="font-medium truncate max-w-[200px]">
                                         {item.label}
                                     </span>
                                 ) : (
                                     <Link
                                         href={item.href || "/"}
-                                        className="hover:text-[#e7c277] transition-colors"
+                                        className={`transition-colors duration-200 ${
+                                            variant === "dark"
+                                                ? "text-white/80 hover:text-white"
+                                                : "text-forest-600 hover:text-clay-500 hover:font-semibold"
+                                        }`}
                                     >
                                         {item.label}
                                     </Link>

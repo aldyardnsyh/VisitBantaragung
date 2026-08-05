@@ -1,18 +1,22 @@
 {
     "slug": "herbal-emergency-kit",
     "title": "Herbal Emergency Kit Rumah Tangga",
-    "excerpt": "Program pembuatan kit pertolongan pertama herbal untuk kebutuhan kesehatan rumah tangga.",
+    "excerpt": "Program ini menyiapkan kotak P3K berbasis herbal untuk kebutuhan kesehatan keluarga. Kit berisi produk alami untuk keluhan ringan, mendorong kemandirian kesehatan.",
     "date": "2026-01-10",
     "category": "kesehatan",
-    "author": "Amanda Friska",
+    "author": "Amanda Friska Asmara",
     "cover": "bic/artikel/herbal-emergency-kit/cover.png",
     "gallery": [
         "bic/artikel/herbal-emergency-kit/01.png",
         "bic/artikel/herbal-emergency-kit/02.png"
     ],
     "content": [
-        "Program ini membuat kit pertolongan pertama berbasis herbal untuk kebutuhan kesehatan rumah tangga.",
-        "Kit berisi berbagai produk herbal untuk mengatasi keluhan kesehatan ringan.",
-        "Kegiatan ini meningkatkan kemandirian kesehatan keluarga dengan bahan alami."
-    ]
+        "Program ini merancang kit pertolongan pertama dari bahan herbal untuk rumah tangga. Kit memuat beragam produk alami yang menangani keluhan kesehatan ringan sehari-hari.",
+        "Kegiatan ini bertujuan memperkuat kemandirian keluarga dalam merespons masalah kesehatan sederhana. Dengan bahan alami, risiko efek samping kimiawi dapat ditekan.",
+        "Setiap kit disusun praktis dan mudah digunakan. Panduan pemakaian disertakan agar anggota keluarga memahami dosis dan cara aplikasi yang tepat.",
+        "Melalui pendekatan herbal, program ini mendorong gaya hidup sehat yang berkelanjutan. Manfaatnya terasa langsung dalam jangka panjang.",
+        "Inisiatif ini menjadi langkah awal menuju ketahanan kesehatan berbasis sumber daya lokal. Keluarga tidak lagi bergantung penuh pada obat modern untuk kasus ringan."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:39:43.751Z"
 }

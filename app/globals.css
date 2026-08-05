@@ -1,6 +1,37 @@
 @import "tailwindcss";
 
-/* Reset kecil */
+@theme {
+  --color-forest-50: #f4f7f2;
+  --color-forest-100: #e8f0e6;
+  --color-forest-200: #cde0d0;
+  --color-forest-300: #a8c4ad;
+  --color-forest-400: #7ba486;
+  --color-forest-500: #4b8059;
+  --color-forest-600: #386646;
+  --color-forest-700: #2d6a4f;
+  --color-forest-800: #1f3d2e;
+  --color-forest-900: #163024;
+  --color-forest-950: #0c1f16;
+
+  --color-sand-50: #fbf8f1;
+  --color-sand-100: #faf6ee;
+  --color-sand-200: #f0e8d8;
+
+  --color-clay-100: #f6e4db;
+  --color-clay-200: #ecc9b7;
+  --color-clay-400: #d98b62;
+  --color-clay-500: #c96f4a;
+  --color-clay-600: #a9543a;
+
+  --color-gold-200: #ecdcc0;
+  --color-gold-400: #d4a373;
+
+  --color-ink: #1b2a26;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: Georgia, "Times New Roman", ui-serif, Cambria, serif;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -9,39 +40,139 @@ html,
 body {
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
-/* Base */
 body {
-  font-family: system-ui, sans-serif;
-  background: #f9f7f0;
-  color: #102440;
+  font-family: var(--font-sans);
+  background: var(--color-sand-100);
+  color: #334155;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Skeleton Loading Animation */
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--color-forest-800);
+    line-height: 1.2;
   }
 
-  100% {
-    background-position: 200% 0;
+  /* Gambar tidak boleh melebihi container (mencegah konten melebar di layar kecil).
+     Kelas seperti h-full/object-cover (utilities, coincident lebih tinggi) tetap menang. */
+  img {
+    max-width: 100%;
+    height: auto;
   }
+
+  video,
+  iframe,
+  canvas,
+  svg {
+    max-width: 100%;
+  }
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Skeleton Loading Animation (dipertahankan dari versi lama) */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 .animate-shimmer {
   animation: shimmer 0.8s ease-in-out infinite;
 }
 
-/* Standardized Badge Colors */
-.badge-light {
-  background-color: rgba(16, 36, 64, 0.08);
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-.badge-dark {
-  background-color: rgba(255, 255, 255, 0.15);
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
-.badge-accent {
-  background-color: rgba(231, 194, 119, 0.15);
+/* Badge styling (dipertahankan untuk kompatibilitas) */
+.badge-light { background-color: rgba(16, 36, 64, 0.08); }
+.badge-dark { background-color: rgba(255, 255, 255, 0.15); }
+.badge-accent { background-color: rgba(201, 111, 74, 0.15); }
+
+/* ===== Efek animasi & visual (mewah, hidup, interaktif) ===== */
+@keyframes vb-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.animate-float {
+  animation: vb-float 6s ease-in-out infinite;
+}
+
+@keyframes vb-fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: vb-fade-up 0.7s ease-out both;
+}
+
+@keyframes vb-slow-zoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+.animate-slow-zoom {
+  animation: vb-slow-zoom 16s ease-in-out infinite alternate;
+}
+
+@keyframes vb-gradient-pan {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+.animate-gradient-pan {
+  background-size: 200% 200%;
+  animation: vb-gradient-pan 6s ease infinite;
+}
+
+@keyframes vb-shine {
+  from { transform: translateX(-120%) skewX(-20deg); }
+  to { transform: translateX(240%) skewX(-20deg); }
+}
+.group:hover .animate-shine {
+  animation: vb-shine 0.9s ease forwards;
+}
+.animate-shine {
+  position: absolute;
+  inset: 0;
+  width: 60%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+}
+
+/* Harga/entrance: cascade ringan untuk elemen bertag data-stagger */
+[data-stagger] > * {
+  animation: vb-fade-up 0.6s ease-out both;
+}
+[data-stagger] > *:nth-child(1) { animation-delay: 0.05s; }
+[data-stagger] > *:nth-child(2) { animation-delay: 0.12s; }
+[data-stagger] > *:nth-child(3) { animation-delay: 0.19s; }
+[data-stagger] > *:nth-child(4) { animation-delay: 0.26s; }
+[data-stagger] > *:nth-child(5) { animation-delay: 0.33s; }
+[data-stagger] > *:nth-child(6) { animation-delay: 0.4s; }
+[data-stagger] > *:nth-child(7) { animation-delay: 0.47s; }
+[data-stagger] > *:nth-child(8) { animation-delay: 0.54s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-fade-up,
+  .animate-slow-zoom,
+  .animate-gradient-pan,
+  .animate-shine,
+  [data-stagger] > * {
+    animation: none !important;
+  }
 }

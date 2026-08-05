@@ -1,7 +1,7 @@
 {
     "slug": "spicegrow-protocol",
     "title": "SpiceGrow Protocol: Penyusunan SOP Pembibitan Rempah Unggul",
-    "excerpt": "Program penyusunan standar operasional prosedur untuk pembibitan rempah berkualitas.",
+    "excerpt": "Program ini menyusun SOP pembibitan rempah unggul untuk memastikan kualitas bibit yang konsisten. Standardisasi produksi menjadi kunci daya saing.",
     "date": "2026-02-01",
     "category": "ekonomi",
     "author": "Adheka Dewandaru",
@@ -11,8 +11,11 @@
         "bic/artikel/spicegrow-protocol/02.png"
     ],
     "content": [
-        "Program ini menyusun SOP pembibitan rempah unggul untuk memastikan kualitas bibit yang konsisten.",
-        "SOP ini mencakup tahapan dari pemilihan benih hingga perawatan bibit.",
-        "Kegiatan ini penting untuk standardisasi produksi rempah berkualitas."
-    ]
+        "SpiceGrow Protocol hadir sebagai jawaban atas kebutuhan standardisasi produksi rempah berkualitas. Melalui penyusunan SOP pembibitan, program ini memastikan setiap tahapan budidaya memiliki acuan yang jelas dan terukur.",
+        "SOP yang disusun mencakup seluruh proses, mulai dari pemilihan benih unggul hingga perawatan bibit secara intensif. Setiap langkah dirancang untuk meminimalkan risiko kegagalan dan menghasilkan bibit yang seragam.",
+        "Dengan adanya protokol ini, petani tidak lagi bergantung pada praktik tradisional yang beragam. Konsistensi kualitas menjadi lebih mudah dicapai, sekaligus membuka peluang peningkatan nilai jual produk rempah.",
+        "Implementasi SOP ini diharapkan mampu memperkuat rantai pasok rempah unggul, dari hulu ke hilir. Pada akhirnya, standardisasi ini menjadi fondasi bagi pertumbuhan ekonomi perdesaan yang berkelanjutan."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:42:50.257Z"
 }

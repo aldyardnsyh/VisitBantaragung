@@ -1,18 +1,21 @@
 {
     "slug": "mini-herb-garden",
-    "title": "Mini Herb Garden Bantaragung",
-    "excerpt": "Program pembuatan kebun herbal mini untuk edukasi dan pemanfaatan tanaman obat keluarga.",
+    "title": "Mini Herb Garden Bantaragung, Wujud Kemandirian Kesehatan Keluarga",
+    "excerpt": "Program Mini Herb Garden mengajak warga Bantaragung menanam dan merawat tanaman herbal di pekarangan rumah. Kegiatan ini mendukung Kampung Herbal sekaligus memperkuat kemandirian kesehatan keluarga.",
     "date": "2026-01-15",
     "category": "lingkungan",
-    "author": "Amanda Friska",
+    "author": "Amanda Friska Asmara",
     "cover": "bic/artikel/mini-herb-garden/cover.png",
     "gallery": [
         "bic/artikel/mini-herb-garden/01.png",
         "bic/artikel/mini-herb-garden/02.png"
     ],
     "content": [
-        "Program Mini Herb Garden membuat kebun tanaman herbal skala kecil di area rumah warga.",
-        "Masyarakat diajarkan cara menanam dan merawat tanaman herbal untuk kebutuhan kesehatan keluarga.",
-        "Kegiatan ini mendukung program Kampung Herbal dan meningkatkan kemandirian kesehatan keluarga."
-    ]
+        "Mini Herb Garden Bantaragung hadir sebagai program pemberdayaan lingkungan yang menginisiasi kebun tanaman herbal skala kecil di area rumah warga. Melalui pendekatan partisipatif, masyarakat diajak terlibat langsung dalam proses penanaman hingga perawatan tanaman herbal. Tujuannya sederhana namun berdampak luas, yaitu menyediakan sumber bahan kesehatan alami yang mudah diakses setiap hari.",
+        "Dalam praktiknya, warga tidak hanya diberi bibit, tetapi juga dibekali pengetahuan teknis tentang cara menanam dan merawat tanaman herbal yang tepat. Pendampingan dilakukan secara bertahap agar warga memahami kebutuhan masing-masing jenis tanaman, mulai dari penyiraman, pemupukan, hingga pengendalian hama alami. Dengan begitu, kebun herbal tidak sekadar menjadi pajangan, melainkan benar-benar berfungsi sebagai apotek hidup keluarga.",
+        "Program ini sejalan dengan visi Kampung Herbal yang sedang digalakkan di Bantaragung. Keberadaan kebun herbal di pekarangan warga memperkuat ketahanan pangan dan kesehatan berbasis keluarga. Ketika kebutuhan herbal dasar dapat dipenuhi dari halaman sendiri, ketergantungan pada obat-obatan kimia pun berkurang. Dampak jangka panjangnya adalah meningkatnya kemandirian kesehatan masyarakat secara kolektif.",
+        "Mini Herb Garden juga menjadi sarana edukasi yang hidup bagi anak-anak dan generasi muda. Mereka belajar mengenal tanaman obat sejak dini dan memahami nilai pentingnya bagi kesehatan. Dengan kebiasaan yang ditanamkan sekarang, diharapkan kesadaran menjaga lingkungan dan kesehatan akan terus tumbuh di masa depan. Inisiatif kecil ini membuktikan bahwa perubahan besar selalu berawal dari langkah sederhana di sekitar kita."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:40:52.152Z"
 }

@@ -1,18 +1,22 @@
 {
     "slug": "kompas-menu",
-    "title": "KOMPAS MENU",
-    "excerpt": "Program penyusunan menu kuliner khas untuk homestay dan restoran desa wisata.",
+    "title": "KOMPAS MENU: Menyusun Menu Kuliner Khas Desa Wisata",
+    "excerpt": "Program KOMPAS MENU merancang menu kuliner khas untuk homestay dan restoran di desa wisata, mengangkat bahan lokal dan cita rasa tradisional untuk memperkaya pengalaman wisatawan.",
     "date": "2026-01-20",
     "category": "wisata",
-    "author": "Anindya Najwa",
+    "author": "Anindya Najwa Nareswari",
     "cover": "bic/artikel/kompas-menu/cover.png",
     "gallery": [
         "bic/artikel/kompas-menu/01.png",
         "bic/artikel/kompas-menu/02.png"
     ],
     "content": [
-        "Program KOMPAS MENU menyusun menu kuliner khas untuk homestay dan restoran di desa wisata.",
-        "Menu dirancang dengan mempertimbangkan bahan lokal dan cita rasa tradisional.",
-        "Kegiatan ini memperkaya pengalaman kuliner wisatawan dan mempromosikan makanan lokal."
-    ]
+        "Program KOMPAS MENU hadir sebagai upaya menyusun menu kuliner khas yang ditujukan untuk homestay dan restoran di kawasan desa wisata. Inisiatif ini lahir dari kebutuhan akan sajian yang tidak hanya lezat, tetapi juga merepresentasikan identitas lokal.",
+        "Setiap menu dirancang dengan cermat, mempertimbangkan ketersediaan bahan baku lokal serta mempertahankan cita rasa tradisional yang otentik. Pendekatan ini memastikan setiap hidangan memiliki cerita dan keunikan tersendiri.",
+        "Kegiatan ini secara langsung memperkaya pengalaman kuliner wisatawan. Saat pengunjung menikmati hidangan, mereka tidak sekadar menyantap makanan, tetapi juga merasakan kekayaan budaya dan tradisi setempat melalui setiap suapan.",
+        "Lebih dari itu, program ini menjadi sarana promosi efektif bagi makanan lokal. Dengan hadirnya menu khas di homestay dan restoran, produk pangan lokal mendapatkan panggung untuk dikenal lebih luas oleh wisatawan.",
+        "Dampak positifnya berkelanjutan: wisatawan mendapat pengalaman otentik, pelaku usaha kuliner mendapat variasi menu, dan produk lokal semakin dikenal. Inilah sinergi yang diharapkan terus tumbuh dalam pengembangan desa wisata."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:40:29.641Z"
 }

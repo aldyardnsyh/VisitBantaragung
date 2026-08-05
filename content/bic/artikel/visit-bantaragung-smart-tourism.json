@@ -1,7 +1,7 @@
 {
     "slug": "visit-bantaragung-smart-tourism",
-    "title": "Visit Bantaragung: Smart Tourism Digital Platform",
-    "excerpt": "Program pengembangan platform digital smart tourism untuk Desa Wisata Bantaragung.",
+    "title": "Visit Bantaragung: Platform Digital untuk Pariwisata Cerdas",
+    "excerpt": "Visit Bantaragung hadir sebagai platform smart tourism yang menyatukan informasi wisata, homestay, UMKM, dan tanaman herbal dalam satu akses digital.",
     "date": "2026-02-05",
     "category": "teknologi",
     "author": "Aldy Ardiansyah",
@@ -11,8 +11,11 @@
         "bic/artikel/visit-bantaragung-smart-tourism/02.png"
     ],
     "content": [
-        "Program ini mengembangkan platform digital Visit Bantaragung sebagai smart tourism platform.",
-        "Platform ini menyediakan informasi lengkap tentang wisata, homestay, UMKM, dan tanaman herbal.",
-        "Kegiatan ini memudahkan wisatawan mengakses informasi dan meningkatkan promosi desa wisata."
-    ]
+        "Program ini mengembangkan platform digital Visit Bantaragung sebagai solusi smart tourism bagi Desa Wisata Bantaragung. Platform dirancang untuk menjadi pusat informasi terpadu bagi wisatawan yang ingin menjelajahi potensi desa.",
+        "Melalui platform tersebut, pengunjung dapat mengakses data lengkap tentang objek wisata, pilihan homestay, produk UMKM lokal, serta informasi tanaman herbal khas desa. Seluruh konten disusun agar mudah dipahami dan diakses kapan saja.",
+        "Kehadiran platform ini memudahkan wisatawan dalam merencanakan kunjungan. Di sisi lain, promosi desa wisata menjadi lebih optimal karena informasi tersebar secara digital dan menjangkau audiens yang lebih luas.",
+        "Dengan sistem yang terintegrasi, Visit Bantaragung diharapkan menjadi jembatan antara wisatawan dan potensi desa. Langkah ini sekaligus mendorong pertumbuhan ekonomi lokal melalui sektor pariwisata yang lebih terorganisir."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:43:00.379Z"
 }

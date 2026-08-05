@@ -1,7 +1,7 @@
 {
     "slug": "pemetaan-imap-desa-bantaragung",
     "title": "Pemetaan IMAP Desa Bantaragung",
-    "excerpt": "Program pemetaan IMAP (Identifikasi Permasalahan dan Analisis Potensi) untuk pengembangan desa.",
+    "excerpt": "Pemetaan IMAP mengidentifikasi permasalahan dan potensi desa. Data ini menjadi dasar perencanaan pembangunan berkelanjutan dan pengambilan keputusan berbasis data.",
     "date": "2026-02-03",
     "category": "teknologi",
     "author": "Evan Sebastian Afrero",
@@ -11,8 +11,10 @@
         "bic/artikel/pemetaan-imap-desa-bantaragung/02.png"
     ],
     "content": [
-        "Program ini melakukan pemetaan IMAP untuk mengidentifikasi permasalahan dan menganalisis potensi desa.",
-        "Data IMAP digunakan sebagai dasar perencanaan pengembangan desa yang berkelanjutan.",
-        "Kegiatan ini mendukung pengambilan keputusan berbasis data untuk pembangunan desa."
-    ]
+        "Program pemetaan IMAP dilaksanakan untuk mengidentifikasi permasalahan dan menganalisis potensi Desa Bantaragung. Pendekatan ini memetakan kondisi aktual desa secara sistematis.",
+        "Data IMAP yang terkumpul menjadi dasar perencanaan pengembangan desa yang berkelanjutan. Hasil analisis digunakan untuk merumuskan prioritas program.",
+        "Kegiatan ini mendukung pengambilan keputusan berbasis data. Dengan demikian, pembangunan desa dapat diarahkan sesuai kebutuhan dan potensi yang ada."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:41:15.943Z"
 }

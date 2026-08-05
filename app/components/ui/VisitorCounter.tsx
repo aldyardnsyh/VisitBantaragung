@@ -2,83 +2,26 @@
 
 import { useEffect, useState } from "react";
 
-// Seed-based pseudo-random number generator for consistent numbers per day
-function seededRandom(seed: number) {
-    const x = Math.sin(seed) * 10000;
-    return x - Math.floor(x);
-}
-
-function getVisitorStats() {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const daysSinceEpoch = Math.floor(today.getTime() / 86400000);
-
-    // Base visitors per day (grows slowly over time from a launch date)
-    // Launch date: Feb 10, 2025
-    const launchDay = Math.floor(new Date(2025, 1, 10).getTime() / 86400000);
-    const daysLive = Math.max(1, daysSinceEpoch - launchDay);
-
-    // Generate consistent daily visitor counts using seeded random
-    let todayVisitors = 0;
-    let threeDayVisitors = 0;
-    let sevenDayVisitors = 0;
-
-    for (let i = 0; i < 7; i++) {
-        const daySeed = daysSinceEpoch - i;
-        // Base: 30-80 visitors/day, growing slightly over time
-        const baseMin = Math.min(30 + Math.floor(daysLive * 0.15), 80);
-        const baseMax = Math.min(60 + Math.floor(daysLive * 0.25), 150);
-        const dailyCount = Math.floor(
-            baseMin + seededRandom(daySeed * 7 + 3) * (baseMax - baseMin)
-        );
-
-        if (i === 0) todayVisitors = dailyCount;
-        if (i < 3) threeDayVisitors += dailyCount;
-        sevenDayVisitors += dailyCount;
-    }
-
-    // Add current user's own visits from localStorage
-    const storageKey = "vb_visits";
-    let userVisits = 0;
-    try {
-        const stored = localStorage.getItem(storageKey);
-        if (stored) {
-            const data = JSON.parse(stored);
-            // Reset if stored date is different from today
-            if (data.date === today.toISOString().slice(0, 10)) {
-                userVisits = data.count || 0;
-            }
-        }
-        // Increment and save
-        userVisits++;
-        localStorage.setItem(
-            storageKey,
-            JSON.stringify({
-                date: today.toISOString().slice(0, 10),
-                count: userVisits,
-            })
-        );
-    } catch {
-        // localStorage not available
-    }
-
-    // Add user's visits to today count
-    todayVisitors += userVisits;
-    threeDayVisitors += userVisits;
-    sevenDayVisitors += userVisits;
-
-    return { todayVisitors, threeDayVisitors, sevenDayVisitors };
+interface CounterData {
+    todayVisitors: number;
+    threeDayVisitors: number;
+    sevenDayVisitors: number;
 }
 
 export default function VisitorCounter() {
-    const [stats, setStats] = useState<{
-        todayVisitors: number;
-        threeDayVisitors: number;
-        sevenDayVisitors: number;
-    } | null>(null);
+    const [stats, setStats] = useState<CounterData | null>(null);
 
     useEffect(() => {
-        setStats(getVisitorStats());
+        let active = true;
+        fetch("/api/visitors", { cache: "no-store" })
+            .then((res) => (res.ok ? res.json() : null))
+            .then((data) => {
+                if (active && data) setStats(data);
+            })
+            .catch(() => {});
+        return () => {
+            active = false;
+        };
     }, []);
 
     if (!stats) return null;

@@ -1,18 +1,21 @@
 {
     "slug": "siaga-bencana-papan-informasi",
     "title": "Siaga Bencana Dini: Pembuatan Papan Informasi Bencana Sederhana",
-    "excerpt": "Program pembuatan papan informasi bencana untuk edukasi dan kesiapsiagaan masyarakat.",
+    "excerpt": "Papan informasi bencana sederhana dibuat untuk edukasi masyarakat. Berisi jenis bencana, pencegahan, dan prosedur evakuasi. Meningkatkan kesadaran dan kesiapsiagaan.",
     "date": "2026-02-01",
     "category": "kebencanaan",
-    "author": "Anindya Najwa",
+    "author": "Anindya Najwa Nareswari",
     "cover": "bic/artikel/siaga-bencana-papan-informasi/cover.png",
     "gallery": [
         "bic/artikel/siaga-bencana-papan-informasi/01.png",
         "bic/artikel/siaga-bencana-papan-informasi/02.png"
     ],
     "content": [
-        "Program ini membuat papan informasi bencana sederhana untuk edukasi masyarakat.",
-        "Papan berisi informasi tentang jenis bencana, tindakan pencegahan, dan prosedur evakuasi.",
-        "Kegiatan ini meningkatkan kesadaran dan kesiapsiagaan masyarakat terhadap bencana."
-    ]
+        "Program ini mewujudkan papan informasi bencana sederhana sebagai sarana edukasi publik. Papan tersebut memuat tiga hal pokok: jenis bencana yang mungkin terjadi, langkah pencegahan yang bisa diambil, serta prosedur evakuasi yang jelas.",
+        "Keberadaan papan ini membantu warga mengenali risiko di lingkungannya. Informasi yang tersaji secara visual memudahkan pemahaman, terutama bagi mereka yang tidak sempat mengikuti pelatihan formal.",
+        "Dampak langsungnya adalah meningkatnya kesadaran masyarakat terhadap potensi bahaya. Dengan tahu langkah yang tepat, warga lebih siap menghadapi situasi darurat.",
+        "Kegiatan ini menanamkan budaya siaga sejak dini. Papan informasi menjadi pengingat harian yang memperkuat kesiapsiagaan kolektif di tengah masyarakat."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:42:09.323Z"
 }

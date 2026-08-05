@@ -5,6 +5,9 @@
 const ASSET_VERSION = '20260210024130';
 
 export function assetUrl(path: string) {
+  // Path lokal (mulai dengan "/") langsung dipakai, tanpa CDN & cache-busting
+  if (path.startsWith("/")) return path;
+
   const base = process.env.NEXT_PUBLIC_ASSET_BASE_URL;
   if (!base) return path;
 

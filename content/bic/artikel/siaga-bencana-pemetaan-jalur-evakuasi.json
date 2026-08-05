@@ -1,18 +1,20 @@
 {
     "slug": "siaga-bencana-pemetaan-jalur-evakuasi",
     "title": "Siaga Bencana Dini: Pemetaan Titik Jalur Evakuasi",
-    "excerpt": "Program pemetaan titik dan jalur evakuasi untuk kesiapsiagaan bencana.",
+    "excerpt": "Pemetaan titik kumpul dan jalur evakuasi untuk kesiapsiagaan bencana. Peta dipasang di tempat strategis guna memudahkan akses masyarakat saat darurat.",
     "date": "2026-02-01",
     "category": "kebencanaan",
-    "author": "Anindya Najwa",
+    "author": "Anindya Najwa Nareswari",
     "cover": "bic/artikel/siaga-bencana-pemetaan-jalur-evakuasi/cover.png",
     "gallery": [
         "bic/artikel/siaga-bencana-pemetaan-jalur-evakuasi/01.png",
         "bic/artikel/siaga-bencana-pemetaan-jalur-evakuasi/02.png"
     ],
     "content": [
-        "Program ini memetakan titik kumpul dan jalur evakuasi untuk kesiapsiagaan bencana.",
-        "Peta evakuasi dipasang di tempat-tempat strategis untuk memudahkan masyarakat.",
-        "Kegiatan ini penting untuk meningkatkan kesiapsiagaan dan keselamatan masyarakat."
-    ]
+        "Program ini memetakan titik kumpul dan jalur evakuasi sebagai langkah awal kesiapsiagaan bencana. Pemetaan dilakukan dengan melibatkan partisipasi warga untuk memastikan akurasi data lapangan.",
+        "Peta evakuasi kemudian dipasang di tempat-tempat strategis seperti balai desa, persimpangan jalan, dan area publik lainnya. Pemasangan ini bertujuan memudahkan masyarakat mengenali rute aman saat terjadi bencana.",
+        "Kegiatan ini penting untuk meningkatkan kesiapsiagaan dan keselamatan masyarakat. Dengan adanya peta yang jelas, diharapkan waktu evakuasi dapat dipersingkat dan risiko korban dapat diminimalkan."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:42:12.167Z"
 }

@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "sync": "node scripts/sync/crawl.js",
+    "rewrite:kkn": "node scripts/rewrite-kkn.mjs"
   },
   "dependencies": {
     "next": "16.1.3",

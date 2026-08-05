@@ -1,7 +1,7 @@
 {
     "slug": "bantaragung-information-center-bic",
     "title": "Bantaragung Information Center (BIC): Pusat Dokumentasi Digital Bantaragung",
-    "excerpt": "Program pengembangan pusat dokumentasi digital untuk artikel dan informasi Desa Bantaragung.",
+    "excerpt": "BIC hadir sebagai pusat dokumentasi digital yang menyimpan artikel, kegiatan, dan informasi penting Desa Bantaragung. Platform ini dirancang untuk mempermudah akses informasi sekaligus melestarikan arsip desa secara sistematis.",
     "date": "2026-02-05",
     "category": "teknologi",
     "author": "Aldy Ardiansyah",
@@ -11,8 +11,11 @@
         "bic/artikel/bantaragung-information-center-bic/02.png"
     ],
     "content": [
-        "Program BIC mengembangkan pusat dokumentasi digital untuk artikel dan informasi Desa Bantaragung.",
-        "Platform ini menyimpan dokumentasi kegiatan, artikel edukasi, dan informasi penting desa.",
-        "Kegiatan ini mempermudah akses informasi dan melestarikan dokumentasi desa."
-    ]
+        "Bantaragung Information Center (BIC) merupakan program pengembangan pusat dokumentasi digital yang dirancang khusus untuk Desa Bantaragung. Inisiatif ini bertujuan menghimpun artikel dan informasi desa dalam satu platform terpadu. Dengan demikian, seluruh data penting dapat diakses secara mudah oleh masyarakat maupun pihak luar.",
+        "Platform ini menjadi tempat penyimpanan dokumentasi kegiatan desa, artikel edukasi, serta informasi penting lainnya. Setiap konten dikelola dengan rapi agar mudah ditelusuri. Kehadiran BIC menjawab kebutuhan akan arsip digital yang selama ini belum terkelola secara optimal.",
+        "Melalui BIC, akses informasi desa menjadi lebih cepat dan praktis. Masyarakat tidak perlu lagi mencari data secara manual karena semuanya tersedia dalam satu wadah digital. Selain itu, dokumentasi yang tersimpan juga berfungsi sebagai bahan referensi untuk pengembangan desa ke depan.",
+        "Kegiatan ini tidak hanya mempermudah akses informasi, tetapi juga berperan penting dalam melestarikan dokumentasi desa. Arsip digital yang terpelihara dengan baik akan menjadi warisan berharga bagi generasi mendatang. BIC menjadi langkah nyata dalam membangun tata kelola informasi yang modern dan berkelanjutan."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:38:49.641Z"
 }

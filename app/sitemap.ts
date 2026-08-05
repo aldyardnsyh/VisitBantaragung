@@ -25,6 +25,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/bdb",
     "/bdb/umkm",
     "/bdb/homestay",
+    "/galeri",
+    "/tentang",
     "/kontak",
   ];
 
@@ -51,17 +53,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   });
 
-  // BIC Artikel
-  getSlugs(path.join(CONTENT_DIR, "bic/artikel")).forEach((file) => {
-    const raw = fs.readFileSync(
-      path.join(CONTENT_DIR, "bic/artikel", `${file}.json`),
-      "utf-8"
-    );
-    const data = JSON.parse(raw);
+  // BIC Artikel & Berita
+  ["bic/artikel", "bic/berita"].forEach((dir) => {
+    const dirPath = path.join(CONTENT_DIR, dir);
+    if (!fs.existsSync(dirPath)) return;
 
-    urls.push({
-      url: `${BASE_URL}/bic/artikel/${data.slug}`,
-      lastModified: new Date(),
+    fs.readdirSync(dirPath).forEach((file) => {
+      const raw = fs.readFileSync(path.join(dirPath, file), "utf-8");
+      const data = JSON.parse(raw);
+
+      urls.push({
+        url: `${BASE_URL}/bic/artikel/${data.slug}`,
+        lastModified: (data.updatedAt ? new Date(data.updatedAt) : data.date ? new Date(data.date) : new Date()),
+      });
     });
   });
 
