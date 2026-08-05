@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 
 interface ImageWithSkeletonProps {
     src: string;
@@ -15,9 +15,25 @@ export default function ImageWithSkeleton({
     className = "",
     aspectRatio = "auto",
 }: ImageWithSkeletonProps) {
+    return (
+        <SkeletonImage
+            key={src}
+            src={src}
+            alt={alt}
+            className={className}
+            aspectRatio={aspectRatio}
+        />
+    );
+}
+
+function SkeletonImage({
+    src,
+    alt,
+    className = "",
+    aspectRatio = "auto",
+}: ImageWithSkeletonProps) {
     const [isLoaded, setIsLoaded] = useState(false);
     const [hasError, setHasError] = useState(false);
-    const imgRef = useRef<HTMLImageElement>(null);
 
     const aspectRatioClasses = {
         square: "aspect-square",
@@ -25,21 +41,6 @@ export default function ImageWithSkeleton({
         portrait: "aspect-[3/4]",
         auto: "",
     };
-
-    // Handle cached images: if the browser already loaded the image
-    // before React attached onLoad, we detect it here via img.complete
-    useEffect(() => {
-        const img = imgRef.current;
-        if (img && img.complete && img.naturalWidth > 0) {
-            setIsLoaded(true);
-        }
-    }, [src]);
-
-    // Reset states when src changes
-    useEffect(() => {
-        setIsLoaded(false);
-        setHasError(false);
-    }, [src]);
 
     const handleLoad = useCallback(() => {
         setIsLoaded(true);
@@ -64,7 +65,6 @@ export default function ImageWithSkeleton({
             {/* Actual Image */}
             {!hasError && (
                 <img
-                    ref={imgRef}
                     src={src}
                     alt={alt}
                     loading="lazy"
@@ -100,4 +100,3 @@ export default function ImageWithSkeleton({
         </div>
     );
 }
-

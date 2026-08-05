@@ -1,7 +1,7 @@
 {
     "slug": "greengate-protocol",
     "title": "GreenGate Protocol: SOP Akses dan Prosedur Masuk Green House Pembibitan Rempah",
-    "excerpt": "Program penyusunan SOP akses dan prosedur masuk green house untuk menjaga kualitas pembibitan.",
+    "excerpt": "Program ini menyusun SOP akses dan prosedur masuk green house untuk menjaga kebersihan dan keamanan. Protokol sanitasi dan keamanan diterapkan guna melindungi bibit dari kontaminasi.",
     "date": "2026-02-01",
     "category": "ekonomi",
     "author": "Adheka Dewandaru",
@@ -11,8 +11,11 @@
         "bic/artikel/greengate-protocol/02.png"
     ],
     "content": [
-        "Program ini menyusun SOP akses dan prosedur masuk green house untuk menjaga kebersihan dan keamanan.",
-        "SOP mencakup protokol sanitasi dan keamanan untuk melindungi bibit dari kontaminasi.",
-        "Kegiatan ini penting untuk menjaga kualitas pembibitan rempah."
-    ]
+        "GreenGate Protocol dirancang sebagai panduan baku bagi siapa pun yang akan memasuki area green house pembibitan rempah. SOP ini disusun untuk memastikan setiap langkah masuk dilakukan secara tertib, bersih, dan aman.",
+        "Protokol yang ditetapkan mencakup prosedur sanitasi, seperti mencuci tangan dan membersihkan alas kaki sebelum masuk. Selain itu, prosedur keamanan juga diatur untuk membatasi akses hanya pada pihak yang berwenang.",
+        "Penerapan SOP ini menjadi langkah penting dalam menjaga kualitas pembibitan rempah. Dengan mengurangi risiko kontaminasi dari luar, pertumbuhan bibit dapat berlangsung optimal dan hasil panen lebih terjamin.",
+        "Melalui GreenGate Protocol, pengelola green house memiliki acuan yang jelas untuk menjaga standar kebersihan dan keamanan. Hal ini turut mendukung keberlanjutan program pembibitan secara keseluruhan."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:39:28.299Z"
 }

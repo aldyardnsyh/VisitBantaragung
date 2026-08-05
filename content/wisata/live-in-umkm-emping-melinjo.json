@@ -1,25 +1,22 @@
 {
-  "slug": "live-in-umkm-emping-melinjo",
-  "title": "Live In UMKM Emping Melinjo",
-  "excerpt": "Program live-in untuk belajar produksi emping melinjo bersama UMKM lokal.",
-  "description": "Live In UMKM Emping Melinjo memberikan pengalaman tinggal bersama warga sekaligus belajar proses pembuatan emping melinjo. Wisatawan akan diajak melihat tahapan produksi, mengolah bahan, hingga pengemasan produk. Program ini memperkenalkan aktivitas ekonomi kreatif desa sekaligus memperkuat interaksi dengan masyarakat.",
-  "cover": "wisata/live-in-umkm-emping-melinjo/cover.png",
-  "gallery": [
-    "wisata/live-in-umkm-emping-melinjo/01.png",
-    "wisata/live-in-umkm-emping-melinjo/02.png"
-  ],
-  "location": {
-    "lat": -6.0,
-    "lng": 108.0
-  },
-  "facilities": [
-    "Musholla",
-    "Persewaan alat",
-    "Wifi area"
-  ],
-  "activities": [
-    "Live-in bersama warga",
-    "Edukasi UMKM",
-    "Kuliner tradisional"
-  ]
+    "slug": "live-in-umkm-emping-melinjo",
+    "title": "Live In UMKM Emping Melinjo",
+    "excerpt": "Program live-in untuk belajar produksi emping melinjo bersama UMKM lokal.",
+    "description": "Live In UMKM Emping Melinjo memberikan pengalaman tinggal bersama warga sekaligus belajar proses pembuatan emping melinjo. Wisatawan akan diajak melihat tahapan produksi, mengolah bahan, hingga pengemasan produk. Program ini memperkenalkan aktivitas ekonomi kreatif desa sekaligus memperkuat interaksi dengan masyarakat.",
+    "cover": "wisata/live-in-umkm-emping-melinjo/cover.png",
+    "gallery": [],
+    "location": {
+        "lat": -6.841111,
+        "lng": 108.392778
+    },
+    "facilities": [
+        "Musholla",
+        "Persewaan alat",
+        "Wifi area"
+    ],
+    "activities": [
+        "Live-in bersama warga",
+        "Edukasi UMKM",
+        "Kuliner tradisional"
+    ]
 }

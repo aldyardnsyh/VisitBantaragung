@@ -1,26 +1,23 @@
 {
-  "slug": "penanaman-pohon-endemik",
-  "title": "Penanaman Pohon Endemik",
-  "excerpt": "Program wisata edukasi lingkungan untuk menanam pohon endemik di kawasan Curug Cipeuteuy.",
-  "description": "Program Penanaman Pohon Endemik mengajak wisatawan dan komunitas untuk ikut menjaga kelestarian alam Bantaragung. Kegiatan dilakukan di sekitar Curug Cipeuteuy dengan pendampingan warga dan pengelola desa wisata. Selain menanam, peserta juga mendapatkan edukasi tentang konservasi hutan dan manfaat ekologisnya.",
-  "cover": "wisata/penanaman-pohon-endemik/cover.png",
-  "gallery": [
-    "wisata/penanaman-pohon-endemik/01.png",
-    "wisata/penanaman-pohon-endemik/02.png"
-  ],
-  "location": {
-    "lat": -6.0,
-    "lng": 108.0
-  },
-  "facilities": [
-    "Areal parkir",
-    "Balai pertemuan",
-    "Kamar mandi umum",
-    "Musholla"
-  ],
-  "activities": [
-    "Penanaman pohon",
-    "Edukasi konservasi",
-    "Wisata komunitas"
-  ]
+    "slug": "penanaman-pohon-endemik",
+    "title": "Penanaman Pohon Endemik",
+    "excerpt": "Program wisata edukasi lingkungan untuk menanam pohon endemik di kawasan Curug Cipeuteuy.",
+    "description": "Program Penanaman Pohon Endemik mengajak wisatawan dan komunitas untuk ikut menjaga kelestarian alam Bantaragung. Kegiatan dilakukan di sekitar Curug Cipeuteuy dengan pendampingan warga dan pengelola desa wisata. Selain menanam, peserta juga mendapatkan edukasi tentang konservasi hutan dan manfaat ekologisnya.",
+    "cover": "wisata/penanaman-pohon-endemik/cover.png",
+    "gallery": [],
+    "location": {
+        "lat": -6.841111,
+        "lng": 108.392778
+    },
+    "facilities": [
+        "Areal parkir",
+        "Balai pertemuan",
+        "Kamar mandi umum",
+        "Musholla"
+    ],
+    "activities": [
+        "Penanaman pohon",
+        "Edukasi konservasi",
+        "Wisata komunitas"
+    ]
 }

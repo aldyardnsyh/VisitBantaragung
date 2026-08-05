@@ -1,7 +1,7 @@
 {
     "slug": "sosialisasi-imap",
     "title": "Sosialisasi IMAP",
-    "excerpt": "Program sosialisasi hasil pemetaan IMAP kepada masyarakat dan stakeholder desa.",
+    "excerpt": "Program sosialisasi hasil pemetaan IMAP kepada masyarakat dan stakeholder desa untuk meningkatkan pemahaman permasalahan serta potensi desa.",
     "date": "2026-02-04",
     "category": "sosial",
     "author": "Gabriella Divanka Utri Tambunan",
@@ -11,8 +11,10 @@
         "bic/artikel/sosialisasi-imap/02.png"
     ],
     "content": [
-        "Program ini mensosialisasikan hasil pemetaan IMAP kepada masyarakat dan stakeholder desa.",
-        "Sosialisasi bertujuan untuk meningkatkan pemahaman tentang permasalahan dan potensi desa.",
-        "Kegiatan ini mendorong partisipasi masyarakat dalam pembangunan desa."
-    ]
+        "Sosialisasi IMAP merupakan program yang menyampaikan hasil pemetaan kepada masyarakat dan stakeholder desa. Tujuannya untuk membangun pemahaman bersama tentang kondisi nyata desa, baik dari sisi permasalahan maupun potensi yang dimiliki.",
+        "Pemahaman yang baik menjadi dasar bagi warga untuk terlibat aktif dalam perencanaan pembangunan. Dengan data yang jelas, partisipasi masyarakat tidak lagi sekadar formalitas, melainkan langkah konkret yang berdampak langsung pada arah kebijakan desa.",
+        "Kegiatan ini membuka ruang dialog antara warga, perangkat desa, dan pihak terkait. Hasilnya, pembangunan desa dapat berjalan lebih terarah dan sesuai dengan kebutuhan riil masyarakat setempat."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:42:33.211Z"
 }

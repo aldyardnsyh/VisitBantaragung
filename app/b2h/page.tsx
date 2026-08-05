@@ -1,77 +1,79 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { getAllHerbal } from "@/lib/content";
-import { assetUrl } from "@/lib/asset";
-import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";
-import BackgroundPattern from "@/app/components/ui/BackgroundPattern";
-import Breadcrumb from "@/app/components/ui/Breadcrumb";
+import PageHeader from "@/app/components/layout/PageHeader";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Kampung Herbal (B2H)",
-  description: "Bantaragung Herbal Hub – Pusat edukasi tanaman obat keluarga yang mengintegrasikan wisata, kesehatan alami, dan pemberdayaan masyarakat.",
+    title: "Kampung Herbal (B2H)",
+    description:
+        "Bantaragung Herbal Hub  -  Pusat edukasi tanaman obat keluarga yang mengintegrasikan wisata, kesehatan alami, dan pemberdayaan masyarakat.",
 };
 
 export default function B2HLanding() {
-  const herbals = getAllHerbal().slice(0, 3);
+    const plants = getAllHerbal();
+    const benefits = plants.reduce((n, p) => n + p.benefits.length, 0);
+    const usage = plants.reduce((n, p) => n + p.usage.length, 0);
 
-  return (
-    <main className="max-w-6xl mx-auto px-6 py-16 space-y-12">
+    const stats = [
+        { value: String(plants.length), label: "Jenis Tanaman" },
+        { value: String(benefits), label: "Manfaat Tercatat" },
+        { value: String(usage), label: "Cara Pemanfaatan" },
+    ];
 
-      <Breadcrumb items={[{ label: "Kampung Herbal" }]} />
-      <section className="relative rounded-3xl bg-gradient-to-br from-[#102440] to-[#1b3b6f] text-white p-10 md:p-12 space-y-4 shadow-lg">
-        <BackgroundPattern variant="leaves" opacity={0.04} className="text-white" />
-        <div className="inline-flex items-center gap-2 rounded-full badge-dark px-4 py-1 text-xs uppercase tracking-widest">
-          Kampung Herbal
-        </div>
-        <h1 className="text-3xl md:text-4xl font-bold">
-          Bantaragung Herbal Hub (B2H)
-        </h1>
-        <p className="text-white/80 max-w-2xl">
-          Kampung Herbal Desa Bantaragung merupakan pusat edukasi tanaman obat
-          keluarga yang mengintegrasikan wisata, kesehatan alami, dan pemberdayaan masyarakat.
-        </p>
-      </section>
-
-      {/* Featured Herbal Plants */}
-      <section className="grid md:grid-cols-3 gap-8">
-        {herbals.map((item: any) => (
-          <Link key={item.slug} href={`/b2h/katalog/${item.slug}`}>
-            <article className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition border border-[#e7c277]/40">
-              <div className="relative">
-                <ImageWithSkeleton
-                  src={assetUrl(item.cover)}
-                  alt={item.name}
-                  className="h-48 w-full object-cover group-hover:scale-105 transition duration-300"
-                />
-                <div className="absolute top-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs text-slate-700 shadow">
-                  {item.latin}
+    return (
+        <main className="min-h-screen">
+            <PageHeader
+                breadcrumb={[{ label: "Kampung Herbal" }]}
+                eyebrow="B2H"
+                title="Bantaragung Herbal Hub"
+                subtitle="Kampung Herbal Desa Bantaragung merupakan pusat edukasi tanaman obat keluarga (TOGA) yang mengintegrasikan wisata, kesehatan alami, dan pemberdayaan masyarakat."
+            >
+                <div className="flex flex-wrap gap-4 pt-2 animate-fade-up">
+                    {stats.map((s) => (
+                        <div
+                            key={s.label}
+                            className="bg-white/10 border border-white/15 rounded-2xl px-5 py-3 text-center"
+                        >
+                            <p className="font-display text-2xl font-bold text-clay-300">{s.value}</p>
+                            <p className="text-xs text-white/80">{s.label}</p>
+                        </div>
+                    ))}
                 </div>
-              </div>
+            </PageHeader>
 
-              <div className="p-5 space-y-3">
-                <h3 className="font-semibold leading-snug">{item.name}</h3>
-                <p className="text-sm text-gray-600 line-clamp-2">{item.excerpt}</p>
-                <span className="inline-flex items-center gap-1 text-[#e7c277] text-sm font-medium">
-                  Lihat detail
-                  <span aria-hidden>→</span>
-                </span>
-              </div>
-            </article>
-          </Link>
-        ))}
-      </section>
+            <section className="max-w-7xl mx-auto px-6 py-16 space-y-12">
+                <section className="grid gap-6 lg:grid-cols-2" data-stagger>
+                    <h2 className="font-display text-2xl md:text-3xl font-bold text-forest-800">
+                        Jelajah Katalog Tanaman Obat
+                    </h2>
+                    <p className="text-slate-600 leading-relaxed">
+                        Kampung herbal membudidayakan ratusan jenis tanaman obat yang tumbuh subur di
+                        kebun warga dan kawasan wisata desa. Katalog lengkap memuat nama Latin,
+                        manfaat, dan cara pemanfaatan tiap tanaman untuk edukasi dan pengunjung
+                        yang ingin mengenal warisan pengobatan tradisional.
+                    </p>
+                </section>
 
-      {/* CTA */}
-      <section className="text-center">
-        <Link
-          href="/b2h/katalog"
-          className="inline-flex items-center gap-2 bg-[#102440] text-white px-6 py-3 rounded-full shadow hover:bg-[#0b1a2f] transition"
-        >
-          Lihat Semua Katalog Herbal
-          <span aria-hidden>→</span>
-        </Link>
-      </section>
-
-    </main>
-  );
+                <section className="rounded-2xl bg-gradient-to-br from-forest-700 to-forest-800 p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-md">
+                    <div className="text-center md:text-left space-y-2">
+                        <h2 className="font-display text-2xl font-bold text-white">
+                            {plants.length} Tanaman Obat Siap Dipelajari
+                        </h2>
+                        <p className="text-white/85 max-w-xl">
+                            Telusuri katalog bergambar, lengkap dengan manfaat dan cara konsumsi
+                            tradisional dari Kampung Herbal Bantaragung.
+                        </p>
+                    </div>
+                    <Link
+                        href="/b2h/katalog"
+                        className="group relative inline-flex items-center gap-2 bg-clay-500 hover:bg-clay-600 text-white rounded-full px-5 py-2.5 font-semibold transition hover:scale-[1.02] active:scale-[0.98] overflow-hidden shrink-0"
+                    >
+                        <span className="animate-shine" aria-hidden />
+                        Buka Katalog Herbal
+                        <span aria-hidden>→</span>
+                    </Link>
+                </section>
+            </section>
+        </main>
+    );
 }

@@ -1,0 +1,26 @@
+{
+    "slug": "kampung-herbal-mertasela",
+    "title": "Kampung Herbal Mertasela",
+    "excerpt": "Kampung budidaya tanaman obat keluarga (TOGA) di Dusun Mertasela dengan puluhan jenis tanaman herbal dan edukasi jamu.",
+    "description": "Kampung Herbal Mertasela adalah kawasan budidaya tanaman obat keluarga (TOGA) di Dusun Mertasela, Desa Bantaragung. Kampung ini mengembangkan puluhan jenis tanaman herbal yang terdokumentasi dalam katalog digital, lengkap dengan informasi nama, manfaat, dan cara penggunaannya. Selain menjadi sentra tanaman obat, kampung ini menjadi sarana edukasi jamu, pelatihan pengolahan produk herbal, hingga aktivitas live-in untuk belajar langsung dari masyarakat.",
+    "cover": "b2h/katalog-tanaman/jahe/cover.png",
+    "gallery": [],
+    "location": {
+        "lat": -6.841111,
+        "lng": 108.392778
+    },
+    "facilities": [
+        "Kebun TOGA",
+        "Katalog digital tanaman herbal",
+        "Area edukasi",
+        "Kamar mandi umum",
+        "Musholla"
+    ],
+    "activities": [
+        "Edukasi tanaman herbal",
+        "Menjelajah kebun TOGA",
+        "Meracik jamu",
+        "Belanja produk herbal",
+        "Live-in kampung herbal"
+    ]
+}

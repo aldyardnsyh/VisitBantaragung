@@ -1,7 +1,7 @@
 {
     "slug": "membaca-dengan-kritis",
     "title": "Membaca dengan Kritis: Teknik Membaca di Era Informasi Tak Terbatas",
-    "excerpt": "Program literasi digital untuk mengajarkan teknik membaca kritis di era informasi.",
+    "excerpt": "Program ini membekali siswa dengan keterampilan membaca kritis di tengah banjir informasi digital. Peserta belajar memverifikasi sumber dan membedakan fakta dari opini untuk memperkuat literasi digital.",
     "date": "2026-01-21",
     "category": "pendidikan",
     "author": "Narandra Adhika Rizaldi",
@@ -11,8 +11,10 @@
         "bic/artikel/membaca-dengan-kritis/02.png"
     ],
     "content": [
-        "Program ini mengajarkan siswa cara membaca dengan kritis di tengah banjir informasi digital.",
-        "Peserta belajar memverifikasi sumber informasi dan membedakan fakta dari opini.",
-        "Kegiatan ini penting untuk meningkatkan literasi digital dan kemampuan berpikir kritis siswa."
-    ]
+        "Program ini mengajarkan siswa cara membaca dengan kritis di tengah banjir informasi digital. Materi mencakup teknik identifikasi sumber terpercaya serta langkah verifikasi sebelum menyebarkan informasi.",
+        "Peserta belajar memverifikasi sumber informasi dan membedakan fakta dari opini. Latihan langsung menggunakan contoh artikel dan unggahan media sosial memperkuat pemahaman mereka.",
+        "Kegiatan ini penting untuk meningkatkan literasi digital dan kemampuan berpikir kritis siswa. Dengan bekal ini, mereka diharapkan lebih bijak dalam menyaring informasi sehari-hari."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:40:45.079Z"
 }

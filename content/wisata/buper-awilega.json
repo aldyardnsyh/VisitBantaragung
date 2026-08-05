@@ -1,30 +1,26 @@
 {
-  "slug": "buper-awilega",
-  "title": "Bumi Perkemahan Awilega",
-  "excerpt": "Bumi perkemahan bernuansa hutan pinus dengan kapasitas hingga 2000 orang.",
-  "description": "Bumi Perkemahan Awilega menawarkan pengalaman camping di tengah hutan pinus yang sejuk. Area perkemahan luas dengan kapasitas besar menjadikannya pilihan favorit untuk kegiatan pramuka, gathering komunitas, hingga acara keluarga. Tersedia area api unggun, spot selfie, serta fasilitas pendukung kenyamanan pengunjung.",
-  "cover": "wisata/buper-awilega/cover.png",
-  "gallery": [
-    "wisata/buper-awilega/01.png",
-    "wisata/buper-awilega/02.png",
-    "wisata/buper-awilega/03.png"
-  ],
-  "location": {
-    "lat": -6.0,
-    "lng": 108.0
-  },
-  "facilities": [
-    "Areal parkir",
-    "Kamar mandi umum",
-    "Musholla",
-    "Selfie area",
-    "Tempat makan",
-    "Wifi area"
-  ],
-  "activities": [
-    "Camping",
-    "Api unggun",
-    "Outbound",
-    "Family gathering"
-  ]
+    "slug": "buper-awilega",
+    "title": "Bumi Perkemahan Awilega",
+    "excerpt": "Bumi perkemahan bernuansa hutan pinus dengan kapasitas hingga 2000 orang.",
+    "description": "Bumi Perkemahan Awilega menawarkan pengalaman camping di tengah hutan pinus yang sejuk. Area perkemahan luas dengan kapasitas besar menjadikannya pilihan favorit untuk kegiatan pramuka, gathering komunitas, hingga acara keluarga. Tersedia area api unggun, spot selfie, serta fasilitas pendukung kenyamanan pengunjung.",
+    "cover": "wisata/buper-awilega/cover.png",
+    "gallery": [],
+    "location": {
+        "lat": -6.841111,
+        "lng": 108.392778
+    },
+    "facilities": [
+        "Areal parkir",
+        "Kamar mandi umum",
+        "Musholla",
+        "Selfie area",
+        "Tempat makan",
+        "Wifi area"
+    ],
+    "activities": [
+        "Camping",
+        "Api unggun",
+        "Outbound",
+        "Family gathering"
+    ]
 }

@@ -1,0 +1,33 @@
+name: sync-berita
+
+on:
+  schedule:
+    - cron: "0 6,18 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Crawl WordPress news
+        run: node scripts/sync/crawl.js
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_URL: ${{ secrets.LLM_URL }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+
+      # Auto-commit: default GITHUB_TOKEN has push permission; triggers Vercel rebuild on main
+      - uses: stefanzweifel/git-auto-commit@v5
+        with:
+          commit_message: "chore: sync berita"
+          commit_user_name: github-actions[bot]
+          commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com

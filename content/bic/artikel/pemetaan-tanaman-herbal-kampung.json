@@ -1,7 +1,7 @@
 {
     "slug": "pemetaan-tanaman-herbal-kampung",
     "title": "Pemetaan Tanaman Herbal Kampung Herbal",
-    "excerpt": "Program pemetaan lokasi dan jenis tanaman herbal di Kampung Herbal untuk dokumentasi dan edukasi.",
+    "excerpt": "Program pemetaan lokasi dan jenis tanaman herbal di Kampung Herbal. Data digunakan untuk katalog digital dan jalur edukasi.",
     "date": "2026-01-28",
     "category": "teknologi",
     "author": "Evan Sebastian Afrero",
@@ -11,8 +11,10 @@
         "bic/artikel/pemetaan-tanaman-herbal-kampung/02.png"
     ],
     "content": [
-        "Program ini memetakan lokasi dan jenis tanaman herbal yang ada di Kampung Herbal.",
-        "Data pemetaan digunakan untuk membuat katalog digital dan jalur edukasi herbal.",
-        "Kegiatan ini memudahkan wisatawan dan peneliti dalam mempelajari tanaman herbal."
-    ]
+        "Program ini memetakan lokasi dan jenis tanaman herbal di Kampung Herbal. Pendataan dilakukan langsung di lapangan untuk mengidentifikasi setiap titik tumbuh.",
+        "Data hasil pemetaan kemudian diolah menjadi katalog digital. Katalog ini juga menjadi dasar perancangan jalur edukasi herbal.",
+        "Kegiatan ini memudahkan wisatawan dan peneliti dalam mempelajari tanaman herbal. Akses informasi menjadi lebih terstruktur dan mudah dipahami."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:41:25.567Z"
 }

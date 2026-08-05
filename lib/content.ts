@@ -138,6 +138,8 @@ export function getHerbalBySlug(slug: string): Herbal {
     return loadJSON<Herbal>(`b2h/katalog-tanaman/${slug}.json`);
 }
 
+export type ArticleOrigin = "kkn" | "berita";
+
 export interface Article {
     slug: string;
     title: string;
@@ -148,30 +150,63 @@ export interface Article {
     cover: string;
     gallery: string[];
     content: string[];
+    origin: ArticleOrigin;
+    tags?: string[];
+    sourceUrl?: string;
+    sourcePublishedAt?: string;
+    updatedAt?: string;
 }
 
-export function getAllArticles(): Article[] {
-    const dir = path.join(CONTENT_DIR, "bic/artikel");
-    const files = fs.readdirSync(dir);
+function listJSON<T>(dirName: string): T[] {
+    const dir = path.join(CONTENT_DIR, dirName);
+    if (!fs.existsSync(dir)) return [];
+    return fs
+        .readdirSync(dir)
+        .map((file) => {
+            const raw = fs.readFileSync(path.join(dir, file), "utf-8");
+            const data = JSON.parse(raw) as T & {
+                slug?: string;
+                title?: string;
+                origin?: ArticleOrigin;
+            };
+            if (!data || (!data.slug && !data.title)) return null;
+            data.origin = data.origin ?? "kkn";
+            return data;
+        })
+        .filter((d): d is NonNullable<T> => d !== null);
+}
 
-    return files.map((file) => {
-        const raw = fs.readFileSync(path.join(dir, file), "utf-8");
-        return JSON.parse(raw);
-    });
+const ARTICLE_DIRS = ["bic/artikel", "bic/berita"];
+
+export function getAllArticles(): Article[] {
+    const all = ARTICLE_DIRS.flatMap((dir) => listJSON<Article>(dir));
+    return all.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+}
+
+export function getAllBerita(): Article[] {
+    return listJSON<Article>("bic/berita").sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+}
+
+export function getArticlesByOrigin(origin: ArticleOrigin): Article[] {
+    return getAllArticles()
+        .filter((a) => a.origin === origin)
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
+
+export function getRecentArticles(limit: number): Article[] {
+    return getAllArticles().slice(0, limit);
 }
 
 export function getArticleBySlug(slug: string): Article | null {
-    const dir = path.join(CONTENT_DIR, "bic/artikel");
-    const files = fs.readdirSync(dir);
-
-    const file = files.find((f) => {
-        const data = JSON.parse(fs.readFileSync(path.join(dir, f), "utf-8"));
-        return data.slug === slug;
-    });
-
-    if (!file) return null;
-
-    return JSON.parse(fs.readFileSync(path.join(dir, file), "utf-8"));
+    for (const dir of ARTICLE_DIRS) {
+        const found = listJSON<Article>(dir).find((d) => d.slug === slug);
+        if (found) return found;
+    }
+    return null;
 }
 
 export interface Location {

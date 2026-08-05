@@ -3,6 +3,7 @@ import Navbar from "@/app/components/layout/Navbar";
 import { getSeoSettings } from "@/lib/content";
 import type { Metadata } from "next";
 import Footer from "@/app/components/layout/Footer";
+import { assetUrl } from "@/lib/asset";
 
 
 export const metadata: Metadata = (() => {
@@ -81,7 +82,10 @@ export const metadata: Metadata = (() => {
       canonical: process.env.NEXT_PUBLIC_SITE_URL || 'https://visitbantaragung.com',
     },
     icons: {
-      icon: '/favicon.ico',
+      icon: [
+        { url: '/icon.svg', type: 'image/svg+xml' },
+        { url: '/favicon.ico' },
+      ],
     },
     openGraph: {
       title: seo.defaultTitle,
@@ -94,6 +98,12 @@ export const metadata: Metadata = (() => {
           url: seo.ogImage,
         },
       ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seo.defaultTitle,
+      description: seo.defaultDescription,
+      images: [assetUrl('_brand/covers/og-default.png')],
     },
     verification: {
       google: 'q5XFEl4u6UQnudUL2FkxQGebBybzBOvBbP92svZtzog',

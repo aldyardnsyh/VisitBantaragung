@@ -1,7 +1,7 @@
 {
     "slug": "bantaragung-herbal-hub-b2h",
     "title": "Bantaragung Herbal Hub (B2H): Digitalisasi Kampung Herbal",
-    "excerpt": "Program digitalisasi katalog tanaman herbal Kampung Herbal Bantaragung.",
+    "excerpt": "Program B2H mendigitalisasi katalog tanaman herbal Kampung Herbal dalam platform digital, menyediakan informasi lengkap tentang jenis, manfaat, dan cara penggunaan tanaman herbal.",
     "date": "2026-02-05",
     "category": "teknologi",
     "author": "Aldy Ardiansyah",
@@ -11,8 +11,11 @@
         "bic/artikel/bantaragung-herbal-hub-b2h/02.png"
     ],
     "content": [
-        "Program B2H mendigitalisasi katalog tanaman herbal Kampung Herbal dalam platform digital.",
-        "Platform ini menyediakan informasi lengkap tentang jenis, manfaat, dan cara penggunaan tanaman herbal.",
-        "Kegiatan ini mempermudah akses informasi herbal dan memperkuat identitas Kampung Herbal."
-    ]
+        "Bantaragung Herbal Hub (B2H) menghadirkan platform digital untuk mengelola katalog tanaman herbal di Kampung Herbal. Melalui program ini, seluruh data tanaman yang tersedia di kampung didokumentasikan secara sistematis dalam satu wadah daring.",
+        "Platform B2H memuat informasi terperinci mengenai jenis tanaman, khasiatnya bagi kesehatan, serta panduan penggunaan yang tepat. Masyarakat dan pengunjung dapat mengakses data tersebut dengan mudah tanpa harus mencari informasi dari berbagai sumber terpisah.",
+        "Kehadiran B2H mempermudah akses informasi herbal sekaligus memperkuat identitas Kampung Herbal sebagai destinasi berbasis tanaman obat. Dokumentasi digital ini menjadikan potensi lokal lebih dikenal luas dan lebih mudah dipromosikan.",
+        "Dengan digitalisasi katalog, pengelolaan data herbal menjadi lebih terstruktur dan transparan. Program ini menjadi langkah awal dalam membangun ekosistem informasi herbal yang lebih modern dan terjangkau bagi semua kalangan."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:38:42.022Z"
 }

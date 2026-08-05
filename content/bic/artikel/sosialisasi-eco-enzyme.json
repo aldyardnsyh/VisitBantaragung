@@ -1,18 +1,21 @@
 {
     "slug": "sosialisasi-eco-enzyme",
     "title": "Sosialisasi Eco Enzyme untuk Sampah Organik",
-    "excerpt": "Program edukasi pembuatan eco enzyme dari sampah organik untuk pembersih ramah lingkungan.",
+    "excerpt": "Program ini mengajarkan masyarakat mengolah sampah organik rumah tangga menjadi eco enzyme, pembersih alami ramah lingkungan yang bermanfaat sekaligus mengurangi limbah.",
     "date": "2026-01-15",
     "category": "lingkungan",
-    "author": "Cicilia Linova",
+    "author": "Cicilia Linova Rizka Pradita",
     "cover": "bic/artikel/sosialisasi-eco-enzyme/cover.png",
     "gallery": [
         "bic/artikel/sosialisasi-eco-enzyme/01.png",
         "bic/artikel/sosialisasi-eco-enzyme/02.png"
     ],
     "content": [
-        "Program ini mengajarkan masyarakat cara membuat eco enzyme dari sampah organik rumah tangga.",
-        "Eco enzyme dapat digunakan sebagai pembersih alami yang ramah lingkungan.",
-        "Kegiatan ini mengurangi sampah organik dan menghasilkan produk bermanfaat."
-    ]
+        "Sosialisasi eco enzyme hadir sebagai solusi pengelolaan sampah organik rumah tangga. Warga diajak memanfaatkan limbah dapur menjadi produk pembersih alami yang ramah lingkungan.",
+        "Program ini memberikan pemahaman praktis tentang pembuatan eco enzyme. Bahan-bahan sederhana seperti sisa buah dan sayur difermentasi menjadi cairan serbaguna yang aman digunakan sehari-hari.",
+        "Eco enzyme tidak hanya mengurangi volume sampah organik yang berakhir di TPA. Produk ini juga menjadi alternatif pengganti pembersih kimia yang lebih sehat bagi keluarga dan lingkungan.",
+        "Kegiatan ini diharapkan menumbuhkan kebiasaan baru dalam pengelolaan sampah berbasis rumah tangga. Dampaknya terasa langsung: lingkungan lebih bersih, dan warga memperoleh produk bernilai guna dari limbah yang tadinya dibuang."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:42:30.182Z"
 }

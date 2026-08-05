@@ -1,9 +1,9 @@
 {
-  "slug": "villa-gardenstone",
-  "name": "Villa Gardenstone",
-  "category": "akomodasi",
-  "excerpt": "Villa modern bernuansa alam untuk keluarga dan rombongan kecil.",
-  "lat": -6.0,
-  "lng": 108.0,
-  "cover": "wisata/villa-gardenstone/cover.png"
+    "slug": "villa-gardenstone",
+    "name": "Villa Gardenstone",
+    "category": "akomodasi",
+    "excerpt": "Villa modern bernuansa alam untuk keluarga dan rombongan kecil.",
+    "lat": -6.841111,
+    "lng": 108.392778,
+    "cover": "wisata/villa-gardenstone/cover.png"
 }

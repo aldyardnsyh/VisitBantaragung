@@ -1,0 +1,26 @@
+{
+    "slug": "pasar-bumi-pakuwon",
+    "title": "Pasar Bumi Pakuwon",
+    "excerpt": "Pasar tradisional bulanan yang digelar di tengah hamparan sawah dengan transaksi unik menggunakan benggol.",
+    "description": "Pasar Bumi Pakuwon merupakan pasar tradisional terbuka yang digelar satu kali setiap bulan di tengah hamparan sawah Dusun Pakuwon, Desa Bantaragung. Lebih dari sekadar tempat berbelanja, pasar ini mempertemukan alam, budaya, dan ekonomi masyarakat dalam satu pengalaman, menghadirkan beragam kuliner khas, hasil bumi, produk UMKM, kopi lokal, hingga pertunjukan seni tradisional yang melibatkan masyarakat setempat. Keunikan utamanya adalah penggunaan benggol, keping kayu yang menjadi alat transaksi selama berada di area pasar, yang dapat diperoleh dengan menukarkan uang atau membayar melalui QRIS. Konsep ini menjadi simbol pelestarian budaya sekaligus inovasi dalam mendukung ekonomi lokal.",
+    "cover": "wisata/terasering-ciboer/cover.png",
+    "gallery": [],
+    "location": {
+        "lat": -6.841111,
+        "lng": 108.392778
+    },
+    "facilities": [
+        "Areal parkir",
+        "Tempat makan",
+        "Kuliner lokal",
+        "Tenant UMKM",
+        "Pembayaran QRIS"
+    ],
+    "activities": [
+        "Belanja hasil bumi",
+        "Kuliner tradisional",
+        "Belanja produk UMKM",
+        "Pertunjukan seni",
+        "Ngopi"
+    ]
+}

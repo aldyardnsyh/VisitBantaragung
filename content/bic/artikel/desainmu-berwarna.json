@@ -1,7 +1,7 @@
 {
     "slug": "desainmu-berwarna",
     "title": "Desainmu Berwarna: Berkomunikasi Menggunakan Visual",
-    "excerpt": "Workshop desain grafis untuk meningkatkan kemampuan komunikasi visual masyarakat.",
+    "excerpt": "Program pelatihan desain grafis untuk komunikasi visual efektif. Peserta belajar tools desain dan prinsip desain guna meningkatkan promosi produk dan kegiatan desa.",
     "date": "2026-02-02",
     "category": "kreativitas",
     "author": "Irwan Febriano Primastya",
@@ -11,8 +11,10 @@
         "bic/artikel/desainmu-berwarna/02.png"
     ],
     "content": [
-        "Program ini mengajarkan dasar-dasar desain grafis untuk komunikasi visual yang efektif.",
-        "Peserta belajar menggunakan tools desain dan prinsip-prinsip desain yang baik.",
+        "Program ini mengajarkan dasar-dasar desain grafis. Fokusnya pada komunikasi visual yang efektif.",
+        "Peserta belajar menggunakan tools desain. Prinsip-prinsip desain yang baik juga dipelajari.",
         "Kegiatan ini meningkatkan kemampuan promosi produk dan kegiatan desa."
-    ]
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:39:04.109Z"
 }

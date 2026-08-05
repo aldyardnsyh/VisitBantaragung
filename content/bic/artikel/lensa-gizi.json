@@ -1,18 +1,21 @@
 {
     "slug": "lensa-gizi",
-    "title": "Lensa Gizi: Melihat Kondisi Gizi dan Edukasi Pola Makan Anak Sekolah",
-    "excerpt": "Program pemantauan status gizi dan edukasi pola makan sehat untuk anak sekolah.",
+    "title": "Lensa Gizi: Memantau dan Mengedukasi Pola Makan Anak Sekolah di Bantaragung",
+    "excerpt": "Program Lensa Gizi hadir untuk memantau kondisi gizi anak sekolah di Desa Bantaragung sekaligus memberikan edukasi pola makan sehat dan gizi seimbang demi tumbuh kembang optimal.",
     "date": "2026-01-20",
     "category": "kesehatan",
-    "author": "Cicilia Linova",
+    "author": "Cicilia Linova Rizka Pradita",
     "cover": "bic/artikel/lensa-gizi/cover.png",
     "gallery": [
         "bic/artikel/lensa-gizi/01.png",
         "bic/artikel/lensa-gizi/02.png"
     ],
     "content": [
-        "Program Lensa Gizi melakukan pemantauan kondisi gizi anak sekolah di Desa Bantaragung.",
-        "Anak-anak diberikan edukasi tentang pentingnya pola makan sehat dan gizi seimbang.",
-        "Kegiatan ini bertujuan untuk meningkatkan kesadaran akan pentingnya nutrisi yang baik untuk tumbuh kembang anak."
-    ]
+        "Program Lensa Gizi menjadi salah satu inisiatif yang menyasar kesehatan anak sekolah di Desa Bantaragung. Melalui kegiatan ini, dilakukan pemantauan langsung terhadap kondisi gizi para siswa, mulai dari pengukuran antropometri hingga penilaian status gizi. Data yang terkumpul menjadi dasar untuk menentukan langkah intervensi yang tepat.",
+        "Selain pemantauan, anak-anak juga menerima edukasi mengenai pentingnya pola makan sehat dan gizi seimbang. Materi disampaikan dengan cara yang interaktif agar mudah dipahami, seperti pengenalan jenis makanan bergizi, porsi makan yang ideal, serta dampak kekurangan gizi bagi tubuh. Edukasi ini diharapkan mampu mengubah kebiasaan makan anak menjadi lebih baik.",
+        "Kegiatan ini bertujuan untuk meningkatkan kesadaran sejak dini akan pentingnya nutrisi bagi tumbuh kembang. Dengan pemahaman yang benar, anak-anak diharapkan mampu memilih makanan yang bergizi secara mandiri. Program ini juga menjadi langkah preventif untuk mencegah masalah gizi buruk di masa mendatang.",
+        "Dukungan dari orang tua dan guru menjadi kunci keberhasilan program ini. Lensa Gizi tidak hanya berhenti pada kegiatan di sekolah, tetapi juga mendorong lingkungan rumah untuk menerapkan pola makan sehat. Kolaborasi semua pihak diharapkan dapat menciptakan generasi yang lebih sehat dan cerdas di Desa Bantaragung."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:40:34.850Z"
 }

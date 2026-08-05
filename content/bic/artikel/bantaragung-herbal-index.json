@@ -1,18 +1,20 @@
 {
     "slug": "bantaragung-herbal-index",
     "title": "Bantaragung Herbal Index: Katalog Digital Tanaman Herbal",
-    "excerpt": "Program pembuatan katalog digital lengkap tanaman herbal Kampung Herbal Bantaragung.",
+    "excerpt": "Katalog digital tanaman herbal di Kampung Herbal, Bantaragung. Memuat nama, manfaat, cara penggunaan, dan lokasi. Mendukung edukasi wisatawan.",
     "date": "2026-01-30",
     "category": "teknologi",
-    "author": "Fauzia Syarahrah Imamia",
+    "author": "Fauzia Isyarah Imamia",
     "cover": "bic/artikel/bantaragung-herbal-index/cover.png",
     "gallery": [
         "bic/artikel/bantaragung-herbal-index/01.png",
         "bic/artikel/bantaragung-herbal-index/02.png"
     ],
     "content": [
-        "Program ini membuat katalog digital lengkap tanaman herbal yang ada di Kampung Herbal.",
-        "Katalog berisi informasi detail tentang nama, manfaat, cara penggunaan, dan lokasi tanaman.",
-        "Kegiatan ini mempermudah akses informasi herbal dan mendukung edukasi wisatawan."
-    ]
+        "Bantaragung Herbal Index menghadirkan katalog digital lengkap tanaman herbal di Kampung Herbal. Program ini merangkum kekayaan flora obat secara sistematis dan mudah diakses.",
+        "Katalog memuat detail penting: nama tanaman, manfaat kesehatan, cara penggunaan, serta lokasi tumbuhnya. Informasi disusun praktis untuk pengunjung dan masyarakat umum.",
+        "Kehadiran katalog ini mempermudah akses informasi herbal. Sekaligus memperkuat edukasi wisatawan tentang potensi pengobatan alami di desa wisata Bantaragung."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:38:44.815Z"
 }

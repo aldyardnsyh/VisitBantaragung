@@ -1,7 +1,7 @@
 {
     "slug": "kanvas-herbalia",
-    "title": "Kanvas Herbalia",
-    "excerpt": "Program seni melukis dengan tema tanaman herbal untuk edukasi dan apresiasi seni.",
+    "title": "Kanvas Herbalia: Melukis Tema Tanaman Herbal untuk Promosi Kampung Herbal",
+    "excerpt": "Program seni yang menggabungkan edukasi keanekaragaman tanaman herbal dengan aktivitas melukis. Karya masyarakat menjadi media promosi Kampung Herbal.",
     "date": "2026-01-05",
     "category": "seni",
     "author": "Jovinka Aldinova Kiranamurti",
@@ -11,8 +11,10 @@
         "bic/artikel/kanvas-herbalia/02.png"
     ],
     "content": [
-        "Program Kanvas Herbalia mengajak masyarakat melukis dengan tema tanaman herbal.",
-        "Kegiatan ini menggabungkan seni dan edukasi tentang keanekaragaman tanaman herbal.",
-        "Hasil karya dapat digunakan sebagai media promosi Kampung Herbal."
-    ]
+        "Kanvas Herbalia mengajak masyarakat melukis dengan tema tanaman herbal. Kegiatan ini memadukan seni dan edukasi tentang keanekaragaman tanaman herbal di sekitar.",
+        "Melalui program ini, peserta diajak mengenal lebih dekat jenis-jenis tanaman herbal. Proses melukis menjadi sarana belajar yang kreatif dan menyenangkan.",
+        "Hasil karya lukisan tersebut tidak hanya bernilai seni. Karya ini juga dimanfaatkan sebagai media promosi Kampung Herbal, memperkenalkan kekayaan tanaman herbal kepada khalayak lebih luas."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:40:12.612Z"
 }

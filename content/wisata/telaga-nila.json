@@ -1,0 +1,25 @@
+{
+    "slug": "telaga-nila",
+    "title": "Telaga Nila",
+    "excerpt": "Telaga dengan air jernih dari mata air pegunungan yang menyegarkan, cocok untuk pemulihan energi.",
+    "description": "Telaga Nila adalah telaga dengan air jernih yang berasal dari sumber mata air pegunungan asli di kawasan Desa Wisata Bantaragung, kaki Gunung Ciremai. Kesegaran airnya yang murni menjadi pilihan untuk menyegarkan diri dan memulihkan energi, dikelilingi suasana alam pegunungan yang asri. Telaga ini cocok untuk bermain air, piknik keluarga, dan melepas penat dari kebisingan kota.",
+    "cover": "wisata/curug-cipeuteuy/cover.png",
+    "gallery": [],
+    "location": {
+        "lat": -6.841111,
+        "lng": 108.392778
+    },
+    "facilities": [
+        "Areal parkir",
+        "Kamar mandi umum",
+        "Spot foto",
+        "Musholla"
+    ],
+    "activities": [
+        "Bermain air",
+        "Berenang",
+        "Piknik keluarga",
+        "Fotografi",
+        "Relaksasi"
+    ]
+}

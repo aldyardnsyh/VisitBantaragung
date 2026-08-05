@@ -1,7 +1,7 @@
 {
     "slug": "bantaragung-map-center-bmc",
     "title": "Bantaragung Map Center (BMC): Peta Digital Kampung Herbal & Jalur Wisata",
-    "excerpt": "Program pengembangan peta digital untuk navigasi Kampung Herbal dan jalur wisata.",
+    "excerpt": "BMC menghadirkan peta digital interaktif untuk navigasi Kampung Herbal dan jalur wisata. Informasi lokasi tanaman, destinasi, dan fasilitas umum tersaji lengkap.",
     "date": "2026-02-05",
     "category": "teknologi",
     "author": "Aldy Ardiansyah",
@@ -11,8 +11,10 @@
         "bic/artikel/bantaragung-map-center-bmc/02.png"
     ],
     "content": [
-        "Program BMC mengembangkan peta digital interaktif untuk navigasi Kampung Herbal dan jalur wisata.",
-        "Peta dilengkapi dengan informasi lokasi tanaman herbal, destinasi wisata, dan fasilitas umum.",
-        "Kegiatan ini memudahkan wisatawan dalam menjelajahi Kampung Herbal dan desa wisata."
-    ]
+        "Bantaragung Map Center (BMC) mengembangkan peta digital interaktif yang memetakan Kampung Herbal dan jalur wisata secara menyeluruh. Inisiatif ini dirancang untuk membantu wisatawan menemukan lokasi dengan mudah dan cepat.",
+        "Peta tersebut memuat informasi detail tentang posisi tanaman herbal, destinasi wisata unggulan, serta fasilitas umum seperti area parkir dan pusat informasi. Data disusun agar navigasi lebih praktis dan akurat.",
+        "Melalui BMC, pengunjung dapat menjelajahi Kampung Herbal dan desa wisata tanpa kebingungan. Program ini menjadi solusi digital yang mendukung kenyamanan eksplorasi sekaligus memperkuat daya tarik wisata lokal."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:38:57.761Z"
 }

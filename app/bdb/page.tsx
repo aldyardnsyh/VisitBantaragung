@@ -1,120 +1,105 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { getAllHomestay, getAllUMKM } from "@/lib/content";
-import { assetUrl } from "@/lib/asset";
-import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";
-import BackgroundPattern from "@/app/components/ui/BackgroundPattern";
-import Breadcrumb from "@/app/components/ui/Breadcrumb";
+import PageHeader from "@/app/components/layout/PageHeader";
+import Reveal from "@/app/components/ui/Reveal";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Branding Desa (BDB)",
-  description: "Bantaragung Digital Branding – Katalog digital UMKM lokal, homestay, dan potensi ekonomi kreatif Desa Bantaragung, Majalengka.",
+    title: "Branding Desa (BDB)",
+    description:
+        "Bantaragung Digital Branding  -  Katalog digital UMKM lokal, homestay, dan potensi ekonomi kreatif Desa Bantaragung, Majalengka.",
 };
 
 export default function BDBLanding() {
-  const homestays = getAllHomestay().slice(0, 3);
-  const umkms = getAllUMKM().slice(0, 3);
+    const homestayCount = getAllHomestay().length;
+    const umkmCount = getAllUMKM().length;
 
-  return (
-    <main className="max-w-6xl mx-auto px-6 py-16 space-y-12">
-      <Breadcrumb items={[{ label: "Branding Desa" }]} />
-      <section className="relative rounded-3xl bg-gradient-to-br from-[#102440] to-[#1b3b6f] text-white p-10 md:p-12 space-y-4 shadow-lg">
-        <BackgroundPattern variant="geometric" opacity={0.04} className="text-white" />
-        <div className="inline-flex items-center gap-2 rounded-full badge-dark px-4 py-1 text-xs uppercase tracking-widest">
-          Branding Desa
-        </div>
-        <h1 className="text-3xl md:text-4xl font-bold">
-          Bantaragung Digital Branding (BDB)
-        </h1>
-        <p className="text-white/80 max-w-2xl">
-          Katalog digital potensi Desa Bantaragung yang mencakup UMKM lokal,
-          homestay, serta paket wisata edukasi.
-        </p>
-      </section>
+    const cards = [
+        {
+            href: "/bdb/homestay",
+            title: "Homestay",
+            count: homestayCount,
+            description:
+                "Penginapan warga untuk pengalaman live-in di tengah desa wisata: suasana pedesaan, kuliner lokal, dan keramahan tuan rumah.",
+            icon: (
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                    />
+                </svg>
+            ),
+        },
+        {
+            href: "/bdb/umkm",
+            title: "UMKM Lokal",
+            count: umkmCount,
+            description:
+                "Katalog usaha mikro masyarakat Bantaragung: warung, toko, dan produk lokal yang siap dipesan langsung via WhatsApp.",
+            icon: (
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                    />
+                </svg>
+            ),
+        },
+    ];
 
-      {/* UMKM Section */}
-      <section className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-[#102440]">UMKM Lokal</h2>
-            <p className="text-sm text-slate-600 mt-1">Produk unggulan masyarakat Desa Bantaragung</p>
-          </div>
-          <Link
-            href="/bdb/umkm"
-            className="inline-flex items-center gap-2 text-[#e7c277] hover:text-[#102440] font-medium transition"
-          >
-            Lihat Seluruhnya
-            <span aria-hidden>→</span>
-          </Link>
-        </div>
+    return (
+        <main className="min-h-screen">
+            <PageHeader
+                breadcrumb={[{ label: "Branding Desa" }]}
+                eyebrow="BDB"
+                title="Bantaragung Digital Branding"
+                subtitle="Katalog digital potensi Desa Bantaragung yang mencakup UMKM lokal, homestay, serta paket wisata edukasi."
+            />
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {umkms.map((item: any) => (
-            <Link key={item.slug} href={`/bdb/umkm/${item.slug}`}>
-              <article className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition border border-[#e7c277]/40">
-                <div className="relative">
-                  <ImageWithSkeleton
-                    src={assetUrl(item.cover)}
-                    alt={item.name}
-                    className="h-48 w-full object-cover group-hover:scale-105 transition duration-300"
-                  />
-                </div>
-                <div className="p-5 space-y-3">
-                  <h3 className="font-semibold leading-snug">{item.name}</h3>
-                  <p className="text-sm text-gray-600 line-clamp-2">{item.excerpt}</p>
-                  <span className="inline-flex items-center gap-1 text-[#e7c277] text-sm font-medium">
-                    Lihat detail
-                    <span aria-hidden>→</span>
-                  </span>
-                </div>
-              </article>
-            </Link>
-          ))}
-        </div>
-      </section>
+            <section className="max-w-7xl mx-auto px-6 py-16 space-y-12">
+                <section className="prose max-w-3xl">
+                    <h2 className="font-display text-2xl md:text-3xl font-bold text-forest-800">
+                        Bisnis Desa Bantaragung
+                    </h2>
+                    <p className="text-slate-600 leading-relaxed">
+                        BDB menghadirkan panggung digital bagi pelaku usaha dan penyedia penginapan
+                        desa. Setiap kunjungan wisatawan turut mendorong ekonomi warga  -  mulai dari
+                        menginap di homestay warga hingga berbelanja kebutuhan di UMKM setempat.
+                    </p>
+                </section>
 
-      {/* Homestay Section */}
-      <section className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-[#102440]">Homestay</h2>
-            <p className="text-sm text-slate-600 mt-1">Penginapan warga untuk pengalaman live-in desa wisata</p>
-          </div>
-          <Link
-            href="/bdb/homestay"
-            className="inline-flex items-center gap-2 text-[#e7c277] hover:text-[#102440] font-medium transition"
-          >
-            Lihat Seluruhnya
-            <span aria-hidden>→</span>
-          </Link>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {homestays.map((item: any) => (
-            <Link key={item.slug} href={`/bdb/homestay/${item.slug}`}>
-              <article className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition border border-[#e7c277]/40">
-                <div className="relative">
-                  <ImageWithSkeleton
-                    src={assetUrl(item.cover)}
-                    alt={item.name}
-                    className="h-48 w-full object-cover group-hover:scale-105 transition duration-300"
-                  />
-                </div>
-                <div className="p-5 space-y-3">
-                  <h3 className="font-semibold leading-snug">{item.name}</h3>
-                  <p className="text-sm text-gray-600 line-clamp-2">{item.excerpt}</p>
-                  <span className="inline-flex items-center gap-1 text-[#e7c277] text-sm font-medium">
-                    Lihat detail
-                    <span aria-hidden>→</span>
-                  </span>
-                </div>
-              </article>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-    </main>
-  );
+                <section className="grid md:grid-cols-2 gap-6">
+                    {cards.map((card, i) => (
+                        <Reveal key={card.href} delay={i * 120} className="h-full">
+                            <Link
+                                href={card.href}
+                                className="group flex flex-col bg-white rounded-2xl border border-forest-200/60 shadow-sm hover:shadow-md transition p-8 gap-4 h-full"
+                        >
+                            <div className="flex items-center justify-between">
+                                <span className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-forest-100 text-forest-700">
+                                    {card.icon}
+                                </span>
+                                <span className="bg-clay-100 text-clay-500 rounded-full px-3 py-1 text-xs font-semibold">
+                                    {card.count} Tersedia
+                                </span>
+                            </div>
+                            <h3 className="font-display text-2xl font-bold text-forest-800">
+                                {card.title}
+                            </h3>
+                            <p className="text-slate-600 leading-relaxed">{card.description}</p>
+                            <span className="mt-auto inline-flex items-center gap-1 text-sm font-semibold text-forest-600 transition-colors duration-200 group-hover:text-clay-600">
+                                Jelajahi {card.title}
+                                <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
+                            </span>
+                            </Link>
+                        </Reveal>
+                    ))}
+                </section>
+            </section>
+        </main>
+    );
 }
-

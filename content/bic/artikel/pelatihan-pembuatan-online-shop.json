@@ -1,18 +1,20 @@
 {
     "slug": "pelatihan-pembuatan-online-shop",
-    "title": "Pelatihan Pembuatan Online Shop",
-    "excerpt": "Program pelatihan pembuatan toko online untuk UMKM agar dapat memasarkan produk secara digital.",
+    "title": "Pelatihan Pembuatan Online Shop untuk UMKM",
+    "excerpt": "Program pelatihan bagi pelaku UMKM dalam membuat dan mengelola toko online. Peserta belajar memanfaatkan platform e-commerce dan media sosial untuk pemasaran.",
     "date": "2026-01-14",
     "category": "ekonomi",
-    "author": "Fauzia Syarahrah Imamia",
+    "author": "Fauzia Isyarah Imamia",
     "cover": "bic/artikel/pelatihan-pembuatan-online-shop/cover.png",
     "gallery": [
         "bic/artikel/pelatihan-pembuatan-online-shop/01.png",
         "bic/artikel/pelatihan-pembuatan-online-shop/02.png"
     ],
     "content": [
-        "Program ini melatih pelaku UMKM cara membuat dan mengelola toko online.",
-        "Peserta belajar menggunakan platform e-commerce dan media sosial untuk pemasaran.",
-        "Kegiatan ini membantu UMKM memperluas jangkauan pasar secara digital."
-    ]
+        "Program ini melatih pelaku UMKM cara membuat dan mengelola toko online secara praktis. Fokus utama pada pengenalan platform e-commerce yang mudah digunakan serta strategi dasar pengelolaan toko digital.",
+        "Peserta belajar menggunakan platform e-commerce dan media sosial untuk pemasaran produk. Materi mencakup pembuatan katalog, pengaturan harga, hingga interaksi dengan pembeli melalui kanal digital.",
+        "Kegiatan ini membantu UMKM memperluas jangkauan pasar secara digital. Dengan keterampilan ini, pelaku usaha dapat menjangkau konsumen lebih luas tanpa terbatas wilayah geografis."
+    ],
+    "_rewritten": true,
+    "updatedAt": "2026-08-05T22:41:04.629Z"
 }

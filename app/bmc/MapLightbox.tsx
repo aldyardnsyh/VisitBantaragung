@@ -3,18 +3,51 @@
 import { useState, useEffect } from "react";
 import { assetUrl } from "@/lib/asset";
 
+interface MapItem {
+    image: string;
+    title: string;
+    description: string;
+}
+
 interface MapLightboxProps {
     isOpen: boolean;
     onClose: () => void;
     mapImage: string;
     mapTitle: string;
     mapDescription: string;
-    allMaps: Array<{ image: string; title: string; description: string }>;
+    allMaps: MapItem[];
     currentIndex: number;
     onNavigate: (index: number) => void;
 }
 
 export default function MapLightbox({
+    isOpen,
+    onClose,
+    mapImage,
+    mapTitle,
+    mapDescription,
+    allMaps,
+    currentIndex,
+    onNavigate,
+}: MapLightboxProps) {
+    if (!isOpen) return null;
+
+    return (
+        <MapLightboxContent
+            key={mapImage}
+            isOpen={true}
+            onClose={onClose}
+            mapImage={mapImage}
+            mapTitle={mapTitle}
+            mapDescription={mapDescription}
+            allMaps={allMaps}
+            currentIndex={currentIndex}
+            onNavigate={onNavigate}
+        />
+    );
+}
+
+function MapLightboxContent({
     isOpen,
     onClose,
     mapImage,
@@ -57,13 +90,6 @@ export default function MapLightbox({
             document.removeEventListener("keydown", handleArrows);
         };
     }, [isOpen, currentIndex, allMaps.length, onNavigate]);
-
-    // Reset zoom when map changes
-    useEffect(() => {
-        setZoom(1);
-    }, [mapImage]);
-
-    if (!isOpen) return null;
 
     const handleDownload = () => {
         const link = document.createElement("a");
