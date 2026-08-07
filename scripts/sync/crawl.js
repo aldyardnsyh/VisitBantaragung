@@ -40,18 +40,75 @@ const LLM_REWRITE = Boolean(LLM_API_KEY && LLM_URL) && !process.argv.includes("-
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-async function getJson(url) {
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 30000);
-  try {
-    const res = await fetch(url, { signal: ctrl.signal });
-    if (!res.ok) throw new Error(`HTTP ${res.status} on ${url}`);
-    const data = await res.json();
-    if (!Array.isArray(data) && data.code) throw new Error(`WP error ${data.code}: ${data.message} on ${url}`);
-    return data;
-  } finally {
-    clearTimeout(timer);
+// User-Agent eksplisit: WP/shared-hosting sering memblokir request tanpa UA
+// atau dari IP datacenter GitHub Actions.
+const UA = "VisitBantaragungBot/1.0 (+visitbantaragung.com)";
+const BASE_HEADERS = { "User-Agent": UA };
+
+// Fetch dengan retry/backoff untuk menahan 429/5xx/network glitch di CI
+async function getWithRetry(url, options = {}, attempts = 3) {
+  let lastErr;
+  for (let i = 1; i <= attempts; i++) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 30000);
+    try {
+      const res = await fetch(url, {
+        signal: ctrl.signal,
+        ...options,
+        headers: { ...BASE_HEADERS, ...(options.headers || {}) },
+      });
+      if ((res.status === 429 || res.status >= 500) && i < attempts) {
+        await sleep(1500 * i);
+        continue;
+      }
+      if (!res.ok) throw new Error(`HTTP ${res.status} on ${url}`);
+      return res;
+    } catch (e) {
+      if (i < attempts && !/^HTTP 4/.test(e.message)) {
+        lastErr = e;
+        await sleep(1500 * i);
+        continue;
+      }
+      throw e;
+    } finally {
+      clearTimeout(timer);
+    }
   }
+  throw lastErr || new Error("gagal fetch");
+}
+
+async function getJson(url) {
+  const res = await getWithRetry(url);
+  const data = await res.json();
+  if (!Array.isArray(data) && data.code) throw new Error(`WP error ${data.code}: ${data.message} on ${url}`);
+  return data;
+}
+
+function stripTags(s) {
+  return String(s || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+// Fallback RSS bila REST API diblokir dari domain/IP runner
+async function fetchRss() {
+  const res = await getWithRetry("https://bantaragung.com/feed/");
+  const xml = await res.text();
+  const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((m) => m[1]);
+  return items.map((it) => {
+    const title = stripTags((it.match(/<title[^>]*>([\s\S]*?)<\/title>/) || [])[1] || "");
+    const link = ((it.match(/<link>([^<]+)<\/link>|href="([^"]+)"\/>/i) || [])[1] || (it.match(/<guid[^>]*>([^<]+)/) || [])[1] || "").trim();
+    const date = (it.match(/<pubDate[^>]*>([^<]+)/) || [])[1] || "";
+    const desc = stripTags((it.match(/<description[^>]*>([\s\S]*?)<\/description>/) || [])[1] || "");
+    const slug = (link.split("/").filter(Boolean).pop() || "").replace(/[^a-z0-9-]/gi, "");
+    return {
+      slug,
+      link,
+      title,
+      date: new Date(date).toISOString(),
+      content: { rendered: desc },
+      excerpt: { rendered: desc },
+      categories: [],
+    };
+  });
 }
 
 async function fetchPages(route, cap) {
@@ -257,6 +314,7 @@ async function rewriteArticle(post) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "User-Agent": UA,
         Authorization: `Bearer ${LLM_API_KEY}`,
       },
       body: JSON.stringify({
@@ -364,11 +422,10 @@ async function fetchCover(post, slug) {
   if (DRY) return `/berita/${slug}/cover.jpg`;
   let res;
   try {
-    res = await fetch(src);
+    res = await getWithRetry(src, {}, 2);
   } catch {
     return "";
   }
-  if (!res.ok) return "";
   const type = (res.headers.get("content-type") || "").toLowerCase();
   if (!/(jpeg|jpg|png|webp)/.test(type)) return "";
   const buf = Buffer.from(await res.arrayBuffer());
@@ -382,10 +439,22 @@ async function fetchCover(post, slug) {
 async function main() {
   if (DRY) console.log("[dry-run] no files will be written, no covers downloaded");
   const catsById = new Map();
-  for (const c of await fetchPages("categories", 3)) {
-    catsById.set(c.id, { name: c.name, slug: c.slug });
+  try {
+    for (const c of await fetchPages("categories", 3)) {
+      catsById.set(c.id, { name: c.name, slug: c.slug });
+    }
+  } catch (e) {
+    console.warn(`kategori tidak termuat (${e.message}); lanjut tanpa kategori`);
   }
-  const posts = await fetchPages("posts?_embed=true", 5);
+
+  let posts;
+  try {
+    posts = await fetchPages("posts?_embed=true", 5);
+  } catch (e) {
+    console.warn(`REST posts gagal (${e.message}); fallback ke RSS feed`);
+    posts = await fetchRss();
+  }
+
   const existing = loadExisting();
   fs.mkdirSync(BERITA_DIR, { recursive: true });
 
