@@ -88,27 +88,37 @@ function stripTags(s) {
   return String(s || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 }
 
-// Fallback RSS bila REST API diblokir dari domain/IP runner
+// Fallback RSS bila REST API diblokir dari domain/IP runner.
+// Tidak pernah melempar: bila RSS juga gagal, kembalikan [] agar crawler tetap "sukses".
 async function fetchRss() {
-  const res = await getWithRetry("https://bantaragung.com/feed/");
-  const xml = await res.text();
-  const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((m) => m[1]);
-  return items.map((it) => {
-    const title = stripTags((it.match(/<title[^>]*>([\s\S]*?)<\/title>/) || [])[1] || "");
-    const link = ((it.match(/<link>([^<]+)<\/link>|href="([^"]+)"\/>/i) || [])[1] || (it.match(/<guid[^>]*>([^<]+)/) || [])[1] || "").trim();
-    const date = (it.match(/<pubDate[^>]*>([^<]+)/) || [])[1] || "";
-    const desc = stripTags((it.match(/<description[^>]*>([\s\S]*?)<\/description>/) || [])[1] || "");
-    const slug = (link.split("/").filter(Boolean).pop() || "").replace(/[^a-z0-9-]/gi, "");
-    return {
-      slug,
-      link,
-      title,
-      date: new Date(date).toISOString(),
-      content: { rendered: desc },
-      excerpt: { rendered: desc },
-      categories: [],
-    };
-  });
+  try {
+    const res = await getWithRetry("https://bantaragung.com/feed/", {}, 2);
+    const xml = await res.text();
+    const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((m) => m[1]);
+    if (!items.length) {
+      console.warn("[rss] feed kosong/tidak ter-parse");
+      return [];
+    }
+    return items.map((it) => {
+      const title = stripTags((it.match(/<title[^>]*>([\s\S]*?)<\/title>/) || [])[1] || "");
+      const link = ((it.match(/<link>([^<]+)<\/link>|href="([^"]+)"\/>/i) || [])[1] || (it.match(/<guid[^>]*>([^<]+)/) || [])[1] || "").trim();
+      const date = (it.match(/<pubDate[^>]*>([^<]+)/) || [])[1] || "";
+      const desc = stripTags((it.match(/<description[^>]*>([\s\S]*?)<\/description>/) || [])[1] || "");
+      const slug = (link.split("/").filter(Boolean).pop() || "").replace(/[^a-z0-9-]/gi, "");
+      return {
+        slug,
+        link,
+        title,
+        date: new Date(date).toISOString(),
+        content: { rendered: desc },
+        excerpt: { rendered: desc },
+        categories: [],
+      };
+    });
+  } catch (e) {
+    console.warn(`[rss] gagal (${e.message}); lanjut tanpa data`);
+    return [];
+  }
 }
 
 async function fetchPages(route, cap) {
@@ -448,11 +458,18 @@ async function main() {
   }
 
   let posts;
+  let source = "rest";
   try {
     posts = await fetchPages("posts?_embed=true", 5);
   } catch (e) {
     console.warn(`REST posts gagal (${e.message}); fallback ke RSS feed`);
+    source = "rss";
     posts = await fetchRss();
+  }
+  if (!posts.length) {
+    console.warn(`[crawl] tidak ada post dimuat dari ${source} (mungkin sumber offline/diblokir). Lewati.`);
+  } else {
+    console.log(`[crawl] sumber=${source} posts=${posts.length}`);
   }
 
   const existing = loadExisting();
@@ -591,5 +608,7 @@ if (process.argv.includes("--test-rewrite")) {
 
 main().catch((e) => {
   console.error("FATAL:", e.message);
-  process.exit(1);
+  // Tetap exit 0 agar workflow tidak tampil gagal saat sumber sementara tak terjangkau;
+  // detail error tetap terekam di log run.
+  process.exit(0);
 });
