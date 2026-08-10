@@ -2,7 +2,8 @@ name: sync-berita
 
 on:
   schedule:
-    - cron: "0 6,18 * * *"
+    # 1x/hari pukul 19:00 WIB (12:00 UTC)
+    - cron: "0 12 * * *"
   workflow_dispatch:
 
 permissions:
