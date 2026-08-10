@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "sync": "node scripts/sync/crawl.js",
-    "rewrite:kkn": "node scripts/rewrite-kkn.mjs"
+    "rewrite:kkn": "node scripts/rewrite-kkn.mjs",
+    "rewrite:berita": "node scripts/rewrite-berita.mjs"
   },
   "dependencies": {
     "next": "16.1.3",
