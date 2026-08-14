@@ -37,6 +37,9 @@ const LLM_URL = process.env.LLM_URL || ""; // contoh: http://localhost:11434/v1/
 const LLM_MODEL = process.env.LLM_MODEL || "oc/deepseek-v4-flash-free";
 const LLM_NO_THINK = process.env.LLM_NO_THINKING === "1";
 const LLM_REWRITE = Boolean(LLM_API_KEY && LLM_URL) && !process.argv.includes("--no-rewrite");
+if (LLM_REWRITE) {
+  console.log(`[llm] rewrite AI aktif (model=${LLM_MODEL})`);
+}
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 

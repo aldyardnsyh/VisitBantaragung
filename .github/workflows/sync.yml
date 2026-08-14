@@ -22,9 +22,10 @@ jobs:
       - name: Crawl WordPress news
         run: node scripts/sync/crawl.js
         env:
+          # Rewrite AI aktif bila secret LLM_API_KEY terisi (openagentic.id)
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-          LLM_URL: ${{ secrets.LLM_URL }}
-          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+          LLM_URL: https://openagentic.id/api/v1/chat/completions
+          LLM_MODEL: deepseek-v4-flash
 
       # Commit & push hasil sync memakai GITHUB_TOKEN (built-in, tanpa action pihak ketiga
       # yang rawan gagal resolve). Trigger Vercel rebuild lewat push ke main.
