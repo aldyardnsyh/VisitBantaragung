@@ -25,7 +25,7 @@ jobs:
           # Rewrite AI aktif bila secret LLM_API_KEY terisi (openagentic.id)
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           LLM_URL: https://openagentic.id/api/v1/chat/completions
-          LLM_MODEL: deepseek-v4-flash
+          LLM_MODEL: claude-sonnet-4.5-thinking
 
       # Commit & push hasil sync memakai GITHUB_TOKEN (built-in, tanpa action pihak ketiga
       # yang rawan gagal resolve). Trigger Vercel rebuild lewat push ke main.
