@@ -322,54 +322,66 @@ async function rewriteArticle(post) {
     post.content.join("\n\n");
 
   let res;
-  for (let attempt = 1; attempt <= 2; attempt++) {
-    res = await fetch(LLM_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "User-Agent": UA,
-        Authorization: `Bearer ${LLM_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: LLM_MODEL,
-        temperature: 0.7,
-        max_tokens: 4000,
-        ...(LLM_NO_THINK ? { enable_thinking: false } : {}),
-        messages: [
-          { role: "system", content: REWRITE_PROMPT },
-          { role: "user", content: userMsg },
-        ],
-      }),
-    });
-
-    if (!res.ok) throw new Error(`LLM HTTP ${res.status}: ${await res.text()}`);
-    const raw = await res.text();
-    if (process.env.LLM_DEBUG) console.error("=== RAW LLM RESPONSE (tail) ===\n" + raw.slice(-500));
-
-    let body;
+  for (let attempt = 1; attempt <= 4; attempt++) {
     try {
-      body = JSON.parse(raw);
-    } catch {
-      // Beberapa gateway menempel teks/objek ganda; coba ambil objek pertama yang valid
-      const obj = raw.slice(raw.indexOf("{"), raw.lastIndexOf("}") + 1);
-      body = JSON.parse(obj);
-    }
-    const text = body.choices && body.choices[0] && body.choices[0].message.content;
-    if (!text && attempt === 1) {
-      await sleep(2000);
-      continue;
-    }
-    if (!text) throw new Error("LLM kosong");
+      res = await fetch(LLM_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "User-Agent": UA,
+          Authorization: `Bearer ${LLM_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: LLM_MODEL,
+          temperature: 0.7,
+          max_tokens: 4000,
+          ...(LLM_NO_THINK ? { enable_thinking: false } : {}),
+          messages: [
+            { role: "system", content: REWRITE_PROMPT },
+            { role: "user", content: userMsg },
+          ],
+        }),
+      });
 
-    const out = extractJSON(text);
-    out.title = deDash(cleanTitle(out.title));
-    out.excerpt = deDash(String(out.excerpt || "")).trim();
-    out.content = (Array.isArray(out.content) ? out.content : [])
-      .map((p) => deDash(String(p).replace(EMOJI_RE, "")).replace(/\n+/g, " ").trim())
-      .filter((p) => p.length > 20);
-    return out;
+      if ((res.status === 503 || res.status === 429 || res.status >= 500) && attempt < 4) {
+        await sleep(3000 * attempt);
+        continue;
+      }
+      if (!res.ok) throw new Error(`LLM HTTP ${res.status}: ${await res.text()}`);
+
+      const raw = await res.text();
+      if (process.env.LLM_DEBUG) console.error("=== RAW LLM RESPONSE (tail) ===\n" + raw.slice(-500));
+
+      let body;
+      try {
+        body = JSON.parse(raw);
+      } catch {
+        const obj = raw.slice(raw.indexOf("{"), raw.lastIndexOf("}") + 1);
+        body = JSON.parse(obj);
+      }
+      const text = body.choices && body.choices[0] && body.choices[0].message.content;
+      if (!text && attempt < 4) {
+        await sleep(2000 * attempt);
+        continue;
+      }
+      if (!text) throw new Error("LLM kosong");
+
+      const out = extractJSON(text);
+      out.title = deDash(cleanTitle(out.title));
+      out.excerpt = deDash(String(out.excerpt || "")).trim();
+      out.content = (Array.isArray(out.content) ? out.content : [])
+        .map((p) => deDash(String(p).replace(EMOJI_RE, "")).replace(/\n+/g, " ").trim())
+        .filter((p) => p.length > 20);
+      return out;
+    } catch (e) {
+      if (attempt < 4 && (e.message.includes("503") || e.message.includes("fetch"))) {
+        await sleep(3000 * attempt);
+        continue;
+      }
+      throw e;
+    }
   }
-  throw new Error("LLM kosong (setelah retry)");
+  throw new Error("LLM gagal setelah 4x retry");
 }
 
 // Terapkan hasil rewrite LLM ke artikel (judul, ekscerpt, isi)
@@ -550,9 +562,14 @@ async function main() {
       try {
         await sleep(500);
         finalizeArticle(article, await rewriteArticle(article));
+        article.rewriteStatus = "success";
       } catch (e) {
-        console.warn(`rewrite gagal untuk ${slug}: ${e.message}; pakai hasil cleaning`);
+        console.warn(`rewrite gagal untuk ${slug}: ${e.message}; skip artikel ini`);
+        skipped++;
+        continue;
       }
+    } else {
+      article.rewriteStatus = LLM_REWRITE ? "pending" : "disabled";
     }
 
     const file = path.join(BERITA_DIR, `${slug}.json`);
