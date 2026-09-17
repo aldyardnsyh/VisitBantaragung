@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllArticles, getArticleBySlug } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
+import { toJsonLd } from "@/lib/jsonld";
 import ResponsiveArticle from "@/app/components/ui/ResponsiveArticle";
 import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";
 
@@ -255,7 +256,7 @@ export default async function ArtikelDetailPage({ params }: ArticleDetailProps) 
 
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                dangerouslySetInnerHTML={{ __html: toJsonLd(jsonLd) }}
             />
         </main>
     );

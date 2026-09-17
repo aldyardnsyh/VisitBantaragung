@@ -24,6 +24,11 @@
 .DS_Store
 *.pem
 
+# environment: jangan pernah commit secrets. Penting karena workflow sync
+# menjalankan `git add -A` setiap hari; tanpa ini .env bisa ikut ter-commit.
+.env*
+!.env.example
+
 # debug
 npm-debug.log*
 yarn-debug.log*

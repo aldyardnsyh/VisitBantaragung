@@ -1,5 +1,6 @@
 ﻿import Link from "next/link";
 import { assetUrl } from "@/lib/asset";
+import { toJsonLd } from "@/lib/jsonld";
 import VisitorCounter from "@/app/components/ui/VisitorCounter";
 import SectionHeading from "@/app/components/ui/SectionHeading";
 import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";
@@ -93,7 +94,7 @@ export default function Home() {
     <main>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: toJsonLd(jsonLd) }}
       />
       {/* HERO */}
       <section className="relative min-h-[75vh] flex items-center overflow-hidden">
