@@ -2,7 +2,7 @@
 // This timestamp ensures images are ALWAYS fresh when updated in CDN
 // Format: YYYYMMDDHHMMSS (e.g., 20260210023000 = Feb 10, 2026, 02:30:00)
 // UPDATE THIS TIMESTAMP EVERY TIME YOU UPLOAD NEW IMAGES TO CDN!
-const ASSET_VERSION = '20260210024130';
+const ASSET_VERSION = '20260917114340';
 
 export function assetUrl(path: string) {
   // Path lokal (mulai dengan "/") langsung dipakai, tanpa CDN & cache-busting
