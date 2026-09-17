@@ -18,7 +18,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.c
 
 const TABS: { key: ArticleOrigin | "all"; label: string }[] = [
     { key: "all", label: "Semua" },
-    { key: "kkn", label: "Kegiatan KKN" },
+    { key: "kkn", label: "KKN-PPM UGM" },
     { key: "berita", label: "Berita Desa" },
 ];
 
@@ -49,7 +49,7 @@ function ArticleCard({ article }: { article: Article }) {
                                 : "bg-clay-100 text-clay-500"
                         }`}
                     >
-                        {article.origin === "berita" ? "Berita Desa" : "Kegiatan KKN"}
+                        {article.origin === "berita" ? "Berita Desa" : "KKN-PPM UGM"}
                     </span>
                 </div>
                 <div className="p-5 flex flex-col gap-2 flex-1">
@@ -83,7 +83,7 @@ export async function generateMetadata({
     const { origin } = await searchParams;
     const isBerita = origin === "berita";
     const isKkn = origin === "kkn";
-    const label = isBerita ? "Berita Desa" : isKkn ? "Kegiatan KKN" : "Artikel";
+    const label = isBerita ? "Berita Desa" : isKkn ? "KKN-PPM UGM" : "Artikel";
     return {
         title: `${label} | Pusat Informasi`,
         description:

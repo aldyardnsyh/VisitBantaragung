@@ -228,7 +228,7 @@ export default function Home() {
                           : "bg-clay-100 text-clay-500"
                       }`}
                     >
-                      {a.origin === "berita" ? "Berita Desa" : "Kegiatan KKN"}
+                      {a.origin === "berita" ? "Berita Desa" : "KKN-PPM UGM"}
                     </span>
                   </div>
                   <div className="flex flex-1 flex-col p-5 gap-2">
