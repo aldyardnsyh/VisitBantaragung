@@ -1,14 +1,16 @@
 import fs from "fs";
 import path from "path";
+import Link from "next/link";
+import type { ReactNode } from "react";
 import PageHeader from "@/app/components/layout/PageHeader";
 import { assetUrl } from "@/lib/asset";
 import GaleriClient from "./GaleriClient";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Galeri Kegiatan KKN",
+    title: "Galeri KKN-PPM UGM Simfoni Sindangwangi di Bantaragung",
     description:
-        "Dokumentasi kegiatan KKN-PPM UGM Simfoni Sindangwangi Periode IV 2025 di Desa Bantaragung dan Desa Sindangwangi, Majalengka.",
+        "Dokumentasi foto Kuliah Kerja Nyata (KKN) UGM Simfoni Sindangwangi di Desa Bantaragung dan Desa Sindangwangi, Majalengka: edukasi, UMKM, kampung herbal, budaya, dan wisata. Lengkap dengan cerita tiap momen.",
 };
 
 const KKN_LOGOS = [
@@ -36,7 +38,7 @@ function LogoCard({ src, label }: { src: string; label: string }) {
 
 // Tanya-jawab nyata seputar KKN di desa ini: ditulis dari fakta program
 // (lokasi, periode, kegiatan), bukan template generik.
-const FAQ_KKN = [
+const FAQ_KKN: { q: string; t?: string; a: ReactNode }[] = [
     {
         q: "Apa itu KKN-PPM UGM Simfoni Sindangwangi?",
         a: "KKN-PPM UGM Simfoni Sindangwangi adalah program Kuliah Kerja Nyata Pembelajaran Pemberdayaan Masyarakat Universitas Gadjah Mada yang ditempatkan di Kecamatan Sindangwangi, Kabupaten Majalengka. Tim mendampingi warga membangun wisata berkelanjutan, mengelola kampung herbal, memberdayakan UMKM, dan mengembangkan platform digital desa seperti situs ini.",
@@ -51,11 +53,26 @@ const FAQ_KKN = [
     },
     {
         q: "Apakah wisatawan bisa berkunjung ke lokasi KKN?",
-        a: "Bisa. Seluruh destinasi di Desa Wisata Bantaragung terbuka untuk umum, dari wisata alam, kuliner, hingga live-in bersama warga dan homestay. Lihat pilihannya di laman wisata atau hubungi pengelola melalui laman kontak.",
+        t: "Bisa. Seluruh destinasi di Desa Wisata Bantaragung terbuka untuk umum, dari wisata alam, kuliner, hingga live-in bersama warga dan homestay. Lihat pilihannya di laman wisata atau hubungi pengelola melalui laman kontak.",
+        a: (
+            <>
+                Bisa. Seluruh destinasi di Desa Wisata Bantaragung terbuka untuk umum, dari wisata alam, kuliner, hingga live-in bersama warga dan homestay. Lihat pilihannya di{" "}
+                <Link href="/wisata" className="text-forest-600 font-medium hover:text-clay-500">laman wisata</Link>{" "}
+                atau hubungi pengelola melalui{" "}
+                <Link href="/kontak" className="text-forest-600 font-medium hover:text-clay-500">laman kontak</Link>.
+            </>
+        ),
     },
     {
         q: "Di mana bisa melihat dokumentasi kegiatan KKN lainnya?",
-        a: "Selain galeri foto ini, cerita dan dokumentasi kegiatan dipublikasikan berkala di laman berita. Arsip postingan harian juga tersedia di situs dan media sosial resmi desa.",
+        t: "Selain galeri foto ini, cerita dan dokumentasi kegiatan dipublikasikan berkala di laman berita. Arsip postingan harian juga tersedia di situs dan media sosial resmi desa.",
+        a: (
+            <>
+                Selain galeri foto ini, cerita dan dokumentasi kegiatan dipublikasikan berkala di{" "}
+                <Link href="/bic/artikel" className="text-forest-600 font-medium hover:text-clay-500">laman berita</Link>.
+                Arsip postingan harian juga tersedia di situs dan media sosial resmi desa.
+            </>
+        ),
     },
 ];
 
@@ -72,7 +89,14 @@ export default function GaleriPage() {
         mainEntity: FAQ_KKN.map((f) => ({
             "@type": "Question",
             name: f.q,
-            acceptedAnswer: { "@type": "Answer", text: f.a },
+            acceptedAnswer: {
+                "@type": "Answer",
+                text:
+                    f.t ??
+                    (typeof f.a === "string"
+                        ? f.a
+                        : "Lihat jawaban lengkap di laman galeri Desa Wisata Bantaragung."),
+            },
         })),
     };
 
@@ -84,9 +108,9 @@ export default function GaleriPage() {
             />
             <PageHeader
                 breadcrumb={[{ label: "Galeri" }]}
-                eyebrow="Dokumentasi Kegiatan"
-                title="Galeri Kegiatan KKN"
-                subtitle="Momen-momen berharga selama pelaksanaan KKN-PPM UGM Simfoni Sindangwangi di Desa Bantaragung dan Desa Sindangwangi."
+                eyebrow="Dokumentasi KKN-PPM UGM"
+                title="Galeri KKN-PPM UGM Simfoni Sindangwangi"
+                subtitle="Momen berharga Kuliah Kerja Nyata UGM di Desa Bantaragung dan Desa Sindangwangi, Majalengka: edukasi, UMKM, kampung herbal, budaya, dan wisata desa."
             />
 
             <section className="max-w-7xl mx-auto px-6 py-16">
