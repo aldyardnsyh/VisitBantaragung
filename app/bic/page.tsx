@@ -40,7 +40,7 @@ function ArticleCard({ article }: { article: Article }) {
                                 : "bg-clay-100 text-clay-500"
                         }`}
                     >
-                        {article.origin === "berita" ? "Berita Desa" : "Kegiatan KKN"}
+                        {article.origin === "berita" ? "Berita Desa" : "KKN-PPM UGM"}
                     </span>
                 </div>
                 <div className="p-5 flex flex-col gap-2 flex-1">

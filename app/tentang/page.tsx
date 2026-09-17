@@ -191,6 +191,52 @@ export default function TentangPage() {
         </div>
       </section>
 
+      {/* DIDUKUNG KKN-PPM UGM */}
+      <section className="py-20 md:py-24">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="rounded-3xl bg-white/60 border border-forest-200/60 p-8 md:p-12 grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-clay-500 mb-2">
+                Kuliah Kerja Nyata UGM
+              </p>
+              <h2 className="font-display font-bold text-forest-800 text-3xl md:text-4xl mb-4">
+                Didukung KKN-PPM UGM Simfoni Sindangwangi
+              </h2>
+              <p className="text-slate-600 leading-relaxed">
+                Platform digital desa ini dibangun bersama mahasiswa Kuliah Kerja Nyata
+                Pembelajaran Pemberdayaan Masyarakat Universitas Gadjah Mada (KKN-PPM UGM)
+                Simfoni Sindangwangi di Desa Bantaragung dan Desa Sindangwangi, Majalengka,
+                melalui pendampingan desa wisata, kampung herbal, UMKM, dan digitalisasi desa.
+              </p>
+              <Link
+                href="/galeri"
+                className="mt-6 inline-flex items-center gap-1.5 text-forest-600 hover:text-clay-500 hover:font-semibold font-medium transition-colors"
+              >
+                Lihat dokumentasi KKN <span aria-hidden>→</span>
+              </Link>
+            </div>
+            <ul className="space-y-3">
+              {[
+                ["Program", "KKN-PPM UGM Simfoni Sindangwangi"],
+                ["Lokasi", "Bantaragung dan Sindangwangi, Majalengka"],
+                ["Fokus", "Desa wisata, kampung herbal, UMKM, digital desa"],
+                ["Luaran", "Situs web, peta digital, dan katalog herbal"],
+              ].map(([k, v]) => (
+                <li
+                  key={k}
+                  className="flex items-center gap-4 rounded-2xl bg-white border border-forest-200/60 px-5 py-4"
+                >
+                  <span className="w-24 shrink-0 text-xs font-semibold uppercase tracking-widest text-clay-500">
+                    {k}
+                  </span>
+                  <span className="font-medium text-forest-800">{v}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* LOKASI */}
       <section className="py-20 md:py-24 bg-forest-950 text-white">
         <div className="max-w-7xl mx-auto px-6 text-center space-y-6">

@@ -117,6 +117,42 @@ export default function GaleriPage() {
                 <GaleriClient files={files} />
             </section>
 
+            {/* Profil KKN */}
+            <section className="max-w-7xl mx-auto px-6 pb-16">
+                <div className="bg-white/60 border border-forest-200/60 rounded-3xl p-8 md:p-12">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-clay-500 mb-2">
+                        Profil Program
+                    </p>
+                    <h2 className="font-display font-bold text-forest-800 text-3xl md:text-4xl mb-4">
+                        KKN-PPM UGM Simfoni Sindangwangi di Majalengka
+                    </h2>
+                    <p className="text-slate-600 max-w-3xl leading-relaxed">
+                        Program Kuliah Kerja Nyata Pembelajaran Pemberdayaan Masyarakat
+                        Universitas Gadjah Mada (KKN-PPM UGM) Simfoni Sindangwangi Periode IV 2025
+                        ditempatkan di Desa Bantaragung dan Desa Sindangwangi, Kecamatan
+                        Sindangwangi, Kabupaten Majalengka, Jawa Barat.
+                    </p>
+                    <dl className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+                        {[
+                            ["Lokasi", "Bantaragung dan Sindangwangi"],
+                            ["Fokus", "Wisata, herbal, UMKM, digital desa"],
+                            ["Kegiatan", "Edukasi, budaya, konservasi"],
+                            ["Luaran", "Situs web dan peta digital"],
+                        ].map(([k, v]) => (
+                            <div
+                                key={k}
+                                className="rounded-2xl bg-white border border-forest-200/60 px-5 py-4"
+                            >
+                                <dt className="text-xs font-semibold uppercase tracking-widest text-clay-500">
+                                    {k}
+                                </dt>
+                                <dd className="font-medium text-forest-800 mt-1">{v}</dd>
+                            </div>
+                        ))}
+                    </dl>
+                </div>
+            </section>
+
             {/* Tentang Program — KKN-PPM */}
             <section className="max-w-7xl mx-auto px-6 pb-16">
                 <div className="bg-white/60 border border-forest-200/60 rounded-3xl p-8 md:p-12">

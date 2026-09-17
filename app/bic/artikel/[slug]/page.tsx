@@ -112,7 +112,7 @@ export default async function ArtikelDetailPage({ params }: ArticleDetailProps) 
                         </li>
                     </ol>
                     <span className="inline-block mt-4 rounded-full bg-white/10 border border-white/15 px-3 py-1 text-xs font-semibold text-white/90">
-                        {article.origin === "berita" ? "Berita Desa" : "Kegiatan KKN"}
+                        {article.origin === "berita" ? "Berita Desa" : "KKN-PPM UGM"}
                     </span>
                 </div>
             </section>
