@@ -6,6 +6,7 @@ import PageHeader from "@/app/components/layout/PageHeader";
 import SectionHeading from "@/app/components/ui/SectionHeading";
 import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";
 import MapGalleryClient from "./MapGalleryClient";
+import CategoryIcon from "./categoryIcons";
 
 export const metadata: Metadata = {
     title: "Peta Digital (BMC)",
@@ -63,11 +64,14 @@ export default function BMCPage() {
                         {mapsConfig.categories.map((category) => (
                             <div
                                 key={category.id}
-                                className="rounded-2xl p-6 bg-white/80 border border-forest-200/70 shadow-sm hover:shadow-md transition"
+                                className={`rounded-2xl p-6 bg-white/80 border border-forest-200/70 shadow-sm hover:shadow-md transition${
+                                    // Kartu RW melebar: hierarchi isi (11 peta vs 1-4 di lainnya).
+                                    category.maps.length > 4 ? " md:col-span-2" : ""
+                                }`}
                             >
                                 <div className="flex items-center gap-3 mb-3">
-                                    <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-forest-100 text-xl">
-                                        {category.icon}
+                                    <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-forest-100 text-forest-700">
+                                        <CategoryIcon id={category.id} />
                                     </span>
                                     <div>
                                         <h3 className="font-bold text-forest-800">

@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { assetUrl } from "@/lib/asset";
 import MapLightbox from "./MapLightbox";
+import CategoryIcon from "./categoryIcons";
 import type { MapsConfig, MapItem } from "@/lib/content";
 
 interface MapGalleryClientProps {
@@ -18,13 +19,13 @@ export default function MapGalleryClient({ mapsConfig }: MapGalleryClientProps) 
 
     // Flatten all maps for "all" view
     const allMaps = useMemo(() => {
-        const maps: (MapItem & { categoryName: string; categoryIcon: string })[] = [];
+        const maps: (MapItem & { categoryName: string; categoryId: string })[] = [];
         mapsConfig.categories.forEach((category) => {
             category.maps.forEach((map) => {
                 maps.push({
                     ...map,
                     categoryName: category.name,
-                    categoryIcon: category.icon,
+                    categoryId: category.id,
                 });
             });
         });
@@ -41,7 +42,7 @@ export default function MapGalleryClient({ mapsConfig }: MapGalleryClientProps) 
             ? category.maps.map((map) => ({
                 ...map,
                 categoryName: category.name,
-                categoryIcon: category.icon,
+                categoryId: category.id,
             }))
             : [];
     }, [selectedCategory, mapsConfig, allMaps]);
@@ -79,7 +80,7 @@ export default function MapGalleryClient({ mapsConfig }: MapGalleryClientProps) 
                     id="category-filter"
                     value={selectedCategory}
                     onChange={(e) => handleCategoryChange(e.target.value)}
-                    className="px-4 py-2 rounded-full border border-[#e7c277]/40 focus:border-[#e7c277] focus:ring-2 focus:ring-[#e7c277]/20 outline-none transition bg-white text-slate-700 font-medium"
+                    className="px-4 py-2 rounded-full border border-gold-400/40 focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20 outline-none transition bg-white text-slate-700 font-medium"
                 >
                     <option value="all">Semua Peta ({allMaps.length})</option>
                     {mapsConfig.categories.map((category) => (
@@ -92,7 +93,7 @@ export default function MapGalleryClient({ mapsConfig }: MapGalleryClientProps) 
 
             {/* Category Description */}
             {selectedCategory !== "all" && (
-                <div className="bg-slate-50 rounded-2xl p-4 border border-[#e7c277]/20">
+                    <div className="bg-slate-50 rounded-2xl p-4 border border-gold-400/20">
                     <p className="text-slate-600 text-sm">
                         {mapsConfig.categories.find((c) => c.id === selectedCategory)?.description}
                     </p>
@@ -111,7 +112,7 @@ export default function MapGalleryClient({ mapsConfig }: MapGalleryClientProps) 
                     <button
                         key={map.id}
                         onClick={() => openLightbox(index)}
-                        className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition border border-[#e7c277]/40 text-left"
+                        className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition border border-forest-200/70 text-left"
                     >
                         <div className="relative bg-slate-100">
                             <img
@@ -121,8 +122,8 @@ export default function MapGalleryClient({ mapsConfig }: MapGalleryClientProps) 
                                 decoding="async"
                                 className="w-full h-auto object-contain group-hover:scale-105 transition duration-300"
                             />
-                            <div className="absolute top-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs text-slate-700 shadow flex items-center gap-1">
-                                <span>{map.categoryIcon}</span>
+                            <div className="absolute top-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs text-slate-700 shadow flex items-center gap-1.5">
+                                <CategoryIcon id={map.categoryId} className="w-3.5 h-3.5" />
                                 <span>{map.categoryName}</span>
                             </div>
                             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end justify-center pb-4">
@@ -145,9 +146,10 @@ export default function MapGalleryClient({ mapsConfig }: MapGalleryClientProps) 
 
             {/* Empty State */}
             {pagedMaps.length === 0 && (
-                <div className="text-center py-16 bg-slate-50 rounded-3xl">
-                    <p className="text-slate-600 text-lg">Tidak ada peta dalam kategori ini.</p>
-                </div>
+                    <div className="text-center py-16 bg-slate-50 rounded-2xl">
+                        <p className="text-slate-600 text-lg">Tidak ada peta dalam kategori ini.</p>
+                        <p className="text-slate-500 text-sm mt-1">Pilih kategori lain pada filter di atas.</p>
+                    </div>
             )}
 
             {/* Pagination */}
@@ -156,9 +158,9 @@ export default function MapGalleryClient({ mapsConfig }: MapGalleryClientProps) 
                     <button
                         onClick={() => setCurrentPage(Math.max(1, safePage - 1))}
                         disabled={safePage === 1}
-                        className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${safePage === 1
+                        className={`px-4 py-2 rounded-full border border-gold-400/40 ${safePage === 1
                             ? "pointer-events-none text-slate-400"
-                            : "text-[#102440] hover:bg-[#102440]/10"
+                            : "text-forest-950 hover:bg-forest-950/10"
                             }`}
                     >
                         ← Sebelumnya
@@ -168,9 +170,9 @@ export default function MapGalleryClient({ mapsConfig }: MapGalleryClientProps) 
                         <button
                             key={page}
                             onClick={() => setCurrentPage(page)}
-                            className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${page === safePage
-                                ? "bg-[#102440] text-white"
-                                : "text-[#102440] hover:bg-[#102440]/10"
+                            className={`px-4 py-2 rounded-full border border-gold-400/40 ${page === safePage
+                                ? "bg-forest-950 text-white"
+                                : "text-forest-950 hover:bg-forest-950/10"
                                 }`}
                         >
                             {page}
@@ -180,9 +182,9 @@ export default function MapGalleryClient({ mapsConfig }: MapGalleryClientProps) 
                     <button
                         onClick={() => setCurrentPage(Math.min(totalPages, safePage + 1))}
                         disabled={safePage === totalPages}
-                        className={`px-4 py-2 rounded-full border border-[#e7c277]/40 ${safePage === totalPages
+                        className={`px-4 py-2 rounded-full border border-gold-400/40 ${safePage === totalPages
                             ? "pointer-events-none text-slate-400"
-                            : "text-[#102440] hover:bg-[#102440]/10"
+                            : "text-forest-950 hover:bg-forest-950/10"
                             }`}
                     >
                         Berikutnya →
