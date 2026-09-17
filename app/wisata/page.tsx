@@ -13,8 +13,31 @@ export const metadata: Metadata = {
         "Jelajahi destinasi wisata alam dan edukasi terbaik di Desa Bantaragung, Majalengka. Ciboer Pass, Curug Cipeuteuy, dan lainnya.",
 };
 
+// Destinasi (alam/kuliner/edukasi) tampil dulu; tradisi, akomodasi, dan paket di akhir.
+const URUTAN_KATEGORI: Record<string, number> = {
+    alam: 1,
+    kuliner: 2,
+    edukasi: 3,
+    akomodasi: 4,
+    budaya: 5,
+    paket: 6,
+};
+
+const LABEL_KATEGORI: Record<string, string> = {
+    alam: "Wisata Alam",
+    kuliner: "Kuliner",
+    edukasi: "Edukasi",
+    akomodasi: "Akomodasi",
+    budaya: "Budaya",
+    paket: "Paket Wisata",
+};
+
 export default function WisataPage() {
-    const items = getAllWisata();
+    const items = getAllWisata().sort(
+        (a, b) =>
+            (URUTAN_KATEGORI[a.kategori] ?? 99) - (URUTAN_KATEGORI[b.kategori] ?? 99) ||
+            a.title.localeCompare(b.title, "id")
+    );
 
     return (
         <main className="min-h-screen">
@@ -47,6 +70,9 @@ export default function WisataPage() {
                                 className="aspect-[4/3] group-hover:scale-105 transition-transform duration-300"
                             />
                             <div className="p-5 flex flex-col gap-2 flex-1">
+                                <span className="w-fit bg-clay-100 text-clay-600 rounded-full px-3 py-1 text-xs font-semibold">
+                                    {LABEL_KATEGORI[w.kategori] ?? w.kategori}
+                                </span>
                                 <h3 className="font-semibold text-forest-800 leading-snug">
                                     {w.title}
                                 </h3>
