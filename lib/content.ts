@@ -85,6 +85,7 @@ export function getMapsConfig(): MapsConfig {
 
 export interface Wisata {
     slug: string;
+    kategori: string;
     title: string;
     excerpt: string;
     description: string;

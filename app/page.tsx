@@ -24,7 +24,15 @@ const prestasiCards = [
 export default function Home() {
   const site = getSiteSettings();
   const seo = getSeoSettings();
-  const wisata: Wisata[] = getAllWisata().slice(0, 3);
+    // Destinasi unggulan beranda: urutan fix sesuai kurasi Pokdarwis.
+    const UNGGULAN = ["curug-cipeuteuy", "kopi-pakuwon", "terasering-ciboer"];
+    const semuaWisata = getAllWisata();
+    const wisata: Wisata[] = [
+        ...UNGGULAN.map((s) => semuaWisata.find((w) => w.slug === s)).filter(
+            (w): w is Wisata => Boolean(w)
+        ),
+        ...semuaWisata.filter((w) => !UNGGULAN.includes(w.slug)),
+    ].slice(0, 3);
   const herbal: Herbal[] = getAllHerbal().slice(0, 3);
   const articles: Article[] = getRecentArticles(3);
   const petaImage = getMapsConfig().categories.flatMap((c) => c.maps).map((m) => m.image)[0] ?? "";
@@ -251,7 +259,7 @@ export default function Home() {
               align="left"
               eyebrow="Destinasi"
               title="Destinasi Unggulan"
-              subtitle="Panorama alam dan pengalaman edukatif pilihan dari lima objek wisata utama Bantaragung."
+              subtitle="Tiga destinasi unggulan pilihan: air terjun, kopi scenic, dan terasering ikonik Bantaragung."
               className="mb-0"
             />
             <Link
