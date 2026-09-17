@@ -14,26 +14,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const urls: MetadataRoute.Sitemap = [];
 
   // Static pages
-  const staticRoutes = [
-    "",
-    "/wisata",
-    "/b2h",
-    "/b2h/katalog",
-    "/bmc",
-    "/bic",
-    "/bic/artikel",
-    "/bdb",
-    "/bdb/umkm",
-    "/bdb/homestay",
-    "/galeri",
-    "/tentang",
-    "/kontak",
+  const staticRoutes: { route: string; priority: number }[] = [
+    { route: "", priority: 1.0 },
+    { route: "/wisata", priority: 0.9 },
+    { route: "/bic/artikel", priority: 0.8 },
+    { route: "/galeri", priority: 0.8 },
+    { route: "/b2h", priority: 0.7 },
+    { route: "/b2h/katalog", priority: 0.7 },
+    { route: "/bmc", priority: 0.7 },
+    { route: "/bic", priority: 0.7 },
+    { route: "/bdb", priority: 0.7 },
+    { route: "/bdb/umkm", priority: 0.7 },
+    { route: "/bdb/homestay", priority: 0.7 },
+    { route: "/tentang", priority: 0.6 },
+    { route: "/kontak", priority: 0.5 },
   ];
 
-  staticRoutes.forEach((route) => {
+  staticRoutes.forEach(({ route, priority }) => {
     urls.push({
       url: `${BASE_URL}${route}`,
       lastModified: new Date(),
+      changeFrequency: "daily",
+      priority,
     });
   });
 
@@ -42,6 +44,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     urls.push({
       url: `${BASE_URL}/wisata/${slug}`,
       lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
     });
   });
 
@@ -65,6 +69,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       urls.push({
         url: `${BASE_URL}/bic/artikel/${data.slug}`,
         lastModified: (data.updatedAt ? new Date(data.updatedAt) : data.date ? new Date(data.date) : new Date()),
+        changeFrequency: "monthly",
+        priority: 0.7,
       });
     });
   });
