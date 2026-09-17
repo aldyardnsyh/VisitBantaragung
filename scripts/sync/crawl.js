@@ -29,9 +29,14 @@ function loadDotEnvLocal() {
 }
 loadDotEnvLocal();
 
-// --- LLM rewrite (opsional): aktif bila LLM_API_KEY terisi (mis. 9router lokal / OpenAI-compatible).
+// --- LLM rewrite (WAJIB): aktif bila LLM_API_KEY+LLM_URL terisi.
+// Stage-gate pipeline (status workflow harus jujur):
+//   GATE 0 model  -> ping dulu; tanpa respons => FATAL (exit 1), sync dibatalkan.
+//   GATE 1 crawl  -> sumber wajib memberi data; kosong => FATAL.
+//   GATE 2 rewrite-> artikel gagal rewrite TIDAK di-push mentah; dihitung, run FATAL.
+//   GATE 3 sync   -> sukses (exit 0) hanya bila ada artikel baru/diubah yang ter-rewrite.
+// Tanpa key/URL (dan tanpa --no-rewrite eksplisit) => FATAL, bukan fallback diam-diam.
 // AMANAN: key/URL cukup dari env, jangan pernah di-commit (gitignore sudah memblokir .env*).
-// Tanpa key => fallback ke pembersihan konten (rewrite nonaktif), crawler tetap jalan.
 const LLM_API_KEY = process.env.LLM_API_KEY || "";
 const LLM_URL = process.env.LLM_URL || ""; // contoh: http://localhost:11434/v1/chat/completions (9router lokal)
 const LLM_MODEL = process.env.LLM_MODEL || "oc/deepseek-v4-flash-free";
@@ -314,6 +319,74 @@ function extractJSON(text) {
   throw new Error("LLM bukan JSON");
 }
 
+// Ambil teks balasan model dari envelope JSON maupun streaming SSE
+// (beberapa gateway memaksa SSE meski tidak diminta).
+function parseLLMText(raw) {
+  if (raw.trimStart().startsWith("data:")) {
+    let out = "";
+    for (const line of raw.split("\n")) {
+      const t = line.trim();
+      if (!t.startsWith("data:")) continue;
+      const payload = t.slice(5).trim();
+      if (payload === "[DONE]") break;
+      try {
+        const j = JSON.parse(payload);
+        const ch = j.choices && j.choices[0];
+        out += (ch && (ch.delta?.content || (ch.message && ch.message.content))) || "";
+      } catch {
+        // abaikan chunk non-JSON (metadata)
+      }
+    }
+    return out;
+  }
+  let body;
+  try {
+    body = JSON.parse(raw);
+  } catch {
+    // Beberapa gateway menempel teks/objek ganda; coba ambil objek pertama yang valid
+    const obj = raw.slice(raw.indexOf("{"), raw.lastIndexOf("}") + 1);
+    body = JSON.parse(obj);
+  }
+  return body.choices && body.choices[0] && body.choices[0].message.content;
+}
+
+// GATE 0 — health-check model SEBELUM crawl: ping ringan, wajib ada respons konten.
+// Gagal (setelah retry) => exit 1 agar status workflow jujur (merah, bukan hijau palsu).
+async function assertLLMHealthy() {
+  console.log(`[gate-model] cek respons model=${LLM_MODEL} ...`);
+  let lastErr;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await fetch(LLM_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "User-Agent": UA,
+          Authorization: `Bearer ${LLM_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: LLM_MODEL,
+          temperature: 0,
+          max_tokens: 16,
+          ...(LLM_NO_THINK ? { enable_thinking: false } : {}),
+          messages: [{ role: "user", content: "Balas hanya dengan: OK" }],
+        }),
+      });
+      if (!res.ok) throw new Error(`LLM HTTP ${res.status}`);
+      const text = parseLLMText(await res.text());
+      if (!text || !text.trim()) throw new Error("LLM kosong");
+      console.log("[gate-model] OK");
+      return;
+    } catch (e) {
+      lastErr = e;
+      console.warn(`[gate-model] percobaan ${attempt}/3 gagal: ${e.message}`);
+      await sleep(2000 * attempt);
+    }
+  }
+  console.error(`FATAL [gate-model]: model tidak merespons (${lastErr && lastErr.message}); sync dibatalkan.`);
+  process.exit(1);
+}
+
 async function rewriteArticle(post) {
   const userMsg =
     `KATEGORI: ${post.category}\n` +
@@ -352,14 +425,7 @@ async function rewriteArticle(post) {
       const raw = await res.text();
       if (process.env.LLM_DEBUG) console.error("=== RAW LLM RESPONSE (tail) ===\n" + raw.slice(-500));
 
-      let body;
-      try {
-        body = JSON.parse(raw);
-      } catch {
-        const obj = raw.slice(raw.indexOf("{"), raw.lastIndexOf("}") + 1);
-        body = JSON.parse(obj);
-      }
-      const text = body.choices && body.choices[0] && body.choices[0].message.content;
+      const text = parseLLMText(raw);
       if (!text && attempt < 4) {
         await sleep(2000 * attempt);
         continue;
@@ -463,6 +529,17 @@ async function fetchCover(post, slug) {
 
 async function main() {
   if (DRY) console.log("[dry-run] no files will be written, no covers downloaded");
+
+  // GATE 0 — pastikan model merespons SEBELUM crawl. Tanpa rewrite yang bekerja,
+  // sync tidak boleh diklaim berhasil.
+  const NO_REWRITE_FLAG = process.argv.includes("--no-rewrite");
+  if (!DRY && !NO_REWRITE_FLAG) {
+    if (!LLM_API_KEY || !LLM_URL) {
+      console.error("FATAL [gate-model]: LLM_API_KEY/LLM_URL belum dikonfigurasi; rewrite wajib aktif.");
+      process.exit(1);
+    }
+    await assertLLMHealthy();
+  }
   const catsById = new Map();
   try {
     for (const c of await fetchPages("categories", 3)) {
@@ -481,11 +558,12 @@ async function main() {
     source = "rss";
     posts = await fetchRss();
   }
+  // GATE 1 — sumber wajib memberi data.
   if (!posts.length) {
-    console.warn(`[crawl] tidak ada post dimuat dari ${source} (mungkin sumber offline/diblokir). Lewati.`);
-  } else {
-    console.log(`[crawl] sumber=${source} posts=${posts.length}`);
+    console.error(`FATAL [gate-crawl]: tidak ada post dimuat dari ${source}; sumber mungkin offline/diblokir.`);
+    process.exit(1);
   }
+  console.log(`[crawl] sumber=${source} posts=${posts.length}`);
 
   const existing = loadExisting();
   fs.mkdirSync(BERITA_DIR, { recursive: true });
@@ -493,6 +571,7 @@ async function main() {
   let added = 0;
   let updated = 0;
   let skipped = 0;
+  let rewriteFails = 0;
   let coverFails = 0;
 
   for (const post of posts) {
@@ -538,9 +617,6 @@ async function main() {
     const tags = [...new Set(postCats.map(tagSlug).filter(Boolean))].slice(0, 5);
     const date = String(post.date || "").slice(0, 10);
 
-    const cover = await fetchCover(post, slug);
-    if (!cover && post.featured_media) coverFails++;
-
     const article = {
       slug,
       title: finalTitle,
@@ -548,7 +624,7 @@ async function main() {
       date,
       category: mapCategory(postCats),
       author: "Admin",
-      cover,
+      cover: "",
       gallery: [],
       content: finalContent,
       origin: "berita",
@@ -564,13 +640,19 @@ async function main() {
         finalizeArticle(article, await rewriteArticle(article));
         article.rewriteStatus = "success";
       } catch (e) {
-        console.warn(`rewrite gagal untuk ${slug}: ${e.message}; skip artikel ini`);
+        rewriteFails++;
         skipped++;
+        console.warn(`rewrite gagal untuk ${slug}: ${e.message}; skip artikel ini (GATE 2)`);
         continue;
       }
     } else {
       article.rewriteStatus = LLM_REWRITE ? "pending" : "disabled";
     }
+
+    // Cover diunduh SETELAH rewrite sukses agar tidak ada cover yatim
+    // (cover tanpa JSON) bila rewrite gagal.
+    article.cover = await fetchCover(post, slug);
+    if (!article.cover && post.featured_media) coverFails++;
 
     const file = path.join(BERITA_DIR, `${slug}.json`);
     const json = JSON.stringify(article, null, 4) + "\n";
@@ -594,8 +676,19 @@ async function main() {
   }
 
   console.log(
-    `done. posts=${posts.length} added=${added} updated=${updated} skipped=${skipped} coverFails=${coverFails}`
+    `done. posts=${posts.length} added=${added} updated=${updated} skipped=${skipped} rewriteFails=${rewriteFails} coverFails=${coverFails}`
   );
+
+  // GATE 2 — semua rewrite wajib sukses; yang gagal tidak di-push mentah dan run merah.
+  if (rewriteFails > 0) {
+    console.error(`FATAL [gate-rewrite]: ${rewriteFails} artikel gagal rewrite dan tidak ikut di-push.`);
+    process.exit(1);
+  }
+  // GATE 3 — sukses hanya bila ada artikel baru/diubah yang ter-rewrite dan siap di-push.
+  if (added + updated === 0) {
+    console.error("FATAL [gate-sync]: tidak ada artikel baru/diubah; tidak ada yang di-push.");
+    process.exit(1);
+  }
 }
 
 // Mode debug: rewrite satu artikel terbaru lalu keluar (untuk uji kualitas tanpa crawl penuh)
@@ -628,7 +721,6 @@ if (process.argv.includes("--test-rewrite")) {
 
 main().catch((e) => {
   console.error("FATAL:", e.message);
-  // Tetap exit 0 agar workflow tidak tampil gagal saat sumber sementara tak terjangkau;
-  // detail error tetap terekam di log run.
-  process.exit(0);
+  // Exit 1: status workflow harus jujur. Hijau = artikel baru ter-rewrite dan siap di-push.
+  process.exit(1);
 });

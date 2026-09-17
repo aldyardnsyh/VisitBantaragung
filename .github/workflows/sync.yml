@@ -20,7 +20,9 @@ jobs:
           node-version: 20
 
       - name: Crawl WordPress news
-        run: node scripts/sync/crawl.js
+        # pipefail: kegagalan crawl (exit 1 dari stage-gate) wajib menggagalkan step,
+        # bukan tertutup exit 0 dari tee.
+        run: set -o pipefail; node scripts/sync/crawl.js 2>&1 | tee "$RUNNER_TEMP/sync.log"
         env:
           # Rewrite AI aktif bila secret LLM_API_KEY terisi (openagentic.id)
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
@@ -29,7 +31,10 @@ jobs:
 
       # Commit & push hasil sync memakai GITHUB_TOKEN (built-in, tanpa action pihak ketiga
       # yang rawan gagal resolve). Trigger Vercel rebuild lewat push ke main.
+      # if: always() -> artikel yang rewrite-nya sukses tetap terbit meski run merah
+      # (ada artikel gagal rewrite); pull --rebase dulu agar tidak race dengan push manual.
       - name: Commit & push hasil sync
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -38,5 +43,17 @@ jobs:
             echo "tidak ada perubahan konten"
           else
             git commit -m "chore: sync berita [skip ci]"
+            git pull --rebase origin main
             git push origin main
           fi
+
+      - name: Ringkasan sync
+        if: always()
+        run: |
+          {
+            echo "### Hasil sync-berita"
+            echo ""
+            echo '```'
+            tail -n 12 "$RUNNER_TEMP/sync.log" 2>/dev/null || echo "(log crawl tidak tersedia)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
