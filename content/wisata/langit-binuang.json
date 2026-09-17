@@ -1,8 +1,8 @@
 {
     "slug": "langit-binuang",
     "title": "Langit Binuang",
-    "excerpt": "Spot wisata alam dengan pemandangan langit terbuka dan udara sejuk pegunungan.",
-    "description": "Langit Binuang menjadi salah satu spot favorit untuk menikmati panorama alam terbuka. Tempat ini cocok untuk bersantai, menikmati udara segar, dan berburu foto lanskap. Suasananya tenang dan sering dijadikan tempat berkumpul komunitas fotografi maupun wisata keluarga.",
+    "excerpt": "Terasering ikonik untuk jalan santai di pematang sawah sambil menghirup udara gunung yang segar.",
+    "description": "Langit Binuang adalah spot panorama terasering ikonik Bantaragung yang relatif baru namun langsung populer di kalangan pemburu foto estetik. Hamparan sawah hijau berundak dengan latar langit terbuka dan udara sejuk pegunungan menghadirkan ketenangan yang sulit ditemukan di tempat lain. Pengunjung bisa berjalan santai menyusuri pematang sawah, berolahraga ringan, atau sekadar duduk menikmati semilir angin gunung. Datanglah pagi atau sore hari untuk cahaya terbaik dan suasana paling syahdu.",
     "cover": "wisata/langit-binuang/cover.png",
     "gallery": [],
     "location": {
@@ -12,10 +12,12 @@
     "facilities": [
         "Areal parkir",
         "Spot foto",
-        "Selfie area"
+        "Selfie area",
+        "Gazebo istirahat"
     ],
     "activities": [
-        "Menikmati panorama",
+        "Menikmati panorama terasering",
+        "Jalan santai di pematang sawah",
         "Fotografi",
         "Bersantai bersama keluarga"
     ]

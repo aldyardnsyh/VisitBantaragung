@@ -1,8 +1,8 @@
 {
     "slug": "pasar-bumi-pakuwon",
     "title": "Pasar Bumi Pakuwon",
-    "excerpt": "Pasar tradisional bulanan yang digelar di tengah hamparan sawah dengan transaksi unik menggunakan benggol.",
-    "description": "Pasar Bumi Pakuwon merupakan pasar tradisional terbuka yang digelar satu kali setiap bulan di tengah hamparan sawah Dusun Pakuwon, Desa Bantaragung. Lebih dari sekadar tempat berbelanja, pasar ini mempertemukan alam, budaya, dan ekonomi masyarakat dalam satu pengalaman, menghadirkan beragam kuliner khas, hasil bumi, produk UMKM, kopi lokal, hingga pertunjukan seni tradisional yang melibatkan masyarakat setempat. Keunikan utamanya adalah penggunaan benggol, keping kayu yang menjadi alat transaksi selama berada di area pasar, yang dapat diperoleh dengan menukarkan uang atau membayar melalui QRIS. Konsep ini menjadi simbol pelestarian budaya sekaligus inovasi dalam mendukung ekonomi lokal.",
+    "excerpt": "Pasar bulanan di tengah sawah Dusun Pakuwon dengan transaksi benggol, kuliner khas, dan pentas seni.",
+    "description": "Pasar Bumi Pakuwon adalah pasar kreatif terbuka yang digelar sebulan sekali setiap akhir bulan, pada hari Sabtu pukul 13.00 hingga 21.00, di tengah hamparan sawah Dusun Pakuwon, Desa Bantaragung. Lebih dari sekadar tempat berbelanja, pasar ini mempertemukan alam, budaya, dan ekonomi warga dalam satu pengalaman, mulai dari kuliner tradisional dan hasil bumi, produk UMKM dan kerajinan, kopi lokal seperti Kopi Pakuwon, hingga pertunjukan seni yang melibatkan masyarakat. Ciri khasnya adalah benggol, keping kayu sebagai alat transaksi di area pasar yang bisa ditukar dari uang tunai atau dibayar via QRIS. Pasar ini juga menjadi etalase road to event besar seperti Trikarsa Fest, sehingga setiap edisinya selalu punya kejutan tema dan tenant baru.",
     "cover": "wisata/terasering-ciboer/cover.png",
     "gallery": [],
     "location": {
@@ -12,15 +12,17 @@
     "facilities": [
         "Areal parkir",
         "Tempat makan",
-        "Kuliner lokal",
         "Tenant UMKM",
-        "Pembayaran QRIS"
+        "Penukaran benggol",
+        "Pembayaran QRIS",
+        "Panggung seni"
     ],
     "activities": [
         "Belanja hasil bumi",
         "Kuliner tradisional",
         "Belanja produk UMKM",
         "Pertunjukan seni",
-        "Ngopi"
+        "Ngopi di tengah sawah",
+        "Fotografi pedesaan"
     ]
 }

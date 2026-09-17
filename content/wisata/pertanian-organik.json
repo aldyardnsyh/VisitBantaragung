@@ -1,8 +1,8 @@
 {
     "slug": "pertanian-organik",
     "title": "Pertanian Organik",
-    "excerpt": "Program edukasi pertanian organik di lahan Ciboer dengan pengalaman langsung di sawah.",
-    "description": "Program Pertanian Organik mengajak wisatawan merasakan langsung aktivitas pertanian tradisional dan organik di Ciboer. Peserta bisa belajar menanam, merawat tanaman, hingga memahami konsep pertanian ramah lingkungan. Kegiatan ini cocok untuk pelajar, keluarga, dan komunitas yang ingin pengalaman edukatif.",
+    "excerpt": "Turun langsung ke sawah organik Ciboer, dari menanam hingga memahami tani ramah lingkungan.",
+    "description": "Program Pertanian Organik mengajak wisatawan merasakan langsung denyut pertanian di hamparan sawah organik kawasan Ciboer yang subur. Peserta belajar menanam padi, merawat tanaman tanpa bahan kimia, dan memahami konsep pertanian ramah lingkungan langsung dari petani pemilik lahan. Kegiatan ini menjadi pelengkap sempurna setelah menikmati panorama terasering, karena wisatawan pulang dengan pemahaman utuh tentang dari mana asal sepiring nasi. Program ini digemari sekolah, keluarga, dan komunitas yang mencari wisata edukatif bermakna.",
     "cover": "wisata/pertanian-organik/cover.png",
     "gallery": [],
     "location": {
@@ -12,13 +12,14 @@
     "facilities": [
         "Kamar mandi umum",
         "Musholla",
-        "Persewaan alat",
         "Tempat makan",
-        "Wifi area"
+        "Gazebo sawah",
+        "Pemandu petani lokal"
     ],
     "activities": [
-        "Edukasi pertanian",
-        "Praktik menanam",
+        "Edukasi pertanian organik",
+        "Praktik menanam padi",
+        "Membajak sawah",
         "Interaksi petani lokal"
     ]
 }

@@ -1,8 +1,8 @@
 {
     "slug": "telaga-nila",
     "title": "Telaga Nila",
-    "excerpt": "Telaga dengan air jernih dari mata air pegunungan yang menyegarkan, cocok untuk pemulihan energi.",
-    "description": "Telaga Nila adalah telaga dengan air jernih yang berasal dari sumber mata air pegunungan asli di kawasan Desa Wisata Bantaragung, kaki Gunung Ciremai. Kesegaran airnya yang murni menjadi pilihan untuk menyegarkan diri dan memulihkan energi, dikelilingi suasana alam pegunungan yang asri. Telaga ini cocok untuk bermain air, piknik keluarga, dan melepas penat dari kebisingan kota.",
+    "excerpt": "Telaga biru jernih di Bantaragung dengan tiket Rp5 ribu, favorit untuk berenang dan foto underwater.",
+    "description": "Telaga Nila yang juga dikenal sebagai Telaga Biru Nila atau Danau Biru adalah telaga alami di Desa Bantaragung dengan air sebening kaca berwarna biru kehijauan dari mata air pegunungan. Dengan tiket masuk sekitar Rp5.000 per orang plus retribusi parkir, destinasi ini jadi pilihan liburan murah meriah sekitar 45 menit dari pusat Kota Majalengka. Pengunjung bisa berenang, bermain air, berpiknik bersama keluarga, atau berburu foto underwater dan lanskap yang instagramable. Ketenarannya terlihat dari akun media sosialnya yang diikuti lebih dari sepuluh ribu penggemar, dan suasananya paling jernih saat kemarau.",
     "cover": "wisata/curug-cipeuteuy/cover.png",
     "gallery": [],
     "location": {
@@ -13,13 +13,14 @@
         "Areal parkir",
         "Kamar mandi umum",
         "Spot foto",
-        "Musholla"
+        "Musholla",
+        "Warung makan"
     ],
     "activities": [
         "Bermain air",
         "Berenang",
         "Piknik keluarga",
-        "Fotografi",
+        "Fotografi underwater",
         "Relaksasi"
     ]
 }

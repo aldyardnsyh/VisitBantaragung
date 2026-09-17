@@ -1,8 +1,8 @@
 {
     "slug": "paket-desa-wisata-bantaragung",
     "title": "Paket Desa Wisata Bantaragung",
-    "excerpt": "Paket wisata lengkap untuk menjelajah destinasi unggulan, budaya lokal, dan kuliner khas desa.",
-    "description": "Paket Desa Wisata Bantaragung menghadirkan pengalaman all-in untuk wisatawan yang ingin menikmati alam, budaya, dan kegiatan desa dalam satu rangkaian perjalanan. Program ini menggabungkan kunjungan ke spot alam, pertunjukan budaya, hingga interaksi langsung dengan masyarakat. Cocok untuk rombongan, sekolah, maupun instansi.",
+    "excerpt": "Paket all-in sehari penuh: curug, terasering, budaya, dan kuliner dalam satu rangkaian terpadu.",
+    "description": "Paket Desa Wisata Bantaragung adalah cara paling praktis menikmati seluruh wajah desa dalam satu rangkaian perjalanan terpadu. Rutenya menggabungkan spot alam unggulan seperti Curug Cipeuteuy dan Terasering Ciboer Pass, pertunjukan budaya seperti genjring atau pencak silat, interaksi dengan UMKM dan kampung herbal, hingga ditutup kuliner khas desa. Pemandu lokal mendampingi sepanjang trip dengan cerita dan konteks di setiap pemberhentian. Paket ini dirancang fleksibel untuk rombongan sekolah, instansi, komunitas, dan keluarga besar, dengan durasi half-day hingga full-day.",
     "cover": "wisata/paket-desa-wisata-bantaragung/cover.png",
     "gallery": [],
     "location": {
@@ -10,15 +10,16 @@
         "lng": 108.392778
     },
     "facilities": [
-        "Balai pertemuan",
-        "Kesenian dan budaya",
+        "Pemandu lokal",
+        "Transportasi lokal",
+        "Tempat makan",
         "Musholla",
         "Selfie area",
-        "Tempat makan",
-        "Wifi area"
+        "Balai pertemuan"
     ],
     "activities": [
-        "Tour desa",
+        "Tour desa terpadu",
+        "Wisata alam unggulan",
         "Pertunjukan budaya",
         "Kuliner lokal",
         "Edukasi wisata"
