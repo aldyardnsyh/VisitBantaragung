@@ -1,8 +1,8 @@
 {
     "slug": "terasering-ciboer",
     "title": "Terasering Ciboer Pass",
-    "excerpt": "Hamparan terasering pesawahan hijau yang menjadi spot santai, wisata edukasi, dan fotografi alam.",
-    "description": "Terasering Ciboer Pass menawarkan pemandangan sawah bertingkat dengan udara sejuk kaki Gunung Ciremai. Selain menikmati kopi di tengah hamparan hijau, wisatawan dapat mengikuti paket edukasi pertanian seperti menanam padi, membajak sawah bersama kerbau, dan mengenal teknik budidaya tradisional. Destinasi ini cocok untuk wisata keluarga, pelajar, maupun komunitas.",
+    "excerpt": "Sawah bertingkat ala Ubud yang dibelah Sungai Ciwaru, 1 km dari desa, lengkap dengan edukasi tani.",
+    "description": "Terasering Ciboer Pass terletak sekitar 1 km dari pusat Desa Bantaragung dan kerap disandingkan dengan keindahan sawah bertingkat Ubud di Bali. Hamparan padi hijau berundak yang dibelah aliran Sungai Ciwaru menciptakan panorama eksotis, terutama saat matahari terbenam di ufuk barat, menjadikannya surga bagi fotografer dan pemburu video sinematik. Selain bersantai dan menyeruput kopi di tengah hamparan hijau, wisatawan bisa mengikuti paket edukasi pertanian tradisional seperti menanam padi, membajak sawah bersama kerbau, dan mengenal teknik budidaya warga. Destinasi ini cocok untuk wisata keluarga, pelajar, dan komunitas yang ingin belajar langsung dari petani lokal.",
     "cover": "wisata/terasering-ciboer/cover.png",
     "gallery": [],
     "location": {
@@ -10,17 +10,18 @@
         "lng": 108.392778
     },
     "facilities": [
+        "Areal parkir",
         "Kamar mandi umum",
         "Musholla",
         "Selfie area",
         "Tempat makan",
-        "Wifi area",
-        "Persewaan alat"
+        "Warung kopi sawah"
     ],
     "activities": [
         "Menikmati terasering",
         "Edukasi pertanian tradisional",
-        "Fotografi lanskap",
+        "Menanam padi",
+        "Fotografi lanskap dan sunset",
         "Ngopi di alam terbuka"
     ]
 }

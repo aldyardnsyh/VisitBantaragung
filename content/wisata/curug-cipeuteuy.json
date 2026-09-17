@@ -1,8 +1,8 @@
 {
     "slug": "curug-cipeuteuy",
     "title": "Curug Cipeuteuy",
-    "excerpt": "Air terjun alami di Desa Bantaragung dengan panorama hutan pinus, cocok untuk keluarga dan pecinta alam.",
-    "description": "Curug Cipeuteuy merupakan ikon wisata alam Desa Bantaragung yang dikelola oleh masyarakat melalui koperasi. Suasana hutan pinus yang sejuk, aliran air jernih, serta jalur trekking ringan menjadikannya destinasi favorit untuk liburan keluarga, edukasi alam, hingga fotografi. Wisatawan dapat menikmati kuliner lokal, area camping, serta wahana outbound yang tersedia di sekitar kawasan.",
+    "excerpt": "Air terjun di kaki Gunung Ciremai dengan kolam berundak yang jernih, tiket Rp15-20 ribu, dan trek ramah pemula.",
+    "description": "Curug Cipeuteuy adalah ikon wisata alam Desa Bantaragung di Jalan Dukuh Pasir, Kecamatan Sindangwangi, yang dikelola masyarakat melalui koperasi desa. Air terjun setinggi sekitar 5-7 meter ini mengalirkan air pegunungan yang jernih langsung dari hutan lereng Gunung Ciremai, lalu tertampung di kolam-kolam alami berundak yang mengundang untuk berenang dan bersantai. Trek menuju lokasi hanya sekitar 300 meter dari area parkir, melewati jembatan, anak tangga, dan rimbunnya hutan pinus, sehingga aman untuk pemula dan keluarga. Tiket masuk Rp15.000 pada hari biasa dan Rp20.000 pada akhir pekan, dengan retribusi parkir Rp5.000 untuk motor dan Rp10.000 untuk mobil. Di sekitar kawasan tersedia warung kuliner UMKM, area camping Awilega, bukit selfie, dan wahana outbound, menjadikannya destinasi lengkap untuk liburan sehari maupun berkemah.",
     "cover": "wisata/curug-cipeuteuy/cover.png",
     "gallery": [],
     "location": {
@@ -15,14 +15,17 @@
         "Musholla",
         "Selfie area",
         "Tempat makan",
-        "Wifi area",
-        "Persewaan alat"
+        "Warung UMKM",
+        "Area camping Awilega",
+        "Papan petunjuk jalur"
     ],
     "activities": [
         "Wisata air terjun",
+        "Berenang di kolam alami",
         "Camping",
         "Hiking ringan",
         "Outbound keluarga",
+        "Fotografi alam",
         "Kuliner lokal"
     ]
 }

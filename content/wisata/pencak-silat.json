@@ -1,8 +1,8 @@
 {
     "slug": "pencak-silat",
     "title": "Pencak Silat",
-    "excerpt": "Kelas dan pertunjukan pencak silat sebagai warisan budaya Desa Bantaragung.",
-    "description": "Pencak silat menjadi bagian dari kearifan lokal Bantaragung yang masih terjaga hingga kini. Wisatawan dapat menyaksikan pertunjukan atau mengikuti sesi pengenalan dasar pencak silat bersama pelatih lokal. Kegiatan ini memperkaya pengalaman wisata budaya dan edukasi.",
+    "excerpt": "Saksikan pertunjukan atau ikuti kelas pengenalan pencak silat bersama pelatih lokal Bantaragung.",
+    "description": "Pencak silat hidup dan terjaga sebagai warisan budaya di Bantaragung, diwariskan turun-temurun melalui sanggar dan komunitas setempat. Wisatawan bisa menyaksikan pertunjukan jurus yang memadukan kekuatan, kelenturan, dan keindahan gerak diiringi musik tradisional, atau mengikuti sesi pengenalan dasar bersama pelatih lokal, dari kuda-kuda hingga jurus pembuka. Kegiatan ini memperkaya wisata budaya dengan pengalaman edukatif yang melatih disiplin dan menghargai filosofi bela diri asli Indonesia. Sesi latihan cocok untuk pelajar, komunitas, dan rombongan gathering.",
     "cover": "wisata/pencak-silat/cover.png",
     "gallery": [],
     "location": {
@@ -12,11 +12,13 @@
     "facilities": [
         "Balai pertemuan",
         "Musholla",
-        "Selfie area"
+        "Selfie area",
+        "Arena latihan"
     ],
     "activities": [
-        "Pertunjukan budaya",
-        "Pelatihan pencak silat",
+        "Menonton pertunjukan budaya",
+        "Kelas pengenalan pencak silat",
+        "Edukasi bela diri tradisional",
         "Interaksi komunitas"
     ]
 }

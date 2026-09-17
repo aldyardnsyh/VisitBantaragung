@@ -1,8 +1,8 @@
 {
     "slug": "villa-gardenstone",
     "title": "Villa Gardenstone",
-    "excerpt": "Villa modern bernuansa alam untuk keluarga atau rombongan di Desa Bantaragung.",
-    "description": "Villa Gardenstone menghadirkan akomodasi dengan fasilitas lengkap dan suasana asri. Pengunjung dapat menikmati udara pegunungan, area bersantai, dan akses mudah ke berbagai destinasi wisata desa. Cocok untuk keluarga, gathering kecil, atau wisatawan yang ingin kenyamanan ekstra.",
+    "excerpt": "Villa hidden gem berambience sejuk dan tenang untuk staycation keluarga di Bantaragung.",
+    "description": "Villa Gardenstone adalah hidden gem akomodasi di Desa Bantaragung yang menawarkan ketenangan, kesejukan udara pegunungan, dan taman asri untuk bersantai. Fasilitasnya yang lengkap menunjang staycation keluarga, gathering kecil, hingga rombongan yang membutuhkan kenyamanan ekstra setelah seharian berwisata. Lokasinya strategis sebagai basecamp, dengan akses mudah ke Curug Cipeuteuy, Terasering Ciboer Pass, dan pusat kuliner Pasar Bumi Pakuwon. Pesan lebih awal saat akhir pekan dan musim liburan karena unitnya terbatas.",
     "cover": "wisata/villa-gardenstone/cover.png",
     "gallery": [],
     "location": {
@@ -10,15 +10,18 @@
         "lng": 108.392778
     },
     "facilities": [
-        "Kamar mandi umum",
+        "Kamar tidur keluarga",
+        "Kamar mandi dalam",
+        "Dapur dan ruang makan",
+        "Taman dan area santai",
         "Musholla",
-        "Selfie area",
-        "Tempat makan",
-        "Wifi area"
+        "Wifi area",
+        "Areal parkir"
     ],
     "activities": [
         "Staycation",
         "Family gathering",
+        "Barbekyu taman",
         "Kuliner lokal"
     ]
 }

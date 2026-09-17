@@ -1,8 +1,8 @@
 {
     "slug": "domba-ketangkasan",
     "title": "Domba Ketangkasan",
-    "excerpt": "Atraksi tradisional yang menampilkan ketangkasan domba sebagai bagian budaya lokal.",
-    "description": "Domba Ketangkasan merupakan atraksi budaya yang menonjolkan ketangkasan domba dalam rangkaian pertunjukan tradisional. Acara ini biasanya digelar pada momen tertentu dan menjadi hiburan yang menarik bagi wisatawan. Selain menikmati atraksi, pengunjung dapat berinteraksi dengan peternak lokal.",
+    "excerpt": "Seni laga ketangkasan domba Garut dengan iringan kendang pencak, kostum, dan tembang Sunda.",
+    "description": "Seni laga ketangkasan domba adalah tradisi Sunda yang lahir dari kebiasaan para peternak mengembala domba, kini berkembang menjadi pertunjukan budaya yang memukau. Di Bantaragung, atraksi ini ditampilkan dengan tata cara khas, mulai dari busana peternak berkampret dan iket kepala, iringan kendang penca dan tembang Sunda, hingga adu ketangkasan domba Garut asli Jawa Barat yang gagah. Selain menonton, pengunjung bisa berinteraksi dengan peternak, mengenal ciri domba unggul, dan memahami bagaimana tradisi ini mengangkat ekonomi peternak lokal. Pertunjukan biasanya digelar pada momen tertentu, jadi konfirmasikan jadwalnya sebelum berkunjung.",
     "cover": "wisata/domba-ketangkasan/cover.png",
     "gallery": [],
     "location": {
@@ -12,11 +12,13 @@
     "facilities": [
         "Areal parkir",
         "Musholla",
-        "Selfie area"
+        "Selfie area",
+        "Tribun penonton"
     ],
     "activities": [
-        "Atraksi budaya",
-        "Edukasi peternakan",
-        "Interaksi komunitas"
+        "Menonton atraksi budaya",
+        "Edukasi peternakan domba Garut",
+        "Interaksi peternak lokal",
+        "Fotografi budaya"
     ]
 }

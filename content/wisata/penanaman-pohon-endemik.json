@@ -1,8 +1,8 @@
 {
     "slug": "penanaman-pohon-endemik",
     "title": "Penanaman Pohon Endemik",
-    "excerpt": "Program wisata edukasi lingkungan untuk menanam pohon endemik di kawasan Curug Cipeuteuy.",
-    "description": "Program Penanaman Pohon Endemik mengajak wisatawan dan komunitas untuk ikut menjaga kelestarian alam Bantaragung. Kegiatan dilakukan di sekitar Curug Cipeuteuy dengan pendampingan warga dan pengelola desa wisata. Selain menanam, peserta juga mendapatkan edukasi tentang konservasi hutan dan manfaat ekologisnya.",
+    "excerpt": "Tanam pohon endemik di kawasan Curug Cipeuteuy dan tinggalkan jejak hijau untuk Ciremai.",
+    "description": "Program Penanaman Pohon Endemik mengajak wisatawan, komunitas, dan perusahaan untuk berkontribusi langsung pada kelestarian hutan lereng Gunung Ciremai. Kegiatan dipusatkan di kawasan Curug Cipeuteuy dengan pendampingan warga dan pengelola desa wisata, menggunakan bibit pohon endemik yang sesuai dengan ekosistem setempat. Setiap peserta menanam, menandai, dan mendapat edukasi konservasi tentang fungsi hutan sebagai penjaga mata air desa. Program ini cocok untuk CSR perusahaan, kegiatan sekolah, dan komunitas pecinta alam yang ingin wisatanya berdampak.",
     "cover": "wisata/penanaman-pohon-endemik/cover.png",
     "gallery": [],
     "location": {
@@ -13,11 +13,13 @@
         "Areal parkir",
         "Balai pertemuan",
         "Kamar mandi umum",
-        "Musholla"
+        "Musholla",
+        "Bibit dan peralatan tanam"
     ],
     "activities": [
         "Penanaman pohon",
-        "Edukasi konservasi",
-        "Wisata komunitas"
+        "Edukasi konservasi hutan",
+        "Wisata komunitas",
+        "Program CSR hijau"
     ]
 }

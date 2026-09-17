@@ -1,8 +1,8 @@
 {
     "slug": "buper-awilega",
     "title": "Bumi Perkemahan Awilega",
-    "excerpt": "Bumi perkemahan bernuansa hutan pinus dengan kapasitas hingga 2000 orang.",
-    "description": "Bumi Perkemahan Awilega menawarkan pengalaman camping di tengah hutan pinus yang sejuk. Area perkemahan luas dengan kapasitas besar menjadikannya pilihan favorit untuk kegiatan pramuka, gathering komunitas, hingga acara keluarga. Tersedia area api unggun, spot selfie, serta fasilitas pendukung kenyamanan pengunjung.",
+    "excerpt": "Buper hutan pinus 200 meter dari kantor desa, kapasitas hingga 2000 orang untuk kemah dan outbound.",
+    "description": "Bumi Perkemahan Awilega terletak hanya sekitar 200 meter dari kantor Desa Bantaragung, di tengah hutan pinus yang sejuk dan asri. Dengan kapasitas mencapai 2000 orang, buper ini menjadi langganan kegiatan pramuka, perkemahan sekolah, gathering komunitas, dan family camp. Tersedia lapangan api unggun, spot selfie, area outbound, serta fasilitas pendukung seperti toilet, musholla, dan warung makan. Aksesnya mudah dijangkau kendaraan, dan paket bermalam bisa dikombinasikan dengan trekking ke Curug Cipeuteuy yang berada di kawasan yang sama.",
     "cover": "wisata/buper-awilega/cover.png",
     "gallery": [],
     "location": {
@@ -15,12 +15,14 @@
         "Musholla",
         "Selfie area",
         "Tempat makan",
-        "Wifi area"
+        "Lapangan api unggun",
+        "Area outbound"
     ],
     "activities": [
         "Camping",
         "Api unggun",
         "Outbound",
-        "Family gathering"
+        "Family gathering",
+        "Kemah pramuka dan sekolah"
     ]
 }

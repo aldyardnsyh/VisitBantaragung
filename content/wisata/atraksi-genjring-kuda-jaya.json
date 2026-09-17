@@ -1,8 +1,8 @@
 {
     "slug": "atraksi-genjring-kuda-jaya",
     "title": "Atraksi Genjring Kuda Jaya",
-    "excerpt": "Pertunjukan seni tradisional khas Bantaragung dengan irama musik dan tarian yang energik.",
-    "description": "Atraksi Genjring Kuda Jaya menampilkan kesenian musik tradisional dengan gerak tarian yang dinamis. Pertunjukan ini biasanya hadir dalam acara penyambutan tamu, festival desa, dan agenda wisata budaya. Wisatawan dapat berinteraksi dengan pelaku seni dan mengenal nilai-nilai budaya lokal.",
+    "excerpt": "Kesenian genjring khas Bantaragung dengan tabuhan energik dan tarian dinamis untuk penyambutan tamu.",
+    "description": "Genjring Kuda Jaya adalah grup kesenian musik tradisional kebanggaan Bantaragung yang memadukan tabuhan genjring yang rancak dengan gerak tarian yang dinamis dan penuh energi. Pertunjukan ini menjadi suguhan utama dalam penyambutan tamu, festival desa, dan agenda wisata budaya, menciptakan suasana meriah sejak menit pertama. Wisatawan tidak hanya menonton, tetapi juga bisa berinteraksi dengan para pelaku seni, mencoba menabuh, dan mengenal nilai gotong royong yang dirawat komunitas seni setempat. Atraksi ini bisa dipesan sebagai bagian dari paket kunjungan rombongan.",
     "cover": "wisata/atraksi-genjring-kuda-jaya/cover.png",
     "gallery": [],
     "location": {
@@ -10,13 +10,15 @@
         "lng": 108.392778
     },
     "facilities": [
+        "Panggung pertunjukan",
         "Musholla",
         "Selfie area",
-        "Wifi area"
+        "Area parkir"
     ],
     "activities": [
-        "Pertunjukan budaya",
+        "Menonton pertunjukan budaya",
         "Edukasi seni tradisional",
-        "Interaksi komunitas"
+        "Interaksi pelaku seni",
+        "Penyambutan tamu rombongan"
     ]
 }

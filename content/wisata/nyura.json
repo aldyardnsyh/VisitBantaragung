@@ -1,8 +1,8 @@
 {
     "slug": "nyura",
     "title": "Nyura",
-    "excerpt": "Tradisi masyarakat membuat bubur syura secara gotong royong sebagai bentuk kebersamaan.",
-    "description": "Nyura adalah kegiatan budaya tahunan masyarakat Bantaragung yang dilakukan dengan memasak bubur syura secara bersama-sama. Tradisi ini merefleksikan nilai gotong royong dan menjadi momen berkumpul bagi warga. Wisatawan dapat melihat proses memasak, mencicipi hidangan, serta memahami makna budaya di baliknya.",
+    "excerpt": "Tradisi tahunan memasak bubur syura secara gotong royong sebagai perayaan kebersamaan warga.",
+    "description": "Nyura adalah tradisi tahunan masyarakat Bantaragung berupa memasak bubur syura dalam kuali besar secara gotong royong. Sejak pagi warga berkumpul, berbagi tugas, dan meracik bubur yang kemudian dibagikan untuk dinikmati bersama, menjadi simbol syukur dan perekat kebersamaan antarwarga. Wisatawan yang datang di momen ini bisa menyaksikan langsung proses memasak massal, mencicipi bubur syura hangat, dan memahami makna filosofis di balik setiap tahapannya. Karena digelar setahun sekali, sempatkan mengecek jadwal ke pengelola desa agar tidak terlewat.",
     "cover": "wisata/nyura/cover.png",
     "gallery": [],
     "location": {
@@ -12,10 +12,12 @@
     "facilities": [
         "Balai pertemuan",
         "Musholla",
-        "Tempat makan"
+        "Tempat makan",
+        "Area parkir"
     ],
     "activities": [
-        "Ritual budaya",
+        "Menyaksikan ritual budaya",
+        "Gotong royong memasak",
         "Kuliner tradisional",
         "Interaksi warga"
     ]
