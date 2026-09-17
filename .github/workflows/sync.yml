@@ -19,7 +19,21 @@ jobs:
         with:
           node-version: 20
 
-      - name: Crawl WordPress news
+      # Sumber utama: Instagram resmi via API resmi (lebih cepat update).
+      # Gagal (termasuk secrets belum diisi) -> lanjut ke fallback WordPress.
+      - name: Crawl Instagram (sumber utama)
+        id: ig
+        continue-on-error: true
+        run: set -o pipefail; node scripts/sync/crawl-ig.js 2>&1 | tee "$RUNNER_TEMP/sync.log"
+        env:
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_URL: https://openagentic.id/api/v1/chat/completions
+          LLM_MODEL: glm-5.3-flash
+
+      - name: Crawl WordPress news (fallback)
+        if: steps.ig.outcome != 'success'
         # pipefail: kegagalan crawl (exit 1 dari stage-gate) wajib menggagalkan step,
         # bukan tertutup exit 0 dari tee.
         run: set -o pipefail; node scripts/sync/crawl.js 2>&1 | tee "$RUNNER_TEMP/sync.log"
