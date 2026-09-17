@@ -3,6 +3,7 @@ import Navbar from "@/app/components/layout/Navbar";
 import { getSeoSettings } from "@/lib/content";
 import type { Metadata } from "next";
 import Footer from "@/app/components/layout/Footer";
+import GoogleAnalytics from "@/app/components/analytics/GoogleAnalytics";
 import { assetUrl } from "@/lib/asset";
 
 
@@ -27,12 +28,22 @@ export const metadata: Metadata = (() => {
       'kkn ppm ugm',
       'kkn ugm',
       'kkn ppm ugm 2025',
+      'kkn ppm ugm periode iv 2025',
+      'kkn ugm 2025',
+      'kuliah kerja nyata ugm',
+      'kuliah kerja nyata universitas gadjah mada',
+      'kkn-ppm ugm',
       'kkn di majalengka',
+      'kkn majalengka',
       'kkn ugm majalengka',
+      'kkn ugm sindangwangi',
+      'kkn sindangwangi',
       'simfoni sindangwangi',
       'kkn simfoni sindangwangi',
       'kkn ppm ugm simfoni',
       'kkn ugm periode 4 2025',
+      'galeri kkn ugm',
+      'dokumentasi kkn bantaragung',
       // Lokasi
       'wisata majalengka',
       'desa wisata majalengka',
@@ -43,6 +54,11 @@ export const metadata: Metadata = (() => {
       'wisata alam jawa barat',
       'wisata gunung ciremai',
       // Destinasi spesifik
+      'pasar bumi pakuwon',
+      'kopi pakuwon',
+      'telaga biru nila',
+      'telaga nila',
+      'homestay warga bantaragung',
       'teras bumi pakuwon',
       'teras bumi pakuwon majalengka',
       'bumi perkemahan awilega',
@@ -119,6 +135,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body>
+        <GoogleAnalytics />
         <Navbar />
         {children}
         <Footer />
