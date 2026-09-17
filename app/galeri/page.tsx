@@ -1,30 +1,14 @@
 import fs from "fs";
 import path from "path";
 import PageHeader from "@/app/components/layout/PageHeader";
-import Reveal from "@/app/components/ui/Reveal";
 import { assetUrl } from "@/lib/asset";
+import GaleriClient from "./GaleriClient";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Galeri Kegiatan KKN",
     description:
         "Dokumentasi kegiatan KKN-PPM UGM Simfoni Sindangwangi Periode IV 2025 di Desa Bantaragung dan Desa Sindangwangi, Majalengka.",
-};
-
-const CAPTIONS: Record<string, string> = {
-    "curug-cipeuteuy": "Curug Cipeuteuy",
-    "edukasi-sekolah": "Edukasi Sekolah",
-    "festival-budaya": "Festival Budaya",
-    "gotong-royong": "Gotong Royong",
-    "keberangkatan": "Keberangkatan",
-    "panen-bersama": "Panen Bersama",
-    "pelatihan-umkm": "Pelatihan UMKM",
-    "penanaman-herbal": "Penanaman Herbal",
-    "Penerjunan": "Penerjunan",
-    "penutupan": "Penutupan",
-    "penyambutan": "Penyambutan",
-    "terasering": "Terasering",
-    "workshop-jamu": "Workshop Jamu",
 };
 
 const KKN_LOGOS = [
@@ -50,16 +34,6 @@ function LogoCard({ src, label }: { src: string; label: string }) {
     );
 }
 
-function humanize(file: string): string {
-    const slug = file.replace(/\.[^.]+$/, "");
-    const caption = CAPTIONS[slug];
-    if (caption) return caption;
-    return slug
-        .replace(/[-_]+/g, " ")
-        .trim()
-        .replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
 export default function GaleriPage() {
     const dir = path.join(process.cwd(), "public", "galeri");
     const files = fs
@@ -77,38 +51,7 @@ export default function GaleriPage() {
             />
 
             <section className="max-w-7xl mx-auto px-6 py-16">
-                <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
-                    {files.map((file, i) => {
-                        const caption = humanize(file);
-                        const slug = file.replace(/\.[^.]+$/, "").toLowerCase();
-                        return (
-                            <Reveal
-                                key={file}
-                                delay={(i % 3) * 100}
-                                className="break-inside-avoid"
-                            >
-                                <figure className="overflow-hidden rounded-2xl bg-white border border-forest-200/60 shadow-sm group">
-                                <div className="overflow-hidden">
-                                    <img
-                                        src={`/galeri/${file}`}
-                                        alt={caption}
-                                        loading="lazy"
-                                        decoding="async"
-                                        className={`w-full object-cover group-hover:scale-105 transition-transform duration-300 ${
-                                            slug === "penerjunan" || slug === "panen-bersama"
-                                                ? "h-80"
-                                                : "h-56"
-                                        }`}
-                                    />
-                                </div>
-                                <figcaption className="px-4 py-3 text-sm font-medium text-forest-800">
-                                    {caption}
-                                </figcaption>
-                            </figure>
-                            </Reveal>
-                        );
-                    })}
-                </div>
+                <GaleriClient files={files} />
             </section>
 
             {/* Tentang Program — KKN-PPM */}
