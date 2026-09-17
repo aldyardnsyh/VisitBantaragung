@@ -1,0 +1,27 @@
+{
+    "slug": "kopi-pakuwon",
+    "title": "Kopi Pakuwon",
+    "excerpt": "Kedai kopi scenic di Jalan Ciboer dengan view alam Bantaragung, paling syahdu selepas hujan.",
+    "description": "Kopi Pakuwon di Jalan Ciboer, Desa Bantaragung, adalah titik kumpul favorit untuk menyeruput kopi robusta dan arabika lokal sambil memandang hamparan hijau desa dan gagahnya Gunung Ciremai di kejauhan. Suasananya paling istimewa selepas hujan, saat kabut tipis turun dan udara pegunungan terasa paling segar. Tempat ini melengkapi pengalaman wisata Ciboer Pass dan Pasar Bumi Pakuwon, sekaligus menjadi etalase kopi petani lokal seperti Kopi Malarhayu. Datanglah sore hari untuk mengejar golden hour atau malam akhir pekan untuk nongkrong santai bersama komunitas.",
+    "cover": "wisata/terasering-ciboer/cover.png",
+    "gallery": [],
+    "location": {
+        "lat": -6.841111,
+        "lng": 108.392778
+    },
+    "facilities": [
+        "Area parkir",
+        "Tempat duduk outdoor",
+        "Musholla",
+        "Kamar mandi umum",
+        "Spot foto",
+        "Gerai biji kopi lokal"
+    ],
+    "activities": [
+        "Ngopi santai",
+        "Menikmati sunset dan view Ciremai",
+        "Nongkrong komunitas",
+        "Fotografi",
+        "Belanja kopi lokal"
+    ]
+}
