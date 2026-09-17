@@ -79,7 +79,7 @@ export default function KontakPage() {
                   rel="noopener noreferrer"
                   className="text-sm text-forest-600 hover:text-clay-500 hover:font-semibold transition-colors"
                 >
-                  +62 {WA_NUMBER.slice(1, 3)} {WA_NUMBER.slice(3)}
+                  +62 {WA_NUMBER.slice(2, 5)}-{WA_NUMBER.slice(5, 9)}-{WA_NUMBER.slice(9)}
                 </a>
               </div>
               <div>
