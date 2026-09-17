@@ -1,5 +1,6 @@
 ﻿import { getAllHomestay, getHomestayBySlug } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
+import { toJsonLd } from "@/lib/jsonld";
 import PageHeader from "@/app/components/layout/PageHeader";
 import type { Metadata } from "next";
 
@@ -54,7 +55,7 @@ export default async function HomestayDetail({
         <main className="min-h-screen">
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                dangerouslySetInnerHTML={{ __html: toJsonLd(jsonLd) }}
             />
 
             <PageHeader

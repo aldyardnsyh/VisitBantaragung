@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import PageHeader from "@/app/components/layout/PageHeader";
 import { assetUrl } from "@/lib/asset";
+import { toJsonLd } from "@/lib/jsonld";
 import GaleriClient from "./GaleriClient";
 import type { Metadata } from "next";
 
@@ -104,7 +105,7 @@ export default function GaleriPage() {
         <main className="min-h-screen">
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+                dangerouslySetInnerHTML={{ __html: toJsonLd(faqJsonLd) }}
             />
             <PageHeader
                 breadcrumb={[{ label: "Galeri" }]}
