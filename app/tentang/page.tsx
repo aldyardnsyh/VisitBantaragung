@@ -3,6 +3,7 @@ import Link from "next/link";
 import Breadcrumb from "@/app/components/ui/Breadcrumb";
 import SectionHeading from "@/app/components/ui/SectionHeading";
 import Reveal from "@/app/components/ui/Reveal";
+import ContactSection from "@/app/kontak/ContactSection";
 import { loadJSON, getSiteSettings } from "@/lib/content";
 
 interface ProfileContent {
@@ -237,60 +238,15 @@ export default function TentangPage() {
         </div>
       </section>
 
-      {/* TANYA JAWAB KKN */}
+      {/* KONTAK */}
       <section className="py-20 md:py-24">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="bg-white/60 border border-forest-200/60 rounded-3xl p-8 md:p-12">
-            <p className="text-xs font-semibold uppercase tracking-widest text-clay-500 mb-2">
-              Tanya Jawab
-            </p>
-            <h2 className="font-display font-bold text-forest-800 text-3xl md:text-4xl mb-6">
-              Seputar KKN di Bantaragung
-            </h2>
-            <div className="space-y-3 max-w-3xl">
-              {[
-                {
-                  q: "Apa itu KKN-PPM UGM Simfoni Sindangwangi?",
-                  a: "Program Kuliah Kerja Nyata Pembelajaran Pemberdayaan Masyarakat Universitas Gadjah Mada yang ditempatkan di Kecamatan Sindangwangi, Kabupaten Majalengka, mendampingi wisata berkelanjutan, kampung herbal, UMKM, dan digitalisasi desa.",
-                },
-                {
-                  q: "Di mana lokasi kegiatan KKN?",
-                  a: "Berpusat di Desa Bantaragung dan Desa Sindangwangi, Kecamatan Sindangwangi, Kabupaten Majalengka, Jawa Barat, di kaki Gunung Ciremai.",
-                },
-                {
-                  q: "Apa saja program yang dijalankan?",
-                  a: "Pendampingan desa wisata, Kampung Herbal Mertasela dan workshop jamu, pelatihan UMKM, edukasi sekolah, penanaman pohon endemik, serta digitalisasi desa melalui peta digital dan situs web.",
-                },
-                {
-                  q: "Apakah wisatawan bisa berkunjung ke lokasi KKN?",
-                  a: "Bisa. Seluruh destinasi terbuka untuk umum. Lihat pilihannya di laman wisata atau hubungi pengelola melalui laman kontak.",
-                },
-                {
-                  q: "Di mana melihat dokumentasi kegiatan KKN?",
-                  a: "Di laman galeri dan laman berita yang memuat cerita serta arsip kegiatan.",
-                },
-              ].map((f) => (
-                <details
-                  key={f.q}
-                  className="group rounded-2xl border border-forest-200/60 bg-white px-5 py-4"
-                >
-                  <summary className="cursor-pointer font-semibold text-forest-800 list-none flex items-center justify-between gap-4">
-                    {f.q}
-                    <span aria-hidden className="text-clay-500 transition-transform group-open:rotate-45 text-xl leading-none">+</span>
-                  </summary>
-                  <p className="text-slate-600 leading-relaxed mt-3 text-sm md:text-base">
-                    {f.a}
-                  </p>
-                </details>
-              ))}
-              <Link
-                href="/galeri"
-                className="inline-flex items-center gap-1.5 text-forest-600 hover:text-clay-500 hover:font-semibold font-medium transition-colors pt-2"
-              >
-                Lihat galeri dan FAQ lengkap <span aria-hidden>→</span>
-              </Link>
-            </div>
-          </div>
+          <SectionHeading
+            eyebrow="Hubungi Kami"
+            title="Siap Merencanakan Kunjungan?"
+            subtitle="Tanya paket wisata, ajak kerja sama, atau sapa tim Pokdarwis Bantaragung."
+          />
+          <ContactSection />
         </div>
       </section>
 
