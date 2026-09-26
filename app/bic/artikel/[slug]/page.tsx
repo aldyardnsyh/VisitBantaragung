@@ -1,7 +1,7 @@
 ﻿import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getAllArticles, getArticleBySlug } from "@/lib/content";
+import { getAllArticles, getArticleBySlug, getRelatedByTags } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
 import { toJsonLd } from "@/lib/jsonld";
 import ResponsiveArticle from "@/app/components/ui/ResponsiveArticle";
@@ -67,11 +67,18 @@ export default async function ArtikelDetailPage({ params }: ArticleDetailProps) 
     const idx = allArticles.findIndex((a) => a.slug === article.slug);
     const newer = idx > 0 ? allArticles[idx - 1] : null;
     const older = idx >= 0 && idx < allArticles.length - 1 ? allArticles[idx + 1] : null;
+    // Posting terkait: tag yang sama lebih spesifik daripada kategori, jadi
+    // setiap artikel mendapat tautan internal yang benar-benar relevan.
     const sameCategory = allArticles.filter(
         (a) => a.slug !== article.slug && a.category === article.category
     );
-    const related = (sameCategory.length >= 3 ? sameCategory : allArticles.filter((a) => a.slug !== article.slug))
-        .slice(0, 3);
+    const byTag = getRelatedByTags(article, 3);
+    const related = (byTag.length
+        ? byTag
+        : sameCategory.length >= 3
+          ? sameCategory
+          : allArticles.filter((a) => a.slug !== article.slug)
+    ).slice(0, 3);
 
     const jsonLd = {
         "@context": "https://schema.org",
@@ -209,8 +216,8 @@ export default async function ArtikelDetailPage({ params }: ArticleDetailProps) 
                     </nav>
                 )}
 
-                {/* Postingan terkait (khusus non-berita; berita desa cukup prev/next agar tidak ramai) */}
-                {article.origin !== "berita" && related.length > 0 && (
+                {/* Posting terkait: pakai tag yang sama bila ada, lalu kategori */}
+                {related.length > 0 && (
                     <div className="pt-8">
                         <h3 className="font-display text-2xl font-bold text-forest-800 mb-4">
                             Postingan Terkait
@@ -238,6 +245,26 @@ export default async function ArtikelDetailPage({ params }: ArticleDetailProps) 
                                 </Link>
                             ))}
                         </div>
+                    </div>
+                )}
+
+                {/* Tag: membuat data tag jadi tautan nyata yang bisa ditelusuri mesin pencari */}
+                {(article.tags || []).length > 0 && (
+                    <div className="flex flex-wrap items-center gap-2 pt-6 border-t border-forest-200/70">
+                        <span className="text-sm text-slate-500">Tag:</span>
+                        {(article.tags || []).map((t) => {
+                            const slug = String(t).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+                            if (!slug) return null;
+                            return (
+                                <Link
+                                    key={slug}
+                                    href={`/tag/${slug}`}
+                                    className="rounded-full bg-forest-100 text-forest-700 px-3 py-1 text-xs hover:bg-forest-200 transition-colors"
+                                >
+                                    {slug.replace(/-/g, " ")}
+                                </Link>
+                            );
+                        })}
                     </div>
                 )}
 

@@ -210,6 +210,57 @@ export function getArticleBySlug(slug: string): Article | null {
     return null;
 }
 
+export interface TagInfo {
+    slug: string;
+    label: string;
+    count: number;
+}
+
+// Tag yang sudah ada di artikel tapi belum pernah jadi halaman. Mengubahnya
+// menjadi tautan nyata membuat Google bisa menelusuri hubungan antar artikel
+// (dulu tag hanya data yang tidak tersentuh perayapan).
+export function getAllTags(): TagInfo[] {
+    const map = new Map<string, TagInfo>();
+    for (const a of getAllArticles()) {
+        for (const raw of a.tags || []) {
+            const slug = String(raw).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+            if (!slug) continue;
+            const existing = map.get(slug);
+            if (existing) existing.count += 1;
+            else map.set(slug, { slug, label: slug, count: 1 });
+        }
+    }
+    return [...map.values()].sort((a, b) => b.count - a.count || a.slug.localeCompare(b.slug));
+}
+
+export function getTagBySlug(slug: string): TagInfo | null {
+    return getAllTags().find((t) => t.slug === slug) || null;
+}
+
+export function getArticlesByTag(tag: string): Article[] {
+    const needle = tag.toLowerCase();
+    return getAllArticles()
+        .filter((a) => (a.tags || []).some((t) => String(t).toLowerCase() === needle))
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
+
+// Artikel lain yang berbagi tag (lebih spesifik daripada kategori) supaya
+// setiap artikel punya maksimal tautan internal yang relevan.
+export function getRelatedByTags(article: Article, limit = 3): Article[] {
+    const tags = new Set((article.tags || []).map((t) => String(t).toLowerCase()));
+    if (!tags.size) return [];
+    return getAllArticles()
+        .filter((a) => a.slug !== article.slug)
+        .map((a) => ({
+            article: a,
+            score: (a.tags || []).filter((t) => tags.has(String(t).toLowerCase())).length,
+        }))
+        .filter((x) => x.score > 0)
+        .sort((a, b) => b.score - a.score || new Date(b.article.date).getTime() - new Date(a.article.date).getTime())
+        .slice(0, limit)
+        .map((x) => x.article);
+}
+
 export interface Location {
     slug: string;
     name: string;
