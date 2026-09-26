@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import {
     getAllArticles,
+    getAllTags,
     getArticlesByOrigin,
     type Article,
     type ArticleOrigin,
@@ -162,6 +163,34 @@ export default async function ArtikelListPage({ searchParams }: ListPageProps) {
                     </div>
                 )}
             </section>
+
+            {/* Tag cloud: pintu masuk ke seluruh halaman tag dari daftar utama,
+                supaya crawler bisa menjangkau semua topik tanpa harus membaca
+                tiap artikel satu per satu. */}
+            {getAllTags().length > 0 && (
+                <section className="max-w-7xl mx-auto px-6 pb-16">
+                    <div className="rounded-2xl bg-white/60 border border-forest-200/60 p-6 md:p-8">
+                        <h2 className="font-display font-bold text-forest-800 text-xl mb-1">
+                            Jelajahi Topik
+                        </h2>
+                        <p className="text-sm text-slate-600 mb-4">
+                            Kumpulan artikel berdasarkan topik yang paling sering muncul.
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                            {getAllTags().slice(0, 60).map((t) => (
+                                <Link
+                                    key={t.slug}
+                                    href={`/tag/${t.slug}`}
+                                    className="rounded-full bg-forest-100 text-forest-700 px-3 py-1.5 text-sm hover:bg-forest-200 transition-colors"
+                                >
+                                    {t.slug.replace(/-/g, " ")}
+                                    <span className="ml-1.5 text-xs text-forest-500">{t.count}</span>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
         </main>
     );
 }
