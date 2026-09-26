@@ -428,31 +428,61 @@ async function assertLLMHealthy() {
 const NON_LATIN_RE =
   /[\u0400-\u04FF\u0600-\u06FF\u0900-\u097F\u0E00-\u0E7F\u1100-\u11FF\u3040-\u30FF\u3130-\u318F\u3400-\u4DBF\u4E00-\u9FFF\uA960-\uA97F\uAC00-\uD7AF\uF900-\uFAFF\uFF00-\uFFEF]/g;
 
-// Kata Latin yang nyasar ke dalam kalimat Indonesia. Based on kasus nyata:
-// "warriors", "pack", "escaping", "holistic" sempat muncul di tengah paragraf.
-const KATA_NYASAR = [
-  "the", "and", "with", "from", "that", "this", "your", "you", "have", "will",
-  "about", "quality", "high", "escape", "escaping", "ignore", "warriors",
-  "warrior", "respect", "correspondingly", "alone", "holistic", "conceded",
-  "meaningful", "moment", "adventure", "experience", "beautiful", "wonderful",
-  "discover", "journey", "relax", "enjoy",
-];
+// Kata fungsi bahasa Inggris. Teks Indonesia yang sehat hampir tidak memakainya,
+// jadi dipakai sebagai detektor "ini bukan bahasa Indonesia".
+const KATA_FUNGSI_EN =
+  /\b(?:the|and|with|from|that|this|these|those|your|you|they|them|their|there|here|have|has|had|will|would|shall|should|can|could|about|into|over|under|after|before|between|during|through|while|when|what|which|who|whom|whose|how|why|where|all|any|each|few|many|most|some|other|such|only|own|same|than|then|also|been|being|does|did|done|were|was|are|not|but|for|its|our|out|very|too|just|now|let|please|sorry|okay|ok|here|produce|final|json|output|note|notes|submit|submit|thereof|need|want|make|made|use|used|using|get|got|give|gave|show|shown|see|seen|say|says|said|tell|told|know|known|think|thought)\b/gi;
+
+// Frasa meta-komunikasi model yang bocor ke dalam konten ("Sorry, let me produce
+// the clean final JSON"). Ini tanda jelas output tidak akan dipakai.
+const META_MODEL_RE =
+  /\b(?:sorry|let me|as an ai|i will|i'?ll|i need to|here'?s|here is|producing|the clean final|final json|json output|as requested|note that|output:)\b/i;
+
+// Simbol acak dari model yang gagal stabil (contoh nyata: "{m}", "/{m}", "{-", "/#").
+const SIMBOL_ACAK_RE = /(?:\{\/?[a-z]{1,3}\}|\{-|-\}|\/#|#\{|\{[mno]|\}\/|\[\/)/gi;
+
+// Caps lock panjang tanpa makna, mis. "ENGUNJUNGAN" nyasar di tengah kalimat.
+// Allowlist: nama acara/merek yang memang ditulis kapital (TRIKARSA, SERTIDEWI).
+const CAPS_PANJANG_RE = /\b[A-Z]{7,}\b/g;
+const CAPS_WHITELIST = new Set([
+  "TRIKARSA", "SERTIDEWI", "WONOSOBO", "PRASETIYO", "INDONESIA", "MAJALENGKA",
+  "BANTARAGUNG", "PADANGDARAUH", "SUMATERA", "KONVENSI", "KEMENTERIAN",
+]);
+
+// Huruf dari Latin Extended Additional/Suplemental yang tidak pernah dipakai
+// bahasa Indonesia; model kadang menyisipkan huruf dari alfabet lain.
+const HURUF_ASING_RE = /[ßẞɓƀḍȷǀǁɠ]/g;
 
 function hitungAnomali(out) {
   const text = [out.title, out.excerpt, ...(out.content || [])].join(" ");
-  const nonLatin = (text.match(NON_LATIN_RE) || []).length;
-  const nyasar = KATA_NYASAR.filter((k) =>
-    new RegExp(`\\b${k}\\b`, "i").test(text)
-  ).length;
-  return { nonLatin, nyasar };
+  const kapital = text.match(CAPS_PANJANG_RE) || [];
+  return {
+    nonLatin: (text.match(NON_LATIN_RE) || []).length,
+    hurufAsing: (text.match(HURUF_ASING_RE) || []).length,
+    meta: META_MODEL_RE.test(text),
+    simbol: (text.match(SIMBOL_ACAK_RE) || []).length,
+    caps: kapital.filter((w) => !CAPS_WHITELIST.has(w)).length,
+    enRatio: (text.match(KATA_FUNGSI_EN) || []).length,
+    totalKata: text.split(/\s+/).filter(Boolean).length,
+  };
 }
 
-// Bersihkan deterministik: buang aksara asing, rapatkan spasi, buang kata nyasar.
+// Bersihkan deterministik: buang aksara asing, meta-komunikasi model, simbol
+// acak, huruf kapital geser, lalu rapatkan spasi.
 function bersihkanOutput(out) {
   const clean = (s) =>
     String(s)
+      .replace(/```[a-zA-Z]*/g, " ")
       .replace(NON_LATIN_RE, "")
+      .replace(HURUF_ASING_RE, "")
+      .replace(META_MODEL_RE, " ")
+      .replace(SIMBOL_ACAK_RE, " ")
+      .replace(CAPS_PANJANG_RE, (w) => (CAPS_WHITELIST.has(w) ? w : " "))
       .replace(/\s{2,}/g, " ")
+      .replace(/\s+,/g, ",")
+      .replace(/,\s*,/g, ",")
+      .replace(/\btidak,\s*tapi\b/gi, "tetapi")
+      .replace(/\bdan\s+berisi\b/gi, "dan berisi")
       .trim();
   out.title = clean(out.title);
   out.excerpt = clean(out.excerpt);
@@ -461,12 +491,18 @@ function bersihkanOutput(out) {
 }
 
 function assertValidIndonesian(out) {
-  const { nonLatin, nyasar } = hitungAnomali(out);
-  if (nonLatin > 0) {
-    throw new Error(`aksara asing tersisa (${nonLatin})`);
-  }
-  if (nyasar > 3) {
-    throw new Error(`kata bahasa Inggris nyasar (${nyasar} jenis)`);
+  const a = hitungAnomali(out);
+  if (a.nonLatin > 0) throw new Error(`aksara asing (${a.nonLatin})`);
+  if (a.meta) throw new Error("meta-komunikasi model bocor");
+  if (a.simbol > 0) throw new Error(`simbol acak (${a.simbol})`);
+  if (a.caps > 0) throw new Error(`huruf kapal acak (${a.caps})`);
+  if (a.hurufAsing > 0) throw new Error(`huruf asing (${a.hurufAsing})`);
+  // Rasio kata fungsi Inggris: teks Indonesia yang sehat hampir nol.
+  const ratio = a.totalKata ? a.enRatio / a.totalKata : 1;
+  if (a.enRatio > 2 && ratio > 0.05) {
+    throw new Error(
+      `bahasa Inggris nyasar (${a.enRatio} kata, ${(ratio * 100).toFixed(0)}%)`
+    );
   }
   if (!out.content || out.content.length < 2) {
     throw new Error("hasil rewrite terlalu pendek (<2 paragraf)");
@@ -476,6 +512,9 @@ function assertValidIndonesian(out) {
   }
   if (out.content.some((p) => p.length < 40)) {
     throw new Error("ada paragraf terlalu pendek");
+  }
+  if (out.content.some((p) => !/[a-z]{3,}/i.test(p))) {
+    throw new Error("ada paragraf tanpa teks yang masuk akal");
   }
 }
 
@@ -837,6 +876,81 @@ if (process.argv.includes("--test-rewrite")) {
     console.error("[test-rewrite] GAGAL:", e.message);
     process.exit(1);
   }
+  process.exit(0);
+}
+
+// Mode self-test guard: memastikan aturan cleanliness benar-benar menolak sampah
+// model (aksara asing, meta-komunikasi, simbol acak, huruf kapal) tanpa
+// menolak artikel Indonesia yang sehat.
+// Pakai: node scripts/sync/crawl.js --selftest-guard
+if (process.argv.includes("--selftest-guard")) {
+  const SAMPLAH_KOTOR = [
+    "operandi-On-benam{- Sorry, let me produce the clean final JSON,",
+    "Adolescents Headstones thereof, submission Suites Notes, submission Notes,",
+    ",/#{m}ENGUNJUNGAN ,",
+    "Desa个省 menerima kunjungan waiver dariutting kelompokasiswa pada插槽_attrs",
+    "berjalan bersama teman dekat. niat tulus untuk menikmati, menjaga, danß berbagi cerita.",
+  ];
+  const cek = (t) => {
+    const a = hitungAnomali({ title: "", excerpt: "", content: [t] });
+    const alasan = [];
+    if (a.nonLatin > 0) alasan.push("aksara");
+    if (a.hurufAsing > 0) alasan.push("huruf-asing");
+    if (a.meta) alasan.push("meta-model");
+    if (a.simbol > 0) alasan.push("simbol");
+    if (a.caps > 0) alasan.push("caps");
+    if (a.enRatio > 2 && a.totalKata && a.enRatio / a.totalKata > 0.05) alasan.push("inggris");
+    return alasan;
+  };
+  let gagal = 0;
+  console.log("A. Sampah model (harus ditolak):");
+  for (const s of SAMPLAH_KOTOR) {
+    const a = cek(s);
+    if (!a.length) gagal++;
+    console.log(`   ${a.length ? "TOLAK" : "BOCOR"} [${a.join(",")}] ${s.slice(0, 46)}`);
+  }
+  console.log("B. Artikel live (harus lolos):");
+  let total = 0;
+  let salah = 0;
+  if (fs.existsSync(BERITA_DIR)) {
+    for (const f of fs.readdirSync(BERITA_DIR).filter((x) => x.endsWith(".json"))) {
+      total++;
+      const d = JSON.parse(fs.readFileSync(path.join(BERITA_DIR, f), "utf8"));
+      const t = [d.title, d.excerpt, ...(d.content || [])].join(" ");
+      const a = cek(t);
+      if (a.length) {
+        salah++;
+        console.log(`   TOLAK ${d.slug} [${a.join(",")}]`);
+      }
+    }
+  }
+  console.log(`   total=${total} lolos=${total - salah} salahTolak=${ salah}`);
+  if (gagal || salah) process.exit(1);
+  console.log("guard OK");
+  process.exit(0);
+}
+
+// Mode perbaikan: bersihkan ulang artikel yang sudah terbit (mis. dari era
+// sebelum guard ketat) tanpa menunggu sync harian.
+// Pakai: node scripts/sync/crawl.js --repair-clean
+if (process.argv.includes("--repair-clean")) {
+  let diubah = 0;
+  if (fs.existsSync(BERITA_DIR)) {
+    for (const f of fs.readdirSync(BERITA_DIR).filter((x) => x.endsWith(".json"))) {
+      const file = path.join(BERITA_DIR, f);
+      const d = JSON.parse(fs.readFileSync(file, "utf-8"));
+      const sebelum = [d.title, d.excerpt, ...(d.content || [])].join(" ");
+      const setelah = [bersihkanOutput(JSON.parse(JSON.stringify(d)))];
+      const txt = [setelah[0].title, setelah[0].excerpt, ...(setelah[0].content || [])].join(" ");
+      if (sebelum === txt) continue;
+      const out = setelah[0];
+      out.updatedAt = new Date().toISOString();
+      fs.writeFileSync(file, JSON.stringify(out, null, 4) + "\n");
+      diubah++;
+      console.log(`dibersihkan: ${out.slug}`);
+    }
+  }
+  console.log(`selesai. ${diubah} artikel dibersihkan.`);
   process.exit(0);
 }
 
