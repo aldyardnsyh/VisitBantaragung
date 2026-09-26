@@ -30,11 +30,12 @@ function loadDotEnvLocal() {
 loadDotEnvLocal();
 
 // --- LLM rewrite (WAJIB): aktif bila LLM_API_KEY+LLM_URL terisi.
-// Stage-gate pipeline (status workflow harus jujur):
-//   GATE 0 model  -> ping dulu; tanpa respons => FATAL (exit 1), sync dibatalkan.
+// Stage-gate pipeline (hijau = sistem sehat; merah = ada masalah nyata):
+//   GATE 0 model  -> ping dulu; tanpa respons => FATAL (exit 1).
 //   GATE 1 crawl  -> sumber wajib memberi data; kosong => FATAL.
-//   GATE 2 rewrite-> artikel gagal rewrite TIDAK di-push mentah; dihitung, run FATAL.
-//   GATE 3 sync   -> sukses (exit 0) hanya bila ada artikel baru/diubah yang ter-rewrite.
+//   GATE 2 rewrite-> artikel gagal rewrite TIDAK di-push mentah; run FATAL.
+//   GATE 3 sync   -> tidak ada artikel baru itu NORMAL (exit 0), bukan kegagalan.
+// Merge hanya bila ada artikel baru yang ter-rewrite;sisanya tidak di-push.
 // Tanpa key/URL (dan tanpa --no-rewrite eksplisit) => FATAL, bukan fallback diam-diam.
 // AMANAN: key/URL cukup dari env, jangan pernah di-commit (gitignore sudah memblokir .env*).
 const LLM_API_KEY = process.env.LLM_API_KEY || "";
@@ -684,10 +685,12 @@ async function main() {
     console.error(`FATAL [gate-rewrite]: ${rewriteFails} artikel gagal rewrite dan tidak ikut di-push.`);
     process.exit(1);
   }
-  // GATE 3 — sukses hanya bila ada artikel baru/diubah yang ter-rewrite dan siap di-push.
+  // Tidak ada artikel baru = kondisi normal (cron harian, sumber sering sepi),
+  // BUKAN kegagalan. Exit 0 supaya tidak mengirim email notifikasi kegagalan tiap hari.
   if (added + updated === 0) {
-    console.error("FATAL [gate-sync]: tidak ada artikel baru/diubah; tidak ada yang di-push.");
-    process.exit(1);
+    console.log("[gate-sync] tidak ada artikel baru hari ini; sync normal, tidak ada yang di-push.");
+  } else {
+    console.log(`[gate-sync] ${added} artikel baru, ${updated} diperbarui, siap di-push.`);
   }
 }
 
