@@ -388,6 +388,51 @@ async function assertLLMHealthy() {
   process.exit(1);
 }
 
+// GATE 2.5 — Deteksi output LLM yang tercemar aksara asing (CJK/Cyrillic/Arabic/
+// dll) atau terlalu banyak kata Inggris. Model gratis kadang mengacak bahasa lain
+// di tengah kalimat Indonesia. Konten seperti itu tidak boleh terbit: di sini kita
+// tolak agar retry, dan bila tetap gagal artikel di-skip (GATE 2).
+const NON_LATIN_RE =
+  /[\u0400-\u04FF\u0600-\u06FF\u0900-\u097F\u0E00-\u0E7F\u1100-\u11FF\u3040-\u30FF\u3130-\u318F\u3400-\u4DBF\u4E00-\u9FFF\uA960-\uA97F\uAC00-\uD7AF\uF900-\uFAFF\uFF00-\uFFEF]/;
+
+// Kata Latin yang bukan bahasa Indonesia. Daftar diperluas dari kasus nyata:
+// model gratis kadang menyisipkan "warriors", "pack", "escaping", atau
+// "high-quality" di tengah kalimat Indonesia.
+const BUKAN_INDO_RE = new RegExp(
+  [
+    "the", "and", "with", "from", "that", "this", "your", "have", "will", "about",
+    "quality", "high", "escape", "escaping", "ignore", "warriors", "warrior",
+    "respect", "correspondingly", "alone", "guide", "journey", "discover", "pack",
+    "enjoy", "relax", "holistic", "conceded", "meaningful", "moment", "adventure",
+    "experience", "visit", "explore", "beautiful", "wonderful", "best", "good",
+    "for", "you", "our", "are", "was", "were", "will", "can", "more", "than",
+  ].join("|"),
+  "gi"
+);
+
+function assertCleanIndonesian(out) {
+  const text = [out.title, out.excerpt, ...(out.content || [])].join(" ");
+  const nonLatin = text.match(NON_LATIN_RE);
+  if (nonLatin) {
+    throw new Error(
+      `output tercemar aksara asing (${[...new Set(nonLatin)].slice(0, 5).join("")})`
+    );
+  }
+  const stray = text.match(BUKAN_INDO_RE) || [];
+  // Toleransi longgar: nama produk/istilah lazim bisa memuat satu-dua kata Inggris.
+  if (stray.length > 3) {
+    throw new Error(
+      `output tercemar bahasa Inggris (${[...new Set(stray.map((w) => w.toLowerCase()))].slice(0, 4).join(", ")})`
+    );
+  }
+  if (!out.content || out.content.length < 2) {
+    throw new Error("hasil rewrite terlalu pendek (<2 paragraf)");
+  }
+  if (!out.title || out.title.length < 15) {
+    throw new Error("judul hasil rewrite tidak valid");
+  }
+}
+
 async function rewriteArticle(post) {
   const userMsg =
     `KATEGORI: ${post.category}\n` +
@@ -439,6 +484,8 @@ async function rewriteArticle(post) {
       out.content = (Array.isArray(out.content) ? out.content : [])
         .map((p) => deDash(String(p).replace(EMOJI_RE, "")).replace(/\n+/g, " ").trim())
         .filter((p) => p.length > 20);
+      // GATE 2.5 — tolak output tercemar (glitch bahasa model), jangan pernah di-push.
+      assertCleanIndonesian(out);
       return out;
     } catch (e) {
       if (attempt < 4 && (e.message.includes("503") || e.message.includes("fetch"))) {
