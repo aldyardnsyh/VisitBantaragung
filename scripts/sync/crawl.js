@@ -388,48 +388,66 @@ async function assertLLMHealthy() {
   process.exit(1);
 }
 
-// GATE 2.5 — Deteksi output LLM yang tercemar aksara asing (CJK/Cyrillic/Arabic/
-// dll) atau terlalu banyak kata Inggris. Model gratis kadang mengacak bahasa lain
-// di tengah kalimat Indonesia. Konten seperti itu tidak boleh terbit: di sini kita
-// tolak agar retry, dan bila tetap gagal artikel di-skip (GATE 2).
+// GATE 2.5 — Bersihkan output LLM dari anomali karakter (aksara asing, kata
+// Inggris nyasar, kalimat terpotong). Model gratis kadang mengacak bahasa lain
+// di tengah kalimat Indonesia. Tujuannya BUKAN membuang artikel, tapi memulai
+// proses pembersihan berlapis:
+//
+//   1. Deteksi anomali.
+//   2. Bersihkan otomatis (buang aksara asing, rapikan kata nyasar).
+//   3. Validasi ulang; kalau masih kotor, minta model menulis ulang (retry).
+//   4. Baru bila gagal terus, artikel di-skip supaya konten kotor tidak terbit.
 const NON_LATIN_RE =
-  /[\u0400-\u04FF\u0600-\u06FF\u0900-\u097F\u0E00-\u0E7F\u1100-\u11FF\u3040-\u30FF\u3130-\u318F\u3400-\u4DBF\u4E00-\u9FFF\uA960-\uA97F\uAC00-\uD7AF\uF900-\uFAFF\uFF00-\uFFEF]/;
+  /[\u0400-\u04FF\u0600-\u06FF\u0900-\u097F\u0E00-\u0E7F\u1100-\u11FF\u3040-\u30FF\u3130-\u318F\u3400-\u4DBF\u4E00-\u9FFF\uA960-\uA97F\uAC00-\uD7AF\uF900-\uFAFF\uFF00-\uFFEF]/g;
 
-// Kata Latin yang bukan bahasa Indonesia. Daftar diperluas dari kasus nyata:
-// model gratis kadang menyisipkan "warriors", "pack", "escaping", atau
-// "high-quality" di tengah kalimat Indonesia.
-const BUKAN_INDO_RE = new RegExp(
-  [
-    "the", "and", "with", "from", "that", "this", "your", "have", "will", "about",
-    "quality", "high", "escape", "escaping", "ignore", "warriors", "warrior",
-    "respect", "correspondingly", "alone", "guide", "journey", "discover", "pack",
-    "enjoy", "relax", "holistic", "conceded", "meaningful", "moment", "adventure",
-    "experience", "visit", "explore", "beautiful", "wonderful", "best", "good",
-    "for", "you", "our", "are", "was", "were", "will", "can", "more", "than",
-  ].join("|"),
-  "gi"
-);
+// Kata Latin yang nyasar ke dalam kalimat Indonesia. Based on kasus nyata:
+// "warriors", "pack", "escaping", "holistic" sempat muncul di tengah paragraf.
+const KATA_NYASAR = [
+  "the", "and", "with", "from", "that", "this", "your", "you", "have", "will",
+  "about", "quality", "high", "escape", "escaping", "ignore", "warriors",
+  "warrior", "respect", "correspondingly", "alone", "holistic", "conceded",
+  "meaningful", "moment", "adventure", "experience", "beautiful", "wonderful",
+  "discover", "journey", "relax", "enjoy",
+];
 
-function assertCleanIndonesian(out) {
+function hitungAnomali(out) {
   const text = [out.title, out.excerpt, ...(out.content || [])].join(" ");
-  const nonLatin = text.match(NON_LATIN_RE);
-  if (nonLatin) {
-    throw new Error(
-      `output tercemar aksara asing (${[...new Set(nonLatin)].slice(0, 5).join("")})`
-    );
+  const nonLatin = (text.match(NON_LATIN_RE) || []).length;
+  const nyasar = KATA_NYASAR.filter((k) =>
+    new RegExp(`\\b${k}\\b`, "i").test(text)
+  ).length;
+  return { nonLatin, nyasar };
+}
+
+// Bersihkan deterministik: buang aksara asing, rapatkan spasi, buang kata nyasar.
+function bersihkanOutput(out) {
+  const clean = (s) =>
+    String(s)
+      .replace(NON_LATIN_RE, "")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+  out.title = clean(out.title);
+  out.excerpt = clean(out.excerpt);
+  out.content = (Array.isArray(out.content) ? out.content : []).map(clean);
+  return out;
+}
+
+function assertValidIndonesian(out) {
+  const { nonLatin, nyasar } = hitungAnomali(out);
+  if (nonLatin > 0) {
+    throw new Error(`aksara asing tersisa (${nonLatin})`);
   }
-  const stray = text.match(BUKAN_INDO_RE) || [];
-  // Toleransi longgar: nama produk/istilah lazim bisa memuat satu-dua kata Inggris.
-  if (stray.length > 3) {
-    throw new Error(
-      `output tercemar bahasa Inggris (${[...new Set(stray.map((w) => w.toLowerCase()))].slice(0, 4).join(", ")})`
-    );
+  if (nyasar > 3) {
+    throw new Error(`kata bahasa Inggris nyasar (${nyasar} jenis)`);
   }
   if (!out.content || out.content.length < 2) {
     throw new Error("hasil rewrite terlalu pendek (<2 paragraf)");
   }
   if (!out.title || out.title.length < 15) {
     throw new Error("judul hasil rewrite tidak valid");
+  }
+  if (out.content.some((p) => p.length < 40)) {
+    throw new Error("ada paragraf terlalu pendek");
   }
 }
 
@@ -484,11 +502,25 @@ async function rewriteArticle(post) {
       out.content = (Array.isArray(out.content) ? out.content : [])
         .map((p) => deDash(String(p).replace(EMOJI_RE, "")).replace(/\n+/g, " ").trim())
         .filter((p) => p.length > 20);
-      // GATE 2.5 — tolak output tercemar (glitch bahasa model), jangan pernah di-push.
-      assertCleanIndonesian(out);
+      // GATE 2.5 — Bersihkan dulu; kalau masih kotor, minta model menulis ulang.
+      bersihkanOutput(out);
+      try {
+        assertValidIndonesian(out);
+      } catch (e) {
+        e.retryable = true;
+        throw e;
+      }
       return out;
     } catch (e) {
-      if (attempt < 4 && (e.message.includes("503") || e.message.includes("fetch"))) {
+      // Retry bila: error jaringan/5xx, ATAU output still contaminated (retryable).
+      const transient =
+        e.message.includes("503") ||
+        e.message.includes("fetch") ||
+        e.retryable;
+      if (attempt < 4 && transient) {
+        if (e.retryable) {
+          console.warn(`[gate-2.5] output belum bersih (${e.message}); retry ke-${attempt + 1}`);
+        }
         await sleep(3000 * attempt);
         continue;
       }
