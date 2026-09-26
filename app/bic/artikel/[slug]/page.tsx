@@ -80,21 +80,46 @@ export default async function ArtikelDetailPage({ params }: ArticleDetailProps) 
           : allArticles.filter((a) => a.slug !== article.slug)
     ).slice(0, 3);
 
+    const wordCount = (article.content || []).join(" ").split(/\s+/).filter(Boolean).length;
+
     const jsonLd = {
         "@context": "https://schema.org",
-        "@type": "Article",
-        headline: article.title,
-        description: article.excerpt,
-        datePublished: article.date,
-        ...(article.updatedAt ? { dateModified: article.updatedAt } : {}),
-        ...(article.author ? { author: { "@type": "Person", name: article.author } } : {}),
-        image: assetUrl(article.cover),
-        mainEntityOfPage: shareUrl,
-        publisher: {
-            "@type": "Organization",
-            name: "Desa Wisata Bantaragung",
-            url: SITE_URL,
-        },
+        "@graph": [
+            {
+                "@type": "Article",
+                "@id": `${shareUrl}#article`,
+                headline: article.title,
+                description: article.excerpt,
+                datePublished: article.date,
+                ...(article.updatedAt ? { dateModified: article.updatedAt } : {}),
+                ...(article.author ? { author: { "@type": "Person", name: article.author } } : {}),
+                image: [assetUrl(article.cover)],
+                mainEntityOfPage: { "@type": "WebPage", "@id": shareUrl },
+                articleSection: article.category,
+                keywords: (article.tags || []).join(", "),
+                wordCount,
+                inLanguage: "id-ID",
+                publisher: {
+                    "@type": "Organization",
+                    name: "Desa Wisata Bantaragung",
+                    url: SITE_URL,
+                },
+            },
+            {
+                "@type": "BreadcrumbList",
+                "@id": `${shareUrl}#breadcrumb`,
+                itemListElement: [
+                    { "@type": "ListItem", position: 1, name: "Beranda", item: SITE_URL },
+                    {
+                        "@type": "ListItem",
+                        position: 2,
+                        name: "Artikel",
+                        item: `${SITE_URL}/bic/artikel`,
+                    },
+                    { "@type": "ListItem", position: 3, name: article.title },
+                ],
+            },
+        ],
     };
 
     return (
