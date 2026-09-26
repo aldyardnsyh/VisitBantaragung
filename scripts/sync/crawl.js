@@ -288,8 +288,12 @@ Aturan WAJIB:
 
 Dibawah adalah berita mentah (judul, kategori, dan isi):`;
 
-// Ambil JSON pertama yang valid (brace-balancing, tahan terhadap teks ekstra sebelum/sesudah)
+// Ambil JSON pertama yang valid (brace-balancing, tahan terhadap teks ekstra
+// sebelum/sesudah). Versi ini khusus untuk model yang sering
+// membungkus JSON di dalam markdown fence (```json ... ```) atau menambah prosa.
 function extractJSON(text) {
+  const candidates = [];
+  // 1. Semua objek {...} yang ter-balance (urutan kemunculan).
   for (let s = 0; s < text.length; s++) {
     if (text[s] !== "{") continue;
     let depth = 0;
@@ -308,16 +312,40 @@ function extractJSON(text) {
       else if (ch === "}") {
         depth--;
         if (depth === 0) {
-          try {
-            return JSON.parse(text.slice(s, i + 1));
-          } catch {
-            break;
-          }
+          candidates.push(text.slice(s, i + 1));
+          break;
         }
       }
     }
   }
+  // 2. Fallback: rentang pertama "{" sampai "}" terakhir.
+  candidates.push(text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1));
+
+  for (const c of candidates) {
+    if (!c || c.length < 10) continue;
+    try {
+      const parsed = JSON.parse(c);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) return parsed;
+    } catch {
+      // coba kandidat berikutnya
+    }
+  }
   throw new Error("LLM bukan JSON");
+}
+
+// Susun artikel dari sumber TERBERSIHKAN saat model tidak bisa menulis ulang.
+// Ini bukan "tempel mentah": emoji, tautan, hashtag, CTA, dan boilerplate sudah
+// dibuang oleh cleanText/isBoilerplate. Dipakai hanya sebagai jaring pengaman
+// agar berita baru tetap terbit bersih, dengan label status yang jujur.
+function artikelBersih(base) {
+  const paras = (base.content || []).map((p) => bersihkanOutput({ title: "", excerpt: "", content: [p] }).content[0]).filter((p) => p.length > 60);
+  if (!paras.length) return null;
+  const judul = looksTruncated(base.title) ? deriveTitle(paras[0]) : base.title;
+  return {
+    title: deDash(cleanTitle(judul)),
+    excerpt: deDash(paras[0].slice(0, 197)) + "…",
+    content: paras,
+  };
 }
 
 // Ambil teks balasan model dari envelope JSON maupun streaming SSE
@@ -720,10 +748,21 @@ async function main() {
         finalizeArticle(article, await rewriteArticle(article));
         article.rewriteStatus = "success";
       } catch (e) {
+        // Jaring pengaman: berita baru TETAP terbit, tapi dari sumber yang sudah
+        // dibersihkan (emoji/tautan/hashtag/CTA sudah dibuang), dengan label
+        // status jujur "cleaned" supaya bisa diaudit kemudian. Konten mentah
+        // yang tidak dibersihkan tidak pernah ikut ter-push.
+        const cadangan = artikelBersih({ title: finalTitle, content: finalContent });
+        if (!cadangan) {
+          rewriteFails++;
+          skipped++;
+          console.warn(`rewrite gagal untuk ${slug}: ${e.message}; sumber terlalu pendek, skip (GATE 2)`);
+          continue;
+        }
         rewriteFails++;
-        skipped++;
-        console.warn(`rewrite gagal untuk ${slug}: ${e.message}; skip artikel ini (GATE 2)`);
-        continue;
+        console.warn(`rewrite gagal untuk ${slug}: ${e.message}; terbit dengan konten bersih (fallback)`);
+        finalizeArticle(article, cadangan);
+        article.rewriteStatus = "cleaned";
       }
     } else {
       article.rewriteStatus = LLM_REWRITE ? "pending" : "disabled";
