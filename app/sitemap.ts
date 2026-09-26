@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import fs from "fs";
 import path from "path";
+import { getAllTags } from "@/lib/content";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const CONTENT_DIR = path.join(process.cwd(), "content");
@@ -72,6 +73,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency: "monthly",
         priority: 0.7,
       });
+    });
+  });
+
+  // Halaman tag: hub yang menghubungkan artikel satu sama lain lewat topik.
+  getAllTags().forEach((t) => {
+    urls.push({
+      url: `${BASE_URL}/tag/${t.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.6,
     });
   });
 
