@@ -310,6 +310,10 @@ CARA MENULIS (WAJIB DIPATUHI):
 
 8. LARANGAN. Tanpa hashtag, emoji, tautan, dan tanpa menyebut Instagram atau
    media sosial.
+9. HURUF MATANG. Tulis HANYA huruf Latin dan tanda baca umum.
+   Jangan pernah menyisipkan huruf Mandarin, aksara Jepang, atau Korea.
+   Jangan menulis kata dari bahasa lain selain bahasa Indonesia.
+   Tulis setiap kata secara utuh dan benar.
 
 FORMAT KELUARAN: HANYA JSON valid tanpa teks lain:
 {"title":"...","excerpt":"...","content":["paragraf1","paragraf2","paragraf3","paragraf4"]}
@@ -505,6 +509,18 @@ function hitungJunkKata(text) {
   return n;
 }
 
+// Model dari Asia Timur kadang menyisipkan hanzi, kana, atau hangul di tengah
+// kalimat Indonesia. Aksara seperti ini WAJIB dicek pada teks mentah, sebelum
+// bersihkanOutput: kalau dibuang diam-diam, kata jadi rusak tapi lolos
+// validasi. Dengan dicek di sini, model dipaksa menulis ulang.
+const CJK_TEKS_RE =
+  /[\u3040-\u30FF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\uFF66-\uFF9D\uAC00-\uD7AF]/;
+
+function cekAksaraCina(text) {
+  const found = String(text || "").match(CJK_TEKS_RE);
+  return found ? [...new Set(found)] : [];
+}
+
 function hitungAnomali(out) {
   const text = [out.title, out.excerpt, ...(out.content || [])].join(" ");
   const kapital = text.match(CAPS_PANJANG_RE) || [];
@@ -618,6 +634,14 @@ async function rewriteArticle(post) {
       if (!text) throw new Error("LLM kosong");
 
       const out = extractJSON(text);
+      // GATE CJK: aksara China, Jepang, atau Korea dicek pada teks mentah.
+      // Kalau ketemu, jangan dibuang, tapi paksa model menulis ulang.
+      const cina = cekAksaraCina(text);
+      if (cina.length) {
+        const e = new Error(`aksara CJK dari model (${cina.slice(0, 4).join(" ")})`);
+        e.retryable = true;
+        throw e;
+      }
       out.title = deDash(cleanTitle(out.title));
       out.excerpt = deDash(String(out.excerpt || "")).trim();
       out.content = (Array.isArray(out.content) ? out.content : [])
@@ -640,7 +664,9 @@ async function rewriteArticle(post) {
         e.retryable;
       if (attempt < 4 && transient) {
         if (e.retryable) {
-          console.warn(`[gate-2.5] output belum bersih (${e.message}); retry ke-${attempt + 1}`);
+          console.warn(
+            `[gate] output belum bersih: ${e.message} (percobaan ${attempt + 1})`
+          );
         }
         await sleep(3000 * attempt);
         continue;
@@ -945,6 +971,7 @@ if (process.argv.includes("--selftest-guard")) {
     "Desa个省 menerima kunjungan waiver dariutting kelompokasiswa pada插槽_attrs",
     "berjalan bersama teman dekat. niat tulus untuk menikmati, menjaga, danß berbagi cerita.",
     "ArkP_ARSIP bukan sekadar tumpukan kertas, ada setiap_picture dan crackdown_RESOURCEED",
+    "Warga desaPbagi_tabular层次高低 panjang descriptorstruktur wirausaha",
   ];
   const cek = (t) => {
     const a = hitungAnomali({ title: "", excerpt: "", content: [t] });
