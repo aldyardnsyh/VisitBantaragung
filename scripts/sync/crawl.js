@@ -484,6 +484,27 @@ const CAPS_WHITELIST = new Set([
 // bahasa Indonesia; model kadang menyisipkan huruf dari alfabet lain.
 const HURUF_ASING_RE = /[ßẞɓƀḍȷǀǁɠ]/g;
 
+// Sisa sampah model yang paling sering muncul: kata ber-underscore atau
+// camelCase di tengah kalimat Indonesia.
+// Contoh nyata dari model: ArkP_ARSIP, setiap_picture, crackdown_RESOURCEED,
+// hamlet_CORRECT, QW_INDonesian.
+// Sinyal ini jauh lebih presisi daripada menebak bahasa tiap kata.
+function hitungJunkKata(text) {
+  const pola = [
+    /\b[a-z]+_[a-z_]+/gi,
+    /\b[a-z]{2,}[A-Z][a-zA-Z]+\b/g,
+    /\b[A-Z]{2,}[a-z]+[A-Z][a-zA-Z]*\b/g,
+  ];
+  let n = 0;
+  for (const re of pola) {
+    for (const c of text.match(re) || []) {
+      if (/^(?:KKN|PPM|UGM|WIA|API|ADWI|BIC|BMC|TNI|MRT|PLN|PDAM|JDIH)$/i.test(c)) continue;
+      n++;
+    }
+  }
+  return n;
+}
+
 function hitungAnomali(out) {
   const text = [out.title, out.excerpt, ...(out.content || [])].join(" ");
   const kapital = text.match(CAPS_PANJANG_RE) || [];
@@ -495,6 +516,7 @@ function hitungAnomali(out) {
     caps: kapital.filter((w) => !CAPS_WHITELIST.has(w)).length,
     enRatio: (text.match(KATA_FUNGSI_EN) || []).length,
     totalKata: text.split(/\s+/).filter(Boolean).length,
+    junkKata: hitungJunkKata(text),
   };
 }
 
@@ -527,6 +549,7 @@ function assertValidIndonesian(out) {
   if (a.meta) throw new Error("meta-komunikasi model bocor");
   if (a.simbol > 0) throw new Error(`simbol acak (${a.simbol})`);
   if (a.caps > 0) throw new Error(`huruf kapal acak (${a.caps})`);
+  if (a.junkKata > 0) throw new Error(`kata sampah (${a.junkKata})`);
   if (a.hurufAsing > 0) throw new Error(`huruf asing (${a.hurufAsing})`);
   // Rasio kata fungsi Inggris: teks Indonesia yang sehat hampir nol.
   const ratio = a.totalKata ? a.enRatio / a.totalKata : 1;
@@ -921,6 +944,7 @@ if (process.argv.includes("--selftest-guard")) {
     ",/#{m}ENGUNJUNGAN ,",
     "Desa个省 menerima kunjungan waiver dariutting kelompokasiswa pada插槽_attrs",
     "berjalan bersama teman dekat. niat tulus untuk menikmati, menjaga, danß berbagi cerita.",
+    "ArkP_ARSIP bukan sekadar tumpukan kertas, ada setiap_picture dan crackdown_RESOURCEED",
   ];
   const cek = (t) => {
     const a = hitungAnomali({ title: "", excerpt: "", content: [t] });
@@ -930,6 +954,7 @@ if (process.argv.includes("--selftest-guard")) {
     if (a.meta) alasan.push("meta-model");
     if (a.simbol > 0) alasan.push("simbol");
     if (a.caps > 0) alasan.push("caps");
+    if (a.junkKata > 0) alasan.push("junk-kata");
     if (a.enRatio > 2 && a.totalKata && a.enRatio / a.totalKata > 0.05) alasan.push("inggris");
     return alasan;
   };
