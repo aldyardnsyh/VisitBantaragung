@@ -486,7 +486,9 @@ async function pingModel(model) {
   if (!res.ok) throw new Error(`LLM HTTP ${res.status}`);
   const raw = await res.text();
   const text = parseLLMText(raw);
-  if (!text || !text.trim()) throw new Error(`LLM kosong (raw: ${raw.slice(0, 120)})`);
+  // Potong 800 char: cukup untuk melihat envelope lengkap (choices,
+  // finish_reason, content) tanpa membanjiri log.
+  if (!text || !text.trim()) throw new Error(`LLM kosong (raw: ${raw.slice(0, 800)})`);
 }
 
 // GATE 0 — pilih model sehat SEBELUM crawl dari daftar kandidat.
