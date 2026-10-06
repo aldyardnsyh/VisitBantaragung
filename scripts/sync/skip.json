@@ -3,5 +3,45 @@
     "reason": "konten terlalu tipis (video-only, 1 kalimat); rewrite selalu gagal dan memerahkan run 71-80",
     "sourceUrl": "https://bantaragung.com/ba-3993888676062278627/",
     "at": "2026-10-06T00:00:00.000Z"
+  },
+  "ba-3999399665699023590": {
+    "reason": "konten terlalu tipis (111 char)",
+    "sourceUrl": "https://bantaragung.com/ba-3999399665699023590/",
+    "at": "2026-10-06T07:55:08.134Z"
+  },
+  "ba-3926310763753327420": {
+    "reason": "konten terlalu tipis (199 char)",
+    "sourceUrl": "https://bantaragung.com/ba-3926310763753327420/",
+    "at": "2026-10-06T07:55:50.604Z"
+  },
+  "ba-3925943000308116480": {
+    "reason": "konten terlalu tipis (28 char)",
+    "sourceUrl": "https://bantaragung.com/ba-3925943000308116480/",
+    "at": "2026-10-06T07:55:50.605Z"
+  },
+  "ba-3921487696103308728": {
+    "reason": "konten terlalu tipis (32 char)",
+    "sourceUrl": "https://bantaragung.com/ba-3921487696103308728/",
+    "at": "2026-10-06T07:57:10.574Z"
+  },
+  "ba-3916897065804973080": {
+    "reason": "konten terlalu tipis (191 char)",
+    "sourceUrl": "https://bantaragung.com/ba-3916897065804973080/",
+    "at": "2026-10-06T07:57:10.575Z"
+  },
+  "ba-3914142040682557567": {
+    "reason": "konten terlalu tipis (91 char)",
+    "sourceUrl": "https://bantaragung.com/ba-3914142040682557567/",
+    "at": "2026-10-06T07:57:10.575Z"
+  },
+  "ba-3911295313742683647": {
+    "reason": "konten terlalu tipis (48 char)",
+    "sourceUrl": "https://bantaragung.com/ba-3911295313742683647/",
+    "at": "2026-10-06T07:57:10.576Z"
+  },
+  "ba-3910635064107350461": {
+    "reason": "konten terlalu tipis (39 char)",
+    "sourceUrl": "https://bantaragung.com/ba-3910635064107350461/",
+    "at": "2026-10-06T07:57:10.577Z"
   }
 }
