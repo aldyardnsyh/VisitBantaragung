@@ -465,8 +465,9 @@ function parseLLMText(raw) {
 }
 
 // Ping satu model (satu percobaan). Dipakai GATE 0 untuk memilih kandidat sehat.
-// max_tokens diset longgar (128): model reasoning menghabiskan token awal
-// untuk berpikir; 16 token membuatnya mengembalikan konten kosong.
+// max_tokens longgar (512): model reasoning menghabiskan ratusan token untuk
+// berpikir sebelum menjawab; budget kecil membuatnya selalu terpotong
+// (finish_reason=length) dengan konten kosong. Sekali per run, biayanya kecil.
 async function pingModel(model) {
   const res = await fetch(LLM_URL, {
     method: "POST",
@@ -478,7 +479,7 @@ async function pingModel(model) {
     body: JSON.stringify({
       model,
       temperature: 0,
-      max_tokens: 128,
+      max_tokens: 512,
       ...(LLM_NO_THINK ? { enable_thinking: false } : {}),
       messages: [{ role: "user", content: "Balas hanya dengan: OK" }],
     }),
