@@ -465,6 +465,8 @@ function parseLLMText(raw) {
 }
 
 // Ping satu model (satu percobaan). Dipakai GATE 0 untuk memilih kandidat sehat.
+// max_tokens diset longgar (128): model reasoning menghabiskan token awal
+// untuk berpikir; 16 token membuatnya mengembalikan konten kosong.
 async function pingModel(model) {
   const res = await fetch(LLM_URL, {
     method: "POST",
@@ -476,14 +478,15 @@ async function pingModel(model) {
     body: JSON.stringify({
       model,
       temperature: 0,
-      max_tokens: 16,
+      max_tokens: 128,
       ...(LLM_NO_THINK ? { enable_thinking: false } : {}),
       messages: [{ role: "user", content: "Balas hanya dengan: OK" }],
     }),
   });
   if (!res.ok) throw new Error(`LLM HTTP ${res.status}`);
-  const text = parseLLMText(await res.text());
-  if (!text || !text.trim()) throw new Error("LLM kosong");
+  const raw = await res.text();
+  const text = parseLLMText(raw);
+  if (!text || !text.trim()) throw new Error(`LLM kosong (raw: ${raw.slice(0, 120)})`);
 }
 
 // GATE 0 — pilih model sehat SEBELUM crawl dari daftar kandidat.
@@ -494,13 +497,15 @@ async function assertLLMHealthy() {
   for (const model of modelCandidates()) {
     console.log(`[gate-model] cek respons model=${model} ...`);
     let ok = false;
-    for (let attempt = 1; attempt <= 2; attempt++) {
+    let lastErr = "";
+    for (let attempt = 1; attempt <= 3; attempt++) {
       try {
         await pingModel(model);
         ok = true;
         break;
       } catch (e) {
-        console.warn(`[gate-model] ${model} percobaan ${attempt}/2 gagal: ${e.message}`);
+        lastErr = e.message;
+        console.warn(`[gate-model] ${model} percobaan ${attempt}/3 gagal: ${e.message}`);
         await sleep(2000 * attempt);
       }
     }
@@ -509,7 +514,7 @@ async function assertLLMHealthy() {
       console.log(`[gate-model] OK (model=${model})`);
       return;
     }
-    gagal.push(model);
+    gagal.push(`${model} (${lastErr})`);
   }
   console.error(`FATAL [gate-model]: tidak ada model merespons (${gagal.join(", ")}); sync dibatalkan.`);
   process.exit(1);
