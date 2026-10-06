@@ -30,21 +30,67 @@ function loadDotEnvLocal() {
 loadDotEnvLocal();
 
 // --- LLM rewrite (WAJIB): aktif bila LLM_API_KEY+LLM_URL terisi.
+// Model: daftar kandidat utama + fallback (env LLM_MODELS koma, atau
+// LLM_MODEL + LLM_FALLBACK_MODELS). GATE 0 memakai kandidat pertama yang
+// sehat, jadi run tidak merah hanya karena satu model down/salah ID.
 // Stage-gate pipeline (hijau = sistem sehat; merah = ada masalah nyata):
-//   GATE 0 model  -> ping dulu; tanpa respons => FATAL (exit 1).
+//   GATE 0 model  -> ping kandidat berurutan; semua gagal => FATAL (exit 1).
 //   GATE 1 crawl  -> sumber wajib memberi data; kosong => FATAL.
 //   GATE 2 rewrite-> artikel gagal rewrite TIDAK di-push mentah; run FATAL.
+//   TIPIS  skip   -> sumber video/CTA-only (<200 char bersih) di-skip permanen
+//                    (scripts/sync/skip.json); BUKAN kegagalan, agar satu
+//                    artikel racun tidak memerahkan run selamanya.
 //   GATE 3 sync   -> tidak ada artikel baru itu NORMAL (exit 0), bukan kegagalan.
 // Merge hanya bila ada artikel baru yang ter-rewrite;sisanya tidak di-push.
 // Tanpa key/URL (dan tanpa --no-rewrite eksplisit) => FATAL, bukan fallback diam-diam.
 // AMANAN: key/URL cukup dari env, jangan pernah di-commit (gitignore sudah memblokir .env*).
 const LLM_API_KEY = process.env.LLM_API_KEY || "";
 const LLM_URL = process.env.LLM_URL || ""; // contoh: http://localhost:11434/v1/chat/completions (9router lokal)
-const LLM_MODEL = process.env.LLM_MODEL || "oc/deepseek-v4-flash-free";
+const LLM_MODEL = process.env.LLM_MODEL || "muse-spark-1.3-free";
+// Urutan kandidat model yang dicoba GATE 0. LLM_MODELS (koma) menang bila diisi;
+// kalau kosong, gabungan LLM_MODEL + LLM_FALLBACK_MODELS (koma).
+function modelCandidates() {
+  const fromList = (process.env.LLM_MODELS || "").split(",").map((s) => s.trim()).filter(Boolean);
+  if (fromList.length) return [...new Set(fromList)];
+  const fallbacks = (process.env.LLM_FALLBACK_MODELS || "").split(",").map((s) => s.trim()).filter(Boolean);
+  return [...new Set([LLM_MODEL, ...fallbacks])];
+}
+// Model terpilih GATE 0 untuk seluruh run (default = kandidat pertama).
+let ACTIVE_MODEL = modelCandidates()[0];
 const LLM_NO_THINK = process.env.LLM_NO_THINKING === "1";
 const LLM_REWRITE = Boolean(LLM_API_KEY && LLM_URL) && !process.argv.includes("--no-rewrite");
 if (LLM_REWRITE) {
-  console.log(`[llm] rewrite AI aktif (model=${LLM_MODEL})`);
+  console.log(`[llm] rewrite AI aktif (kandidat=${modelCandidates().join(", ")})`);
+}
+
+// Batas artikel yang diterbitkan per run (terbaru dulu; sisanya antrean run
+// berikutnya). Melindungi kuota FREE (100 req/hari) dan timeout 30 menit:
+// 1 artikel bisa makan 4x LLM call bila model ngambek.
+const MAX_PER_RUN = Math.max(0, parseInt(process.env.SYNC_MAX_PER_RUN || "6", 10) || 0);
+// Batas minimal bahan tulisan agar rewrite bisa jujur (tanpa mengarang).
+// Post video/CTA-only umumnya menyisakan <100 char setelah dibersihkan.
+const THIN_MIN_CHARS = 200;
+// Daftar slug yang dilewati permanen (dicoba sekali, gagal karena terlalu
+// tipis). Di-commit agar CI tidak mengulanginya tiap run.
+const SKIP_FILE = path.join(ROOT, "scripts", "sync", "skip.json");
+
+function readSkipMap() {
+  try {
+    const d = JSON.parse(fs.readFileSync(SKIP_FILE, "utf-8"));
+    return d && typeof d === "object" ? d : {};
+  } catch {
+    return {};
+  }
+}
+
+function recordSkip(map, slug, entry) {
+  map[slug] = { ...entry, at: new Date().toISOString() };
+  try {
+    fs.mkdirSync(path.dirname(SKIP_FILE), { recursive: true });
+    fs.writeFileSync(SKIP_FILE, JSON.stringify(map, null, 2) + "\n");
+  } catch (e) {
+    console.warn(`skip ${slug} tidak tersimpan (${e.message})`);
+  }
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -136,7 +182,11 @@ async function fetchPages(route, cap) {
     await sleep(300);
     let batch;
     try {
-      batch = await getJson(`${API}/${route}?per_page=100&page=${page}`);
+      // Route bisa sudah mengandung query (mis. "posts?_embed=true") -> pakai &.
+      // Tanpa ini WP mengabaikan per_page (default 10/halaman) sehingga sync
+      // tak pernah mencapai artikel lama (50 = 5 x 10, bukan 5 x 100).
+      const sep = route.includes("?") ? "&" : "?";
+      batch = await getJson(`${API}/${route}${sep}per_page=100&page=${page}`);
     } catch (e) {
       if (page === 1) throw e;
       break;
@@ -414,40 +464,54 @@ function parseLLMText(raw) {
   return body.choices && body.choices[0] && body.choices[0].message.content;
 }
 
-// GATE 0 — health-check model SEBELUM crawl: ping ringan, wajib ada respons konten.
-// Gagal (setelah retry) => exit 1 agar status workflow jujur (merah, bukan hijau palsu).
+// Ping satu model (satu percobaan). Dipakai GATE 0 untuk memilih kandidat sehat.
+async function pingModel(model) {
+  const res = await fetch(LLM_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent": UA,
+      Authorization: `Bearer ${LLM_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model,
+      temperature: 0,
+      max_tokens: 16,
+      ...(LLM_NO_THINK ? { enable_thinking: false } : {}),
+      messages: [{ role: "user", content: "Balas hanya dengan: OK" }],
+    }),
+  });
+  if (!res.ok) throw new Error(`LLM HTTP ${res.status}`);
+  const text = parseLLMText(await res.text());
+  if (!text || !text.trim()) throw new Error("LLM kosong");
+}
+
+// GATE 0 — pilih model sehat SEBELUM crawl dari daftar kandidat.
+// Kandidat pertama yang merespons dipakai untuk seluruh run. Semua gagal
+// (setelah retry) => exit 1 agar status workflow jujur (merah, bukan hijau palsu).
 async function assertLLMHealthy() {
-  console.log(`[gate-model] cek respons model=${LLM_MODEL} ...`);
-  let lastErr;
-  for (let attempt = 1; attempt <= 3; attempt++) {
-    try {
-      const res = await fetch(LLM_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "User-Agent": UA,
-          Authorization: `Bearer ${LLM_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: LLM_MODEL,
-          temperature: 0,
-          max_tokens: 16,
-          ...(LLM_NO_THINK ? { enable_thinking: false } : {}),
-          messages: [{ role: "user", content: "Balas hanya dengan: OK" }],
-        }),
-      });
-      if (!res.ok) throw new Error(`LLM HTTP ${res.status}`);
-      const text = parseLLMText(await res.text());
-      if (!text || !text.trim()) throw new Error("LLM kosong");
-      console.log("[gate-model] OK");
-      return;
-    } catch (e) {
-      lastErr = e;
-      console.warn(`[gate-model] percobaan ${attempt}/3 gagal: ${e.message}`);
-      await sleep(2000 * attempt);
+  const gagal = [];
+  for (const model of modelCandidates()) {
+    console.log(`[gate-model] cek respons model=${model} ...`);
+    let ok = false;
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        await pingModel(model);
+        ok = true;
+        break;
+      } catch (e) {
+        console.warn(`[gate-model] ${model} percobaan ${attempt}/2 gagal: ${e.message}`);
+        await sleep(2000 * attempt);
+      }
     }
+    if (ok) {
+      ACTIVE_MODEL = model;
+      console.log(`[gate-model] OK (model=${model})`);
+      return;
+    }
+    gagal.push(model);
   }
-  console.error(`FATAL [gate-model]: model tidak merespons (${lastErr && lastErr.message}); sync dibatalkan.`);
+  console.error(`FATAL [gate-model]: tidak ada model merespons (${gagal.join(", ")}); sync dibatalkan.`);
   process.exit(1);
 }
 
@@ -466,12 +530,12 @@ const NON_LATIN_RE =
 // Kata fungsi bahasa Inggris. Teks Indonesia yang sehat hampir tidak memakainya,
 // jadi dipakai sebagai detektor "ini bukan bahasa Indonesia".
 const KATA_FUNGSI_EN =
-  /\b(?:the|and|with|from|that|this|these|those|your|you|they|them|their|there|here|have|has|had|will|would|shall|should|can|could|about|into|over|under|after|before|between|during|through|while|when|what|which|who|whom|whose|how|why|where|all|any|each|few|many|most|some|other|such|only|own|same|than|then|also|been|being|does|did|done|were|was|are|not|but|for|its|our|out|very|too|just|now|let|please|sorry|okay|ok|here|produce|final|json|output|note|notes|submit|submit|thereof|need|want|make|made|use|used|using|get|got|give|gave|show|shown|see|seen|say|says|said|tell|told|know|known|think|thought)\b/gi;
+  /\b(?:the|and|with|from|that|this|these|those|your|you|they|them|their|there|here|have|has|had|will|would|shall|should|can|could|about|into|over|under|after|before|between|during|through|while|when|what|which|who|whom|whose|how|why|where|all|any|each|few|many|most|some|other|such|only|own|same|than|then|also|been|being|does|did|done|were|was|are|not|but|for|its|our|out|very|too|just|now|let|please|sorry|okay|ok|here|produce|final|json|output|note|notes|submit|submit|thereof|need|want|make|made|use|used|using|get|got|give|gave|show|shown|see|seen|say|says|said|tell|told|know|known|think|thought)\b/gi; // audit-skip: definisi pola detektor, bukan konten tercemar
 
-// Frasa meta-komunikasi model yang bocor ke dalam konten ("Sorry, let me produce
-// the clean final JSON"). Ini tanda jelas output tidak akan dipakai.
+// Frasa meta-komunikasi model yang bocor ke dalam konten ("Sorry, let me produce // audit-skip: komentar penjelas pola, bukan konten tercemar
+// the clean final JSON"). Ini tanda jelas output tidak akan dipakai. // audit-skip: komentar penjelas pola, bukan konten tercemar
 const META_MODEL_RE =
-  /\b(?:sorry|let me|as an ai|i will|i'?ll|i need to|here'?s|here is|producing|the clean final|final json|json output|as requested|note that|output:)\b/i;
+  /\b(?:sorry|let me|as an ai|i will|i'?ll|i need to|here'?s|here is|producing|the clean final|final json|json output|as requested|note that|output:)\b/i; // audit-skip: definisi pola detektor, bukan konten tercemar
 
 // Simbol acak dari model yang gagal stabil (contoh nyata: "{m}", "/{m}", "{-", "/#").
 const SIMBOL_ACAK_RE = /(?:\{\/?[a-z]{1,3}\}|\{-|-\}|\/#|#\{|\{[mno]|\}\/|\[\/)/gi;
@@ -486,7 +550,7 @@ const CAPS_WHITELIST = new Set([
 
 // Huruf dari Latin Extended Additional/Suplemental yang tidak pernah dipakai
 // bahasa Indonesia; model kadang menyisipkan huruf dari alfabet lain.
-const HURUF_ASING_RE = /[ßẞɓƀḍȷǀǁɠ]/g;
+const HURUF_ASING_RE = /[ßẞɓƀḍȷǀǁɠ]/g; // audit-skip: definisi pola detektor, bukan konten tercemar
 
 // Sisa sampah model yang paling sering muncul: kata ber-underscore atau
 // camelCase di tengah kalimat Indonesia.
@@ -606,7 +670,7 @@ async function rewriteArticle(post) {
           Authorization: `Bearer ${LLM_API_KEY}`,
         },
         body: JSON.stringify({
-          model: LLM_MODEL,
+          model: ACTIVE_MODEL,
           temperature: 0.7,
           max_tokens: 4000,
           ...(LLM_NO_THINK ? { enable_thinking: false } : {}),
@@ -761,8 +825,10 @@ async function main() {
   // sync tidak boleh diklaim berhasil.
   const NO_REWRITE_FLAG = process.argv.includes("--no-rewrite");
   if (!DRY && !NO_REWRITE_FLAG) {
-    if (!LLM_API_KEY || !LLM_URL) {
-      console.error("FATAL [gate-model]: LLM_API_KEY/LLM_URL belum dikonfigurasi; rewrite wajib aktif.");
+    // Placeholder (mis. "ISI_DENGAN_KEY_...") bukan key valid; tolak eksplisit
+    // agar tidak terkecoh log "[llm] rewrite AI aktif" lalu gagal 401 di GATE 0.
+    if (!LLM_API_KEY || !LLM_URL || /^ISI_/i.test(LLM_API_KEY)) {
+      console.error("FATAL [gate-model]: LLM_API_KEY/LLM_URL belum dikonfigurasi (masih placeholder); rewrite wajib aktif.");
       process.exit(1);
     }
     await assertLLMHealthy();
@@ -793,13 +859,18 @@ async function main() {
   console.log(`[crawl] sumber=${source} posts=${posts.length}`);
 
   const existing = loadExisting();
+  const skipMap = readSkipMap();
+  const skipSet = new Set(Object.keys(skipMap));
+  if (skipSet.size) console.log(`[skip] ${skipSet.size} slug dilewati permanen (skip.json)`);
   fs.mkdirSync(BERITA_DIR, { recursive: true });
 
   let added = 0;
   let updated = 0;
   let skipped = 0;
+  let skippedThin = 0;
   let rewriteFails = 0;
   let coverFails = 0;
+  let capped = false;
 
   for (const post of posts) {
     if (post.content && post.content.protected) continue;
@@ -815,6 +886,16 @@ async function main() {
     if (existing.slugs.has(slug)) {
       skipped++;
       continue;
+    }
+    if (skipSet.has(slug)) {
+      skipped++;
+      continue;
+    }
+    // Kuota per run habis -> berhenti (post lama menunggu run 3-harian berikutnya).
+    // Skip/thin di atas tidak memakan kuota sehingga dicek duluan.
+    if (MAX_PER_RUN > 0 && added + updated >= MAX_PER_RUN) {
+      capped = true;
+      break;
     }
     if (existing.artikel.has(slug)) slug += "-berita";
 
@@ -860,6 +941,22 @@ async function main() {
       sourcePublishedAt: post.date,
       updatedAt: new Date().toISOString(),
     };
+
+    // SKIP TIPIS (hanya saat rewrite aktif / dry-run) — sumber video/CTA-only
+    // tidak punya cukup bahan untuk ditulis ulang secara jujur (tanpa
+    // mengarang). Mencoba rewrite hanya membuang kuota + memerahkan run
+    // selamanya, jadi catat permanen di skip.json dan lewati (BUKAN kegagalan).
+    const thinChars = finalContent.join(" ").length;
+    if ((LLM_REWRITE || DRY) && (finalContent.length < 2 || thinChars < THIN_MIN_CHARS)) {
+      skippedThin++;
+      if (DRY) {
+        console.log(`[dry-run] would skip (thin, ${thinChars} char) ${slug}`);
+      } else {
+        recordSkip(skipMap, slug, { reason: `konten terlalu tipis (${thinChars} char)`, sourceUrl: post.link });
+        console.log(`skip (thin, ${thinChars} char, dicatat permanen) ${slug}`);
+      }
+      continue;
+    }
 
     if (LLM_REWRITE && !DRY) {
       try {
@@ -914,7 +1011,7 @@ async function main() {
   }
 
   console.log(
-    `done. posts=${posts.length} added=${added} updated=${updated} skipped=${skipped} rewriteFails=${rewriteFails} coverFails=${coverFails}`
+    `done. posts=${posts.length} added=${added} updated=${updated} skipped=${skipped} thinSkipped=${skippedThin} rewriteFails=${rewriteFails} coverFails=${coverFails} model=${ACTIVE_MODEL}`
   );
 
   // GATE 2 — semua rewrite wajib sukses; yang gagal tidak di-push mentah dan run merah.
@@ -922,12 +1019,12 @@ async function main() {
     console.error(`FATAL [gate-rewrite]: ${rewriteFails} artikel gagal rewrite dan tidak ikut di-push.`);
     process.exit(1);
   }
-  // Tidak ada artikel baru = kondisi normal (cron harian, sumber sering sepi),
-  // BUKAN kegagalan. Exit 0 supaya tidak mengirim email notifikasi kegagalan tiap hari.
+  // Tidak ada artikel baru = kondisi normal (sumber sering sepi),
+  // BUKAN kegagalan. Exit 0 supaya tidak mengirim email notifikasi kegagalan.
   if (added + updated === 0) {
     console.log("[gate-sync] tidak ada artikel baru hari ini; sync normal, tidak ada yang di-push.");
   } else {
-    console.log(`[gate-sync] ${added} artikel baru, ${updated} diperbarui, siap di-push.`);
+    console.log(`[gate-sync] ${added} artikel baru, ${updated} diperbarui, siap di-push.${capped ? ` (cap ${MAX_PER_RUN}/run; sisanya antrean berikutnya)` : ""}`);
   }
 }
 
@@ -965,13 +1062,13 @@ if (process.argv.includes("--test-rewrite")) {
 // Pakai: node scripts/sync/crawl.js --selftest-guard
 if (process.argv.includes("--selftest-guard")) {
   const SAMPLAH_KOTOR = [
-    "operandi-On-benam{- Sorry, let me produce the clean final JSON,",
+    "operandi-On-benam{- Sorry, let me produce the clean final JSON,", // audit-skip: fixture sampel JELEK untuk selftest-guard
     "Adolescents Headstones thereof, submission Suites Notes, submission Notes,",
     ",/#{m}ENGUNJUNGAN ,",
-    "Desa个省 menerima kunjungan waiver dariutting kelompokasiswa pada插槽_attrs",
-    "berjalan bersama teman dekat. niat tulus untuk menikmati, menjaga, danß berbagi cerita.",
+    "Desa个省 menerima kunjungan waiver dariutting kelompokasiswa pada插槽_attrs", // audit-skip: fixture sampel JELEK untuk selftest-guard
+    "berjalan bersama teman dekat. niat tulus untuk menikmati, menjaga, danß berbagi cerita.", // audit-skip: fixture sampel JELEK untuk selftest-guard
     "ArkP_ARSIP bukan sekadar tumpukan kertas, ada setiap_picture dan crackdown_RESOURCEED",
-    "Warga desaPbagi_tabular层次高低 panjang descriptorstruktur wirausaha",
+    "Warga desaPbagi_tabular层次高低 panjang descriptorstruktur wirausaha", // audit-skip: fixture sampel JELEK untuk selftest-guard
   ];
   const cek = (t) => {
     const a = hitungAnomali({ title: "", excerpt: "", content: [t] });
