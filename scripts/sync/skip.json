@@ -143,5 +143,15 @@
     "reason": "konten terlalu tipis (26 char)",
     "sourceUrl": "https://bantaragung.com/ba-3888083007357938539/",
     "at": "2026-10-06T08:24:53.987Z"
+  },
+  "ba-3880658797266075150": {
+    "reason": "konten terlalu tipis (34 char)",
+    "sourceUrl": "https://bantaragung.com/ba-3880658797266075150/",
+    "at": "2026-10-06T08:33:56.072Z"
+  },
+  "ba-3880297391203486780": {
+    "reason": "konten terlalu tipis (166 char)",
+    "sourceUrl": "https://bantaragung.com/ba-3880297391203486780/",
+    "at": "2026-10-06T08:33:56.072Z"
   }
 }
