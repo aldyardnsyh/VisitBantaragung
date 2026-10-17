@@ -19,6 +19,7 @@ import Dialog from "../../_components/Dialog";
 import { useToast } from "../../_components/Toast";
 import { apiGet, apiSend, apiUpload } from "../../_lib/api";
 import { compressImage, formatBytes, previewUrl, readError, MediaItem } from "../../_components/MediaPicker";
+import MediaDetailSheet, { MediaDetail } from "../../_components/MediaDetailSheet";
 
 interface UsageLocation {
   collection: string;
@@ -62,6 +63,8 @@ export default function MediaClient({ folders }: { folders: string[] }) {
   const [dragging, setDragging] = useState(false);
   const [report, setReport] = useState<MediaReport | null>(null);
   const [usage, setUsage] = useState<Record<string, UsageLocation[]>>({});
+  const [detail, setDetail] = useState<MediaDetail | null>(null);
+  const [detailLoading, setDetailLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(async () => {
@@ -136,17 +139,50 @@ export default function MediaClient({ folders }: { folders: string[] }) {
   }
 
   /** Sebelum menghapus, cek dulu dipakai di mana saja. */
-  async function askDelete(item: MediaItem) {
-    setPendingDelete(item);
-    setDeleteUsage(null);
+  /**
+   * Buka panel detail satu gambar.
+   *
+   * Panel menampilkan pratinjau besar, daftar halaman yang memakai gambar,
+   * tautan untuk menyunting halaman tersebut, serta tombol salin URL dan
+   * hapus. Pemakaian diambil dari peta yang sudah dimuat agar panel langsung
+   * terbuka tanpa menunggu permintaan jaringan; bila peta belum memuat berkas
+   * ini, detail diambil ulang dari API.
+   */
+  async function openDetail(item: MediaItem) {
+    const known = usageByPath.get(item.path);
+    setDetail({
+      path: item.path,
+      name: item.name,
+      size: item.size,
+      url: item.url,
+      usedBy: known ?? [],
+    });
+    setDetailLoading(!known);
+    if (known) return;
+
     try {
       const data = await apiGet<{ usedBy: UsageLocation[] }>(
         `/api/admin/media/report?path=${encodeURIComponent(item.path)}`
       );
-      setDeleteUsage(data.usedBy);
+      setDetail((current) =>
+        current && current.path === item.path ? { ...current, usedBy: data.usedBy } : current
+      );
     } catch {
-      setDeleteUsage([]);
+      setDetail((current) =>
+        current && current.path === item.path ? { ...current, usedBy: [] } : current
+      );
+    } finally {
+      setDetailLoading(false);
     }
+  }
+
+  /** Dari panel detail, lanjut ke dialog konfirmasi hapus. */
+  function requestDelete(path: string) {
+    const item = items?.find((i) => i.path === path) ?? null;
+    if (!item) return;
+    setDetail(null);
+    setPendingDelete(item);
+    setDeleteUsage(usageByPath.get(item.path) ?? null);
   }
 
   async function confirmDelete() {
@@ -391,14 +427,25 @@ export default function MediaClient({ folders }: { folders: string[] }) {
                   className="group overflow-hidden rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface transition-shadow hover:shadow-adm-sm"
                 >
                   <div className="relative">
-                    <img
-                      src={previewUrl(item.path, "assets")}
-                      alt={item.name}
-                      loading="lazy"
-                      className="aspect-square w-full bg-adm-muted object-cover"
-                    />
+                    {/* Seluruh area gambar dapat diklik untuk membuka detail.
+                        Sebelumnya tidak ada handler sama sekali, sehingga di
+                        layar sentuh tidak ada cara melihat atau menghapus
+                        gambar selain menebak ikon kecil saat hover. */}
+                    <button
+                      type="button"
+                      onClick={() => openDetail(item)}
+                      aria-label={`Lihat detail ${item.name}`}
+                      className="adm-ring adm-transition block w-full cursor-zoom-in focus-visible:outline-offset-[-3px]"
+                    >
+                      <img
+                        src={previewUrl(item.path, "assets")}
+                        alt={item.name}
+                        loading="lazy"
+                        className="aspect-square w-full bg-adm-muted object-cover transition-opacity group-hover:opacity-95"
+                      />
+                    </button>
                     {/* Penanda pemakaian: ini yang menjawab "gambar ini dipakai di mana?" */}
-                    <span className="absolute left-1.5 top-1.5">
+                    <span className="pointer-events-none absolute left-1.5 top-1.5">
                       {isUnused ? (
                         <span
                           className="inline-flex items-center gap-1 rounded-[var(--radius-adm-xs)] bg-adm-warning-soft/95 px-1.5 py-0.5 text-[10px] font-medium text-adm-warning shadow-adm-xs"
@@ -415,7 +462,7 @@ export default function MediaClient({ folders }: { folders: string[] }) {
                         </span>
                       )}
                     </span>
-                    <div className="absolute inset-x-0 bottom-0 flex justify-end gap-1 bg-gradient-to-t from-black/45 to-transparent p-1.5 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-end gap-1 bg-gradient-to-t from-black/45 to-transparent p-1.5 opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100 focus-within:pointer-events-auto focus-within:opacity-100">
                       <button
                         type="button"
                         onClick={() => copyUrl(item)}
@@ -431,7 +478,7 @@ export default function MediaClient({ folders }: { folders: string[] }) {
                       </button>
                       <button
                         type="button"
-                        onClick={() => askDelete(item)}
+                        onClick={() => openDetail(item)}
                         aria-label={`Hapus ${item.name}`}
                         title="Hapus"
                         className="adm-ring adm-transition inline-flex h-7 w-7 items-center justify-center rounded-[var(--radius-adm-xs)] bg-white/95 text-adm-danger hover:bg-white active:bg-adm-danger-soft"
@@ -494,6 +541,26 @@ export default function MediaClient({ folders }: { folders: string[] }) {
           setPendingDelete(null);
           setDeleteUsage(null);
         }}
+      />
+
+      {/* Panel detail: dibuka dengan mengklik gambar atau tombol hapus. */}
+      <MediaDetailSheet
+        open={Boolean(detail)}
+        detail={detail}
+        loading={detailLoading}
+        copied={Boolean(detail && copied === detail.path)}
+        onCopy={async (url) => {
+          try {
+            await navigator.clipboard.writeText(url);
+            if (detail) setCopied(detail.path);
+            toast.success("URL disalin ke papan klip.");
+            window.setTimeout(() => setCopied(null), 2000);
+          } catch {
+            toast.error("Gagal menyalin. Salin manual dari lokasi berkas di bawah.");
+          }
+        }}
+        onDelete={requestDelete}
+        onClose={() => setDetail(null)}
       />
     </div>
   );

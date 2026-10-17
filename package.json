@@ -5,14 +5,21 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "node scripts/strip-sourcemaps.mjs",
     "start": "next start",
     "lint": "eslint",
     "sync": "node scripts/sync/crawl.js",
     "rewrite:kkn": "node scripts/rewrite-kkn.mjs",
     "rewrite:berita": "node scripts/rewrite-berita.mjs",
-    "admin:password": "node scripts/admin-password.mjs"
+    "admin:password": "node scripts/admin-password.mjs",
+    "images:optimize": "node scripts/optimize-images.mjs",
+    "images:migrate": "node scripts/migrate-images-webp.mjs",
+    "images:berita": "node scripts/migrate-berita-covers.mjs",
+    "images:restore": "node scripts/restore-missing-images.mjs",
+    "images:check": "node scripts/check-quality.mjs"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "lucide-react": "^1.58.0",
     "next": "16.1.3",
     "react": "19.2.3",

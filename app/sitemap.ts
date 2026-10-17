@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 import fs from "fs";
 import path from "path";
-import { getAllTags, getArticlesByTag } from "@/lib/content";
+import { getArticlesByTag, getPageTags } from "@/lib/content";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const CONTENT_DIR = path.join(process.cwd(), "content");
@@ -103,7 +103,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Halaman tag: hub yang menghubungkan artikel satu sama lain lewat topik.
   // lastmod memakai tanggal artikel terbaru di tag itu, bukan hari build.
-  getAllTags().forEach((t) => {
+  getPageTags().forEach((t) => {
     const latest = getArticlesByTag(t.slug)
       .map((a) => new Date(a.updatedAt || a.date).getTime())
       .filter((n) => Number.isFinite(n))

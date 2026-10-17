@@ -1,6 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  /*
+   * Source map produksi dimatikan.
+   *
+   * Setiap deployment menyimpan berkas .map untuk seluruh chunk server dan
+   * klien. Berkas itu tidak dipakai saat runtime; fungsinya hanya untuk
+   * memetakan stack trace ke kode sumber. Pada proyek ini ukurannya sekitar
+   * 4 MB per deployment, dan karena Vercel menyimpan setiap deployment,
+   * pengaruhnya menumpuk pada kuota Deployment Storage.
+   *
+   * Bila suatu saat perlu menelusuri galat produksi, aktifkan sementara lalu
+   * matikan lagi setelah selesai.
+   */
+  productionBrowserSourceMaps: false,
+
   // Header keamanan: nol biaya runtime, tanpa memengaruhi render.
   // Tanpa CSP (berisiko merusak embed Maps dan skrip inline tanpa tuning khusus).
   async headers() {

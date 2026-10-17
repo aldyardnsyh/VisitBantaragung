@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getAllTags, getArticlesByTag, getTagBySlug } from "@/lib/content";
+import { getArticlesByTag, getPageTags, getTagBySlug } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
 import { toJsonLd } from "@/lib/jsonld";
 import PageHeader from "@/app/components/layout/PageHeader";
@@ -16,7 +16,10 @@ interface TagPageProps {
 export const dynamic = "force-static";
 
 export function generateStaticParams() {
-    return getAllTags().map((t) => ({ slug: t.slug }));
+    // Hanya tag yang punya minimal dua artikel. Tag dengan satu artikel tidak
+    // dibuatkan halaman karena isinya terlalu tipis untuk berguna, sementara
+    // setiap halaman menambah ukuran build dan penyimpanan deployment.
+    return getPageTags().map((t) => ({ slug: t.slug }));
 }
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://visitbantaragung.com";
@@ -37,7 +40,7 @@ export async function generateMetadata({ params }: TagPageProps): Promise<Metada
 export default async function TagPage({ params }: TagPageProps) {
     const { slug } = await params;
     const tag = getTagBySlug(slug);
-    if (!tag) notFound();
+    if (!tag || tag.count < 2) notFound();
     const articles = getArticlesByTag(tag.slug);
     const label = tag.slug.replace(/-/g, " ");
 
@@ -111,7 +114,7 @@ export default async function TagPage({ params }: TagPageProps) {
                     <div className="mt-12 rounded-2xl bg-white/60 border border-forest-200/60 p-6">
                         <h2 className="font-bold text-forest-800 mb-3">Tag lain</h2>
                         <div className="flex flex-wrap gap-2">
-                            {getAllTags()
+                            {getPageTags()
                                 .filter((t) => t.slug !== tag.slug)
                                 .slice(0, 40)
                                 .map((t) => (

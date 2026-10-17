@@ -4,6 +4,7 @@ import { getSeoSettings } from "@/lib/content";
 import type { Metadata } from "next";
 import Footer from "@/app/components/layout/Footer";
 import SiteChrome from "@/app/components/layout/SiteChrome";
+import PublicAnalytics from "@/app/components/analytics/PublicAnalytics";
 import { assetUrl } from "@/lib/asset";
 
 
@@ -140,6 +141,17 @@ export default function RootLayout({
         <SiteChrome navbar={<Navbar />} footer={<Footer />}>
           {children}
         </SiteChrome>
+
+        {/*
+         * Vercel Analytics: menghitung kunjungan halaman publik.
+         *
+         * Diletakkan di dalam SiteChrome yang tidak merender apa pun di rute
+         * /admin, sehingga kunjungan admin tidak ikut terhitung dan skrip
+         * pelacak tidak dimuat di dasbor. Skrip ini ringan (sekitar 2 KB) dan
+         * hanya aktif pada deployment Vercel; saat pengembangan lokal tidak
+         * mengirim data apa pun.
+         */}
+        <PublicAnalytics />
       </body>
     </html>
   );

@@ -233,6 +233,25 @@ export function getAllTags(): TagInfo[] {
     return [...map.values()].sort((a, b) => b.count - a.count || a.slug.localeCompare(b.slug));
 }
 
+/**
+ * Ambang minimum artikel agar sebuah tag punya halaman sendiri.
+ *
+ * Tag dengan satu artikel adalah thin content: halaman hampir kosong yang
+ * tidak membantu pembaca maupun mesin pencari, tetapi tetap ikut dibangun
+ * dan disimpan pada setiap deployment. Dari 140 tag, 93 di antaranya hanya
+ * berisi satu artikel. Dengan ambang 2, jumlah halaman tag turun dari 141
+ * menjadi 48 tanpa menghilangkan tautan internal yang benar-benar berguna.
+ *
+ * Tag di bawah ambang tetap muncul sebagai label di kartu artikel dan tetap
+ * ada di data; hanya halaman khususnya yang tidak dibuat.
+ */
+export const MIN_ARTICLES_FOR_TAG_PAGE = 2;
+
+/** Tag yang layak mendapat halaman sendiri. */
+export function getPageTags(): TagInfo[] {
+    return getAllTags().filter((t) => t.count >= MIN_ARTICLES_FOR_TAG_PAGE);
+}
+
 export function getTagBySlug(slug: string): TagInfo | null {
     return getAllTags().find((t) => t.slug === slug) || null;
 }
