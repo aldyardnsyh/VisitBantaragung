@@ -102,12 +102,67 @@ export async function buildMediaUsage(force = false): Promise<MediaUsageMap> {
       const rel = path.replace(/^content\//, "");
       const dir = rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : "";
       const collection = COLLECTIONS.find((c) => c.dir === dir);
-      if (!collection) continue;
 
       let data: Record<string, unknown>;
       try {
         data = JSON.parse(raw) as Record<string, unknown>;
       } catch {
+        continue;
+      }
+
+      // Berkas khusus di luar koleksi standar.
+      //
+      // content/bmc/maps-config.json menyimpan gambar peta secara bersarang
+      // (categories[].maps[].image). Tanpa penanganan di sini, 22 gambar peta
+      // akan salah dianggap "tidak dipakai" sehingga berisiko terhapus.
+      if (!collection) {
+        if (path === "content/bmc/maps-config.json") {
+          const categories = Array.isArray(data.categories) ? data.categories : [];
+          for (const rawCategory of categories) {
+            if (!rawCategory || typeof rawCategory !== "object") continue;
+            const category = rawCategory as Record<string, unknown>;
+            const categoryName = typeof category.name === "string" ? category.name : "Peta";
+            const maps = Array.isArray(category.maps) ? category.maps : [];
+            for (const rawMap of maps) {
+              if (!rawMap || typeof rawMap !== "object") continue;
+              const map = rawMap as Record<string, unknown>;
+              const image = map.image;
+              if (typeof image !== "string" || !IMAGE_EXT.test(image)) continue;
+              const key = normalizeMediaPath(image);
+              if (!usage[key]) usage[key] = [];
+              usage[key].push({
+                collection: "bmc",
+                collectionLabel: "Peta Digital",
+                slug: typeof map.id === "string" ? map.id : "",
+                title: typeof map.title === "string" ? map.title : categoryName,
+                field: "peta",
+                href: "/admin/peta",
+              });
+            }
+          }
+        }
+
+        // content/galeri/galeri.json menyimpan daftar nama berkas galeri tanpa
+        // awalan folder. Nama-nama itu diubah menjadi path galeri/<nama> agar
+        // cocok dengan berkas di repositori aset. Tanpa ini, seluruh foto
+        // galeri salah dianggap tidak dipakai.
+        if (path === "content/galeri/galeri.json") {
+          const files = Array.isArray(data.files) ? data.files : [];
+          for (const rawName of files) {
+            if (typeof rawName !== "string" || !IMAGE_EXT.test(rawName)) continue;
+            const key = normalizeMediaPath(`galeri/${rawName}`);
+            if (!usage[key]) usage[key] = [];
+            usage[key].push({
+              collection: "galeri",
+              collectionLabel: "Galeri",
+              slug: rawName,
+              title: `Foto galeri: ${rawName.replace(/\.[a-z0-9]+$/i, "")}`,
+              field: "galeri",
+              href: "/galeri",
+            });
+          }
+        }
+
         continue;
       }
 
