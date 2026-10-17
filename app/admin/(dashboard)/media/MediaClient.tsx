@@ -42,11 +42,24 @@ export default function MediaClient({ folders }: { folders: string[] }) {
   async function upload(files: FileList) {
     setUploading(true);
     let added = 0;
+    let skipped = 0;
+    const daftar = Array.from(files);
+
     try {
-      for (const file of Array.from(files)) {
+      for (let i = 0; i < daftar.length; i += 1) {
+        const file = daftar[i];
+        // Satu toast dengan id tetap: isinya diperbarui tiap berkas sehingga
+        // pengguna melihat kemajuan nyata, bukan spinner tanpa keterangan.
+        toast.loading(
+          daftar.length > 1
+            ? `Mengunggah ${i + 1} dari ${daftar.length}: ${file.name}`
+            : `Mengunggah ${file.name}...`,
+          { id: "upload" }
+        );
+
         const compressed = await compressImage(file);
         if (compressed.size > 3_500_000) {
-          toast.error(`${file.name} terlalu besar setelah dikompresi dan dilewati.`);
+          skipped += 1;
           continue;
         }
         const form = new FormData();
@@ -56,12 +69,25 @@ export default function MediaClient({ folders }: { folders: string[] }) {
         await apiUpload("/api/admin/media", form);
         added += 1;
       }
-      if (added) {
-        toast.success(`${added} gambar diunggah. Situs akan memuatnya dalam 1 sampai 2 menit.`);
+
+      if (added > 0) {
+        toast.success(
+          skipped > 0
+            ? `${added} gambar diunggah, ${skipped} dilewati karena terlalu besar.`
+            : `${added} gambar diunggah. Situs akan memuatnya dalam 1 sampai 2 menit.`,
+          { id: "upload" }
+        );
         await load();
+      } else {
+        toast.warning(
+          skipped > 0
+            ? `${skipped} gambar dilewati karena terlalu besar setelah dikompresi.`
+            : "Tidak ada berkas yang diunggah.",
+          { id: "upload" }
+        );
       }
     } catch (failure) {
-      toast.error(readError(failure));
+      toast.error(readError(failure), { id: "upload" });
     } finally {
       setUploading(false);
       if (inputRef.current) inputRef.current.value = "";

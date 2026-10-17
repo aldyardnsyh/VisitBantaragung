@@ -83,7 +83,7 @@ export default function RecordEditor({
     }
     if (Object.keys(localErrors).length) {
       setErrors(localErrors);
-      toast.error("Lengkapi dulu kolom yang ditandai.");
+      toast.warning("Lengkapi dulu kolom yang ditandai.");
       const firstKey = Object.keys(localErrors)[0];
       document.getElementById(`field-${firstKey}`)?.focus();
       return;
@@ -98,13 +98,15 @@ export default function RecordEditor({
         expectedSha: mode === "edit" ? initialSha : undefined,
         values,
       };
-      const result = await apiSend<{ message: string; warnings: string[] }>(
+      const result = await apiSend<{ message: string; warnings: string[]; commitUrl?: string }>(
         "/api/admin/content",
         "POST",
         payload
       );
-      toast.success(result.message);
-      for (const warning of result.warnings ?? []) toast.info(warning);
+      toast.success(result.message, {
+        action: result.commitUrl ? { label: "Lihat commit", href: result.commitUrl } : undefined,
+      });
+      for (const warning of result.warnings ?? []) toast.warning(warning);
       router.push(`/admin/${collection.id}`);
       router.refresh();
     } catch (failure) {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PageHeader, Card } from "../../_components/Card";
+import { PageHeader } from "../../_components/Card";
 import { Field, Input, Textarea } from "../../_components/Form";
 import Button from "../../_components/Button";
 import Badge from "../../_components/Badge";

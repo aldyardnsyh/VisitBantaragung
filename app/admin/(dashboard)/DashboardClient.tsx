@@ -75,15 +75,18 @@ export default function DashboardClient({
 
   async function runSync() {
     setSyncing(true);
+    // Toast loading memakai id tetap, lalu diganti hasilnya lewat id yang sama
+    // sehingga tidak menumpuk menjadi dua notifikasi.
+    toast.loading("Memulai sinkronisasi berita...", { id: "sync" });
     try {
       const result = await apiSend<{ message: string }>("/api/admin/sync", "POST");
-      toast.success(result.message);
+      toast.success(result.message, { id: "sync", duration: 6000 });
     } catch (failure) {
       const message =
         typeof failure === "object" && failure !== null && "error" in failure
           ? String((failure as { error: unknown }).error)
           : "Gagal memulai sinkronisasi.";
-      toast.error(message);
+      toast.error(message, { id: "sync" });
     } finally {
       setSyncing(false);
     }

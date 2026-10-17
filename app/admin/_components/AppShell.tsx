@@ -12,6 +12,7 @@ import {
   LogOut,
   MapPin,
   Menu,
+  Search,
   Newspaper,
   Settings,
   Sprout,
@@ -22,6 +23,8 @@ import {
 import type { ReactNode } from "react";
 import { apiSend } from "../_lib/api";
 import { SectionLabel } from "./Card";
+import NotificationBell from "./NotificationBell";
+import CommandPalette from "./CommandPalette";
 
 interface NavItem {
   href: string;
@@ -280,7 +283,20 @@ export default function AppShell({
                 >
                   <ExternalLink aria-hidden className="h-3.5 w-3.5" />
                   Situs
-                </Link>
+                </Link>              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true }))}
+                aria-label="Cari halaman (Ctrl K)"
+                className="adm-ring adm-transition hidden h-8 items-center gap-1.5 rounded-[var(--radius-adm-sm)] border border-adm-border bg-adm-surface-2 px-2.5 text-[12px] text-adm-subtle hover:bg-adm-muted hover:text-adm-ink md:inline-flex"
+              >
+                <Search aria-hidden className="h-3.5 w-3.5" />
+                <span>Cari</span>
+                <kbd className="ml-0.5 rounded border border-adm-border bg-adm-surface px-1 font-mono text-[10px]">
+                  Ctrl K
+                </kbd>
+              </button>
+              <NotificationBell />
+              <CommandPalette />
                 <span aria-hidden className="mx-1 hidden h-5 w-px bg-adm-divider sm:block" />
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-adm-primary-soft text-[11px] font-semibold uppercase text-adm-primary-ink">
                   {username.slice(0, 2)}

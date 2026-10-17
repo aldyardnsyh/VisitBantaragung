@@ -203,11 +203,21 @@ export function GalleryPicker({ value, folder, target, onChange }: GalleryPicker
   async function handleFiles(files: FileList) {
     setUploading(true);
     const added: string[] = [];
+    let skipped = 0;
+    const daftar = Array.from(files);
     try {
-      for (const file of Array.from(files)) {
+      for (let i = 0; i < daftar.length; i += 1) {
+        const file = daftar[i];
+        // Toast kemajuan dengan id tetap supaya tidak menumpuk per berkas.
+        toast.loading(
+          daftar.length > 1
+            ? `Mengunggah ${i + 1} dari ${daftar.length}: ${file.name}`
+            : `Mengunggah ${file.name}...`,
+          { id: "galeri-upload" }
+        );
         const compressed = await compressImage(file);
         if (compressed.size > 3_500_000) {
-          toast.error(`${file.name} terlalu besar setelah dikompresi dan dilewati.`);
+          skipped += 1;
           continue;
         }
         const form = new FormData();
@@ -218,10 +228,17 @@ export function GalleryPicker({ value, folder, target, onChange }: GalleryPicker
       }
       if (added.length) {
         onChange([...value, ...added]);
-        toast.success(`${added.length} gambar diunggah.`);
+        toast.success(
+          skipped > 0
+            ? `${added.length} foto diunggah, ${skipped} dilewati karena terlalu besar.`
+            : `${added.length} foto diunggah.`,
+          { id: "galeri-upload" }
+        );
+      } else if (skipped > 0) {
+        toast.warning(`${skipped} foto dilewati karena terlalu besar.`, { id: "galeri-upload" });
       }
     } catch (failure) {
-      toast.error(readError(failure));
+      toast.error(readError(failure), { id: "galeri-upload" });
     } finally {
       setUploading(false);
       if (inputRef.current) inputRef.current.value = "";
