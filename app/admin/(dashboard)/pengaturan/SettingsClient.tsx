@@ -59,7 +59,7 @@ export default function SettingsClient({ site, seo, info, config }: SettingsClie
             className={`adm-ring adm-transition rounded-[var(--radius-adm-sm)] px-3 py-1.5 text-[12.5px] font-medium ${
               tab === value
                 ? "bg-adm-surface text-adm-ink shadow-adm-xs"
-                : "text-adm-subtle hover:text-adm-ink"
+                : "text-adm-subtle hover:bg-adm-surface/60 hover:text-adm-ink active:bg-adm-muted"
             }`}
           >
             {label}

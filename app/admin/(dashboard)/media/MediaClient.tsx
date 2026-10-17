@@ -266,7 +266,7 @@ export default function MediaClient({ folders }: { folders: string[] }) {
             {items.map((item) => (
               <li
                 key={item.path}
-                className="group overflow-hidden rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface transition-shadow hover:shadow-adm-sm"
+                className="group overflow-hidden rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface transition-shadow hover:shadow-adm-sm active:shadow-none"
               >
                 <div className="relative">
                   <img
@@ -281,7 +281,7 @@ export default function MediaClient({ folders }: { folders: string[] }) {
                       onClick={() => copyUrl(item)}
                       aria-label={`Salin URL ${item.name}`}
                       title="Salin URL"
-                      className="adm-ring adm-transition inline-flex h-7 w-7 items-center justify-center rounded-[var(--radius-adm-xs)] bg-white/95 text-adm-ink hover:bg-white"
+                      className="adm-ring adm-transition inline-flex h-7 w-7 items-center justify-center rounded-[var(--radius-adm-xs)] bg-white/95 text-adm-ink hover:bg-white active:bg-adm-muted"
                     >
                       {copied === item.path ? (
                         <Check aria-hidden className="h-3.5 w-3.5 text-adm-success" />
@@ -294,7 +294,7 @@ export default function MediaClient({ folders }: { folders: string[] }) {
                       onClick={() => setPendingDelete(item)}
                       aria-label={`Hapus ${item.name}`}
                       title="Hapus"
-                      className="adm-ring adm-transition inline-flex h-7 w-7 items-center justify-center rounded-[var(--radius-adm-xs)] bg-white/95 text-adm-danger hover:bg-white"
+                      className="adm-ring adm-transition inline-flex h-7 w-7 items-center justify-center rounded-[var(--radius-adm-xs)] bg-white/95 text-adm-danger hover:bg-white active:bg-adm-danger-soft"
                     >
                       <Trash2 aria-hidden className="h-3.5 w-3.5" />
                     </button>

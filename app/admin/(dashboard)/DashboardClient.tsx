@@ -198,7 +198,7 @@ export default function DashboardClient({
           </div>
           <Link
             href="/admin/media"
-            className="adm-ring adm-transition hidden shrink-0 items-center gap-1.5 rounded text-[12.5px] font-medium text-adm-primary hover:underline underline-offset-2 sm:inline-flex"
+            className="adm-ring adm-transition hidden shrink-0 items-center gap-1.5 rounded text-[12.5px] font-medium text-adm-primary hover:underline hover:underline-offset-2 active:text-adm-primary-active sm:inline-flex"
           >
             <Images aria-hidden className="h-3.5 w-3.5" />
             Pustaka gambar
@@ -213,7 +213,7 @@ export default function DashboardClient({
               <Link
                 key={item.id}
                 href={`/admin/${item.id}`}
-                className="adm-ring adm-transition group relative overflow-hidden rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface p-4 hover:border-adm-border-strong hover:shadow-adm-sm"
+                className="adm-ring adm-transition group relative overflow-hidden rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface p-4 hover:border-adm-border-strong hover:shadow-adm-sm active:translate-y-px active:shadow-none"
               >
                 <div className="flex items-start justify-between gap-3">
                   <span className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-adm-sm)] bg-adm-muted text-adm-text transition-colors group-hover:bg-adm-primary-soft group-hover:text-adm-primary">
@@ -241,7 +241,7 @@ export default function DashboardClient({
                 menyisakan lubang, sekaligus jalan cepat ke pustaka gambar. */}
             <Link
               href="/admin/media"
-              className="adm-ring adm-transition group relative flex flex-col justify-between overflow-hidden rounded-[var(--radius-adm-lg)] border border-dashed border-adm-border-strong bg-adm-surface-2 p-4 hover:border-adm-primary/40 hover:bg-adm-primary-soft/40"
+              className="adm-ring adm-transition group relative flex flex-col justify-between overflow-hidden rounded-[var(--radius-adm-lg)] border border-dashed border-adm-border-strong bg-adm-surface-2 p-4 hover:border-adm-primary/40 hover:bg-adm-primary-soft/40 active:translate-y-px"
             >
               <div className="flex items-start justify-between gap-3">
                 <span className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-adm-sm)] bg-adm-muted text-adm-subtle transition-colors group-hover:bg-adm-primary-soft group-hover:text-adm-primary">

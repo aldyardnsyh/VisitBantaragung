@@ -202,7 +202,7 @@ export default function CollectionList({ collection }: { collection: CollectionI
               </thead>
               <tbody className="divide-y divide-adm-divider">
                 {filtered.map((record) => (
-                  <tr key={record.slug} className="adm-transition group hover:bg-adm-surface-2">
+                  <tr key={record.slug} className="adm-transition group hover:bg-adm-surface-2 focus-within:bg-adm-surface-2">
                     <td className="max-w-0 px-4 py-3">
                       <Link
                         href={`/admin/${collection.id}/${record.slug}`}
@@ -230,7 +230,7 @@ export default function CollectionList({ collection }: { collection: CollectionI
                           href={`/admin/${collection.id}/${record.slug}`}
                           aria-label={`Ubah ${record.title}`}
                           title="Ubah"
-                          className="adm-ring adm-transition inline-flex h-9 w-9 items-center justify-center rounded-[var(--radius-adm-sm)] text-adm-subtle hover:bg-adm-primary-soft hover:text-adm-primary"
+                          className="adm-ring adm-transition inline-flex h-9 w-9 items-center justify-center rounded-[var(--radius-adm-sm)] text-adm-subtle hover:bg-adm-primary-soft hover:text-adm-primary active:bg-[#d3e3d9]"
                         >
                           <Pencil aria-hidden className="h-4 w-4" />
                         </Link>
@@ -239,7 +239,7 @@ export default function CollectionList({ collection }: { collection: CollectionI
                           onClick={() => setPendingDelete(record)}
                           aria-label={`Hapus ${record.title}`}
                           title="Hapus"
-                          className="adm-ring adm-transition inline-flex h-9 w-9 items-center justify-center rounded-[var(--radius-adm-sm)] text-adm-subtle hover:bg-adm-danger-soft hover:text-adm-danger"
+                          className="adm-ring adm-transition inline-flex h-9 w-9 items-center justify-center rounded-[var(--radius-adm-sm)] text-adm-subtle hover:bg-adm-danger-soft hover:text-adm-danger active:bg-[#f6d9d9]"
                         >
                           <Trash2 aria-hidden className="h-4 w-4" />
                         </button>
@@ -257,7 +257,7 @@ export default function CollectionList({ collection }: { collection: CollectionI
               <li key={record.slug} className="rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface">
                 <Link
                   href={`/admin/${collection.id}/${record.slug}`}
-                  className="adm-ring block rounded-t-[var(--radius-adm-lg)] px-4 pb-3 pt-4"
+                  className="adm-ring block rounded-t-[var(--radius-adm-lg)] px-4 pb-3 pt-4 active:bg-adm-surface-2"
                 >
                   <p className="text-[13.5px] font-medium text-adm-ink">{record.title}</p>
                   {record.subtitle ? (
@@ -275,7 +275,7 @@ export default function CollectionList({ collection }: { collection: CollectionI
                 <div className="flex gap-2 border-t border-adm-divider px-3 py-2.5">
                   <Link
                     href={`/admin/${collection.id}/${record.slug}`}
-                    className="adm-ring adm-transition inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-[var(--radius-adm-sm)] border border-adm-border-strong text-[12.5px] font-medium text-adm-ink hover:bg-adm-muted"
+                    className="adm-ring adm-transition inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-[var(--radius-adm-sm)] border border-adm-border-strong text-[12.5px] font-medium text-adm-ink hover:bg-adm-muted active:bg-adm-pressed"
                   >
                     <Pencil aria-hidden className="h-3 w-3" />
                     Ubah

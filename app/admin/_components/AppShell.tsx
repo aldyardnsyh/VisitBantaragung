@@ -195,7 +195,7 @@ export default function AppShell({
           href="/"
           target="_blank"
           rel="noreferrer"
-          className="adm-ring adm-transition flex h-8.5 items-center gap-2 rounded-[var(--radius-adm-sm)] px-2 py-2 text-[12.5px] text-adm-text hover:bg-adm-nav-hover hover:text-adm-ink"
+          className="adm-ring adm-transition flex h-8.5 items-center gap-2 rounded-[var(--radius-adm-sm)] px-2 py-2 text-[12.5px] text-adm-text hover:bg-adm-nav-hover hover:text-adm-ink active:bg-adm-pressed"
         >
           <ExternalLink aria-hidden className="h-3.5 w-3.5" />
           Lihat Situs
@@ -251,7 +251,7 @@ export default function AppShell({
                 type="button"
                 onClick={() => setDrawerOpen(true)}
                 aria-label="Buka menu"
-                className="adm-ring adm-transition -ml-1 rounded-[var(--radius-adm-sm)] p-2 text-adm-text hover:bg-adm-muted hover:text-adm-ink lg:hidden"
+                className="adm-ring adm-transition -ml-1 rounded-[var(--radius-adm-sm)] p-2 text-adm-text hover:bg-adm-muted hover:text-adm-ink active:bg-adm-pressed lg:hidden"
               >
                 <Menu aria-hidden className="h-[18px] w-[18px]" />
               </button>
@@ -287,7 +287,7 @@ export default function AppShell({
                 type="button"
                 onClick={() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true }))}
                 aria-label="Cari halaman (Ctrl K)"
-                className="adm-ring adm-transition hidden h-8 items-center gap-1.5 rounded-[var(--radius-adm-sm)] border border-adm-border bg-adm-surface-2 px-2.5 text-[12px] text-adm-subtle hover:bg-adm-muted hover:text-adm-ink md:inline-flex"
+                className="adm-ring adm-transition hidden h-8 items-center gap-1.5 rounded-[var(--radius-adm-sm)] border border-adm-border bg-adm-surface-2 px-2.5 text-[12px] text-adm-subtle hover:bg-adm-muted hover:text-adm-ink active:bg-adm-pressed md:inline-flex"
               >
                 <Search aria-hidden className="h-3.5 w-3.5" />
                 <span>Cari</span>
@@ -331,7 +331,7 @@ function NavLink({
       className={`adm-ring adm-transition group relative flex items-center gap-2.5 rounded-[var(--radius-adm-sm)] px-2.5 py-2 text-[13px] ${
         active
           ? "bg-adm-nav-active font-semibold text-adm-primary-ink"
-          : "text-adm-text hover:bg-adm-nav-hover hover:text-adm-ink"
+          : "text-adm-text hover:bg-adm-nav-hover hover:text-adm-ink active:bg-adm-muted-2"
       }`}
     >
       <span

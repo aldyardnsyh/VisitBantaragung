@@ -50,6 +50,8 @@
   --color-adm-surface-2: #fbfaf7;
   --color-adm-muted: #f4f2ec;
   --color-adm-muted-2: #ecebe3;
+  /* Permukaan saat ditekan (pressed) untuk tombol netral. */
+  --color-adm-pressed: #e3e1d8;
 
   /* Garis */
   --color-adm-border: #e6e4dc;
@@ -64,6 +66,7 @@
   /* Aksi utama */
   --color-adm-primary: #2d6a4f;
   --color-adm-primary-hover: #245843;
+  --color-adm-primary-active: #1c4636;
   --color-adm-primary-soft: #eaf2ed;
   --color-adm-primary-ink: #1d4a37;
 
@@ -80,6 +83,7 @@
   --color-adm-warning-soft: #fef6e7;
   --color-adm-danger: #b91c1c;
   --color-adm-danger-hover: #991b1b;
+  --color-adm-danger-active: #7f1616;
   --color-adm-danger-soft: #fdefef;
   --color-adm-info: #1d4ed8;
   --color-adm-info-soft: #eff4ff;
