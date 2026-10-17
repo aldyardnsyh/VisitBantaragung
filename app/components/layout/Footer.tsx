@@ -1,9 +1,5 @@
-﻿import Link from "next/link";
-import { getSiteSettings } from "@/lib/content";
-
-const WHATSAPP_URL = "https://wa.me/6281324427327";
-const EMAIL = "desawisatabantaragung@gmail.com";
-const MAPS_URL = "https://maps.google.com/?q=Desa+Bantaragung+Sindangwangi+Majalengka+Jawa+Barat";
+import Link from "next/link";
+import { getPublicContact, getSiteSettings } from "@/lib/content";
 
 const exploreLinks = [
   { href: "/wisata", label: "Wisata" },
@@ -15,7 +11,7 @@ const exploreLinks = [
 
 const infoLinks = [
   { href: "/bic/artikel", label: "Berita" },
-  { href: `mailto:${EMAIL}`, label: "Kontak" },
+  { href: "/kontak", label: "Kontak" },
   { href: "/bmc", label: "Peta" },
   { href: "/bdb", label: "Branding Desa" },
   { href: "/tentang", label: "Dewi" },
@@ -37,6 +33,10 @@ const followUs = [
 
 export default function Footer() {
   const site = getSiteSettings();
+  // Kontak diambil dari satu sumber (content/settings/site.json dengan
+  // cadangan terverifikasi), sehingga mengubahnya lewat dasbor admin
+  // benar-benar berpengaruh ke footer.
+  const contact = getPublicContact();
 
   return (
     <footer className="bg-forest-900 text-[#c8d5cd] border-t-4 border-clay-500 mt-20">
@@ -124,11 +124,10 @@ export default function Footer() {
         <div>
           <h4 className="font-semibold text-white mb-4">Hubungi Kami</h4>
           <p className="text-sm text-forest-100/70">
-            Desa Bantaragung, Kec. Sindangwangi,<br />
-            Kab. Majalengka, Jawa Barat
+            {contact.address}
           </p>
           <a
-            href={WHATSAPP_URL}
+            href={contact.whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center bg-clay-500 hover:bg-clay-600 text-white rounded-full px-5 py-2 mt-5 text-sm font-semibold transition active:scale-[0.98]"
@@ -136,13 +135,13 @@ export default function Footer() {
             Chat WhatsApp
           </a>
           <a
-            href={`mailto:${EMAIL}`}
+            href={`mailto:${contact.email}`}
             className="block text-sm mt-3 text-white/80 hover:text-gold-400 hover:font-semibold transition-colors duration-200"
           >
-            {EMAIL}
+            {contact.email}
           </a>
           <a
-            href={MAPS_URL}
+            href={contact.googleMapsUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm text-forest-100/70 hover:text-white mt-3 transition-colors duration-200"

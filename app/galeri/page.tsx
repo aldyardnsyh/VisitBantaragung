@@ -53,10 +53,14 @@ export const metadata: Metadata = {
         "Dokumentasi foto Kuliah Kerja Nyata (KKN) UGM Simfoni Sindangwangi di Desa Bantaragung dan Desa Sindangwangi, Majalengka: edukasi, UMKM, kampung herbal, budaya, dan wisata. Lengkap dengan cerita tiap momen.",
 };
 
+// Dua berkas di bawah sudah dikonversi ke .webp di repo aset
+// (scripts/migrate-images-webp.mjs), tetapi rujukannya masih .png sehingga
+// jsDelivr membalas 404 dan logo tampil kosong. Nama berkas di CDN bersifat
+// permanen (lihat docs/ADMIN.md), jadi yang harus disesuaikan adalah path-nya.
 const KKN_LOGOS = [
-    { src: "_brand/logo/LogoAlmamaterUgm.png", alt: "Universitas Gadjah Mada" },
+    { src: "_brand/logo/LogoAlmamaterUgm.webp", alt: "Universitas Gadjah Mada" },
     { src: "_brand/logo/LogoKknPpmUgm.png", alt: "KKN-PPM UGM" },
-    { src: "_brand/logo/LogoSimfoniSindangwangi.png", alt: "Simfoni Sindangwangi" },
+    { src: "_brand/logo/LogoSimfoniSindangwangi.webp", alt: "Simfoni Sindangwangi" },
 ];
 
 const SPONSOR_LOGOS = [

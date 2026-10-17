@@ -1,10 +1,10 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumb from "@/app/components/ui/Breadcrumb";
 import SectionHeading from "@/app/components/ui/SectionHeading";
 import Reveal from "@/app/components/ui/Reveal";
 import ContactSection from "@/app/kontak/ContactSection";
-import { loadJSON, getSiteSettings } from "@/lib/content";
+import { loadJSON, getPublicContact } from "@/lib/content";
 
 interface ProfileContent {
   overview: string;
@@ -32,11 +32,9 @@ export const metadata: Metadata = {
 
 export default function TentangPage() {
   const profile = loadJSON<ProfileContent>("settings/profile.json");
-  const site = getSiteSettings();
-
-  const mapsUrl =
-    site.contact.googleMapsUrl ||
-    "https://maps.google.com/?q=Desa+Bantaragung+Sindangwangi+Majalengka+Jawa+Barat";
+  // Satu sumber kontak untuk seluruh situs (lihat getPublicContact).
+  const contact = getPublicContact();
+  const mapsUrl = contact.googleMapsUrl;
 
   return (
     <main>
@@ -246,7 +244,7 @@ export default function TentangPage() {
             title="Siap Merencanakan Kunjungan?"
             subtitle="Tanya paket wisata, ajak kerja sama, atau sapa tim Pokdarwis Bantaragung."
           />
-          <ContactSection />
+          <ContactSection contact={contact} />
         </div>
       </section>
 

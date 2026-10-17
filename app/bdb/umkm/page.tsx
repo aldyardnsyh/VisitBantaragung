@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { getAllUMKM } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
 import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";

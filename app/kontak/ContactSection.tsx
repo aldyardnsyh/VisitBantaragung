@@ -4,17 +4,30 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import Reveal from "@/app/components/ui/Reveal";
 
-const WA_NUMBER = "6281324427327";
-const EMAIL = "desawisatabantaragung@gmail.com";
-const WHATSAPP_URL = `https://wa.me/${WA_NUMBER}`;
-const BUSINESS_HOURS = "Senin  -  Minggu, 08.00  -  17.00 WIB";
+/**
+ * Blok kontak bersama: dipakai laman /kontak dan section kontak di /tentang.
+ * Nomor, email, dan jam dikirim dari server (getPublicContact) supaya tidak
+ * ada lagi salinan konstanta yang bisa berbeda antar halaman.
+ */
+export interface ContactInfo {
+  whatsapp: string;
+  whatsappUrl: string;
+  whatsappDisplay: string;
+  email: string;
+  address: string;
+  businessHours: string;
+  googleMapsUrl: string;
+}
 
-// Blok kontak bersama: dipakai laman /kontak dan section kontak di /tentang.
-// Satu sumber agar nomor, jam, dan perilaku form tidak pernah berbeda.
-export default function ContactSection() {
+export default function ContactSection({ contact }: { contact: ContactInfo }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+
+  const EMAIL = contact.email;
+  const WA_NUMBER = contact.whatsapp;
+  const WHATSAPP_URL = contact.whatsappUrl;
+  const BUSINESS_HOURS = contact.businessHours;
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

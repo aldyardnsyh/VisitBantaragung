@@ -1,4 +1,4 @@
-﻿import { getAllHerbal, getHerbalBySlug } from "@/lib/content";
+import { getAllHerbal, getHerbalBySlug } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
 import PageHeader from "@/app/components/layout/PageHeader";
 import type { Metadata } from "next";

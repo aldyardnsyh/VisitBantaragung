@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { toJsonLd } from "@/lib/jsonld";
 
 export interface BreadcrumbItem {

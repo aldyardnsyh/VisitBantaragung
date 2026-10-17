@@ -1,12 +1,13 @@
-﻿import Breadcrumb from "@/app/components/ui/Breadcrumb";
+import Breadcrumb from "@/app/components/ui/Breadcrumb";
 import ContactSection from "./ContactSection";
+import { getPublicContact } from "@/lib/content";
 
-const MAPS_URL =
-  "https://maps.google.com/?q=Desa+Bantaragung+Sindangwangi+Majalengka+Jawa+Barat";
 const MAPS_EMBED =
   "https://maps.google.com/maps?q=Desa%20Bantaragung%20Sindangwangi%20Majalengka&t=&z=13&ie=UTF8&iwloc=&output=embed";
 
 export default function KontakPage() {
+  const contact = getPublicContact();
+
   return (
     <main>
       {/* HERO */}
@@ -29,7 +30,7 @@ export default function KontakPage() {
       {/* KONTAK */}
       <section className="py-20 md:py-24">
         <div className="max-w-7xl mx-auto px-6">
-          <ContactSection />
+          <ContactSection contact={contact} />
         </div>
       </section>
 
@@ -48,7 +49,7 @@ export default function KontakPage() {
           </div>
           <p className="text-center mt-4">
             <a
-              href={MAPS_URL}
+              href={contact.googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-forest-600 hover:text-clay-500 hover:font-semibold font-medium transition-colors"

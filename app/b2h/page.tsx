@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { getAllHerbal } from "@/lib/content";
 import PageHeader from "@/app/components/layout/PageHeader";
 import type { Metadata } from "next";

@@ -1,4 +1,4 @@
-﻿import { getAllHomestay, getHomestayBySlug } from "@/lib/content";
+import { getAllHomestay, getHomestayBySlug } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
 import { toJsonLd } from "@/lib/jsonld";
 import PageHeader from "@/app/components/layout/PageHeader";

@@ -24,9 +24,12 @@ export interface SiteSettings {
     };
     contact: {
         address: string;
+        /** Nomor WhatsApp format internasional tanpa tanda plus, mis. 6281324427327. */
         whatsapp: string;
         email: string;
         googleMapsUrl: string;
+        /** Opsional: berkas lama tidak memuat ini. */
+        businessHours?: string;
     };
     socials: {
         instagram: string;
@@ -45,6 +48,85 @@ export interface SiteSettings {
 
 export function getSiteSettings(): SiteSettings {
     return loadJSON<SiteSettings>("settings/site.json");
+}
+
+/**
+ * Kontak publik, satu sumber kebenaran.
+ *
+ * Sebelumnya nomor WhatsApp dan email ditulis ulang di Footer.tsx,
+ * ContactSection.tsx, dan JSON-LD beranda dengan nilai yang berbeda-beda,
+ * sementara content/settings/site.json (yang disunting lewat dasbor admin)
+ * justru berisi placeholder. Akibatnya mengubah kontak di dasbor tidak
+ * berpengaruh apa pun ke halaman, dan chatbot berisiko menjawab nomor palsu.
+ *
+ * Fungsi ini memilih nilai pertama yang benar-benar terisi, lalu jatuh ke
+ * konstanta terakhir yang sudah terbukti dipakai situs. Jadi selama json
+ * belum diperbarui (atau berisi placeholder), tampilan tetap seperti biasa.
+ */
+const FALLBACK_CONTACT = {
+    whatsapp: "6281324427327",
+    email: "desawisatabantaragung@gmail.com",
+    businessHours: "Senin - Minggu, 08.00 - 17.00 WIB",
+    googleMapsUrl:
+        "https://maps.google.com/?q=Desa+Bantaragung+Sindangwangi+Majalengka+Jawa+Barat",
+} as const;
+
+/** Placeholder seperti "628xxxxxxxxxx" atau email kosong dianggap belum diisi. */
+function isPlaceholder(value: string | undefined): boolean {
+    if (!value) return true;
+    if (/x{3,}/i.test(value)) return true;
+    if (/^0+$/.test(value)) return true;
+    return false;
+}
+
+export interface PublicContact {
+    whatsapp: string;
+    whatsappUrl: string;
+    /** Format +62 813-2442-7327 untuk ditampilkan. */
+    whatsappDisplay: string;
+    email: string;
+    address: string;
+    businessHours: string;
+    googleMapsUrl: string;
+    instagram: string;
+    /** true bila semua nilai berasal dari situs, bukan fallback. */
+    configured: boolean;
+}
+
+export function getPublicContact(): PublicContact {
+    const site = getSiteSettings();
+    const c = site.contact ?? ({} as SiteSettings["contact"]);
+
+    const whatsapp = isPlaceholder(c.whatsapp) ? FALLBACK_CONTACT.whatsapp : c.whatsapp;
+    const email = isPlaceholder(c.email) ? FALLBACK_CONTACT.email : c.email;
+    const businessHours = isPlaceholder(c.businessHours)
+        ? FALLBACK_CONTACT.businessHours
+        : (c.businessHours as string);
+    const googleMapsUrl = isPlaceholder(c.googleMapsUrl)
+        ? FALLBACK_CONTACT.googleMapsUrl
+        : c.googleMapsUrl;
+
+    const digits = whatsapp.replace(/\D/g, "");
+    const local = digits.startsWith("62") ? digits.slice(2) : digits;
+    const whatsappDisplay = `+62 ${local.slice(0, 3)}-${local.slice(3, 7)}-${local.slice(7)}`;
+
+    const address =
+        c.address && /bantaragung/i.test(c.address) && !isPlaceholder(c.address)
+            ? c.address
+            : "Desa Bantaragung, Kecamatan Sindangwangi, Kabupaten Majalengka, Jawa Barat";
+
+    return {
+        whatsapp: digits,
+        whatsappUrl: `https://wa.me/${digits}`,
+        whatsappDisplay,
+        email,
+        address,
+        businessHours,
+        googleMapsUrl,
+        instagram: site.socials?.instagram || "https://instagram.com/visitbantaragung",
+        configured:
+            !isPlaceholder(c.whatsapp) && !isPlaceholder(c.email),
+    };
 }
 
 export interface SeoSettings {

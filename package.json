@@ -16,7 +16,18 @@
     "images:migrate": "node scripts/migrate-images-webp.mjs",
     "images:berita": "node scripts/migrate-berita-covers.mjs",
     "images:restore": "node scripts/restore-missing-images.mjs",
-    "images:check": "node scripts/check-quality.mjs"
+    "images:check": "node scripts/check-quality.mjs",
+    "chat:test:guard": "node scripts/chat/test-offline.mjs",
+    "chat:test:guardrails": "node scripts/chat/test-guardrails.mjs",
+    "chat:test:degraded": "node scripts/chat/test-degraded.mjs",
+    "chat:test:retrieval": "node scripts/chat/test-retrieval.mjs",
+    "chat:test:e2e": "node scripts/chat/test-e2e.mjs",
+    "chat:test:cases": "node scripts/chat/test-cases.mjs",
+    "chat:test:llm": "node scripts/chat/test-llm.mjs",
+    "chat:test:slop": "node scripts/chat/test-slop.mjs",
+    "chat:test:typography": "node scripts/chat/test-typography.mjs",
+    "chat:check": "node scripts/chat/check-availability.mjs",
+    "chat:probe": "node scripts/chat/probe-models.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

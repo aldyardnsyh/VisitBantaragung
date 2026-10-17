@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { assetUrl } from "@/lib/asset";
 import { toJsonLd } from "@/lib/jsonld";
 import VisitorCounter from "@/app/components/ui/VisitorCounter";
@@ -12,6 +12,7 @@ import {
   getSiteSettings,
   getSeoSettings,
   getMapsConfig,
+  getPublicContact,
 } from "@/lib/content";
 import type { Wisata, Herbal, Article } from "@/lib/content";
 
@@ -25,6 +26,9 @@ const prestasiCards = [
 export default function Home() {
   const site = getSiteSettings();
   const seo = getSeoSettings();
+  // Kontak resmi untuk structured data, diambil dari sumber yang sama dengan
+  // Footer dan halaman Kontak agar nomor di Google tidak berbeda dari situs.
+  const contact = getPublicContact();
     // Destinasi unggulan beranda: urutan fix sesuai kurasi Pokdarwis.
     const UNGGULAN = ["curug-cipeuteuy", "kopi-pakuwon", "terasering-ciboer"];
     const semuaWisata = getAllWisata();
@@ -65,7 +69,8 @@ export default function Home() {
         ],
         contactPoint: {
           "@type": "ContactPoint",
-          telephone: "+6281324427327",
+          telephone: `+${contact.whatsapp}`,
+          email: contact.email,
           contactType: "customer service",
           areaServed: "ID",
           availableLanguage: "Indonesian",

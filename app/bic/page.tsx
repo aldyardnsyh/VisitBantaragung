@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { getRecentArticles, type Article } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";

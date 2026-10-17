@@ -4,21 +4,22 @@
     "description": "Platform digital resmi Desa Wisata Bantaragung yang menyajikan informasi wisata, kampung herbal, peta digital, pusat pengetahuan, dan branding potensi desa.",
     "location": {
         "village": "Bantaragung",
-        "district": "",
-        "regency": "",
+        "district": "Sindangwangi",
+        "regency": "Majalengka",
         "province": "Jawa Barat",
         "country": "Indonesia",
         "latitude": -6.841111,
         "longitude": 108.392778
     },
     "contact": {
-        "address": "Desa Bantaragung",
-        "whatsapp": "628xxxxxxxxxx",
-        "email": "",
-        "googleMapsUrl": ""
+        "address": "Desa Bantaragung, Kecamatan Sindangwangi, Kabupaten Majalengka, Jawa Barat",
+        "whatsapp": "6281324427327",
+        "email": "desawisatabantaragung@gmail.com",
+        "googleMapsUrl": "https://maps.google.com/?q=Desa+Bantaragung+Sindangwangi+Majalengka+Jawa+Barat",
+        "businessHours": "Senin - Minggu, 08.00 - 17.00 WIB"
     },
     "socials": {
-        "instagram": "",
+        "instagram": "https://instagram.com/visitbantaragung",
         "facebook": "",
         "youtube": "",
         "tiktok": ""

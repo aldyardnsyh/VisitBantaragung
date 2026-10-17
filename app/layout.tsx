@@ -1,10 +1,11 @@
 import "./globals.css";
 import Navbar from "@/app/components/layout/Navbar";
-import { getSeoSettings } from "@/lib/content";
+import { getPublicContact, getSeoSettings } from "@/lib/content";
 import type { Metadata } from "next";
 import Footer from "@/app/components/layout/Footer";
 import SiteChrome from "@/app/components/layout/SiteChrome";
 import PublicAnalytics from "@/app/components/analytics/PublicAnalytics";
+import ChatWidget from "@/app/components/chat/ChatWidget";
 import { assetUrl } from "@/lib/asset";
 
 
@@ -133,12 +134,25 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Kontak dibaca di server lalu diteruskan sebagai prop, supaya widget tidak
+  // perlu mengambil data sendiri dan nilainya selalu sama dengan Footer.
+  const contact = getPublicContact();
+
   return (
     <html lang="id">
       <body>
         {/* Navbar/Footer publik tidak dirender di rute /admin yang punya
             tata letak sendiri. Halaman publik tetap identik seperti sebelumnya. */}
-        <SiteChrome navbar={<Navbar />} footer={<Footer />}>
+        <SiteChrome
+          navbar={<Navbar />}
+          footer={<Footer />}
+          chat={
+            <ChatWidget
+              whatsappUrl={contact.whatsappUrl}
+              whatsappDisplay={contact.whatsappDisplay}
+            />
+          }
+        >
           {children}
         </SiteChrome>
 

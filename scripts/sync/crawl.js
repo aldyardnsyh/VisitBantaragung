@@ -46,7 +46,13 @@ loadDotEnvLocal();
 // AMANAN: key/URL cukup dari env, jangan pernah di-commit (gitignore sudah memblokir .env*).
 const LLM_API_KEY = process.env.LLM_API_KEY || "";
 const LLM_URL = process.env.LLM_URL || ""; // contoh: http://localhost:11434/v1/chat/completions (9router lokal)
-const LLM_MODEL = process.env.LLM_MODEL || "muse-spark-1.3-free";
+// Default diganti dari `muse-spark-1.3-free` karena model itu sudah TIDAK
+// TERSEDIA di plan free (error model_not_available saat diuji). Kandidat
+// pertama selalu gagal sehingga GATE 0 membuang 3 percobaan + jeda 2/4/6 detik
+// di setiap run. `deepseek-v4.1-flash-free` terukur 1,8 detik dan stabil.
+// Daftar model gratis penyedia berubah setiap hari; bila kandidat pertama
+// bermasalah, GATE 0 tetap mencoba kandidat berikutnya.
+const LLM_MODEL = process.env.LLM_MODEL || "deepseek-v4.1-flash-free";
 // Urutan kandidat model yang dicoba GATE 0. LLM_MODELS (koma) menang bila diisi;
 // kalau kosong, gabungan LLM_MODEL + LLM_FALLBACK_MODELS (koma).
 function modelCandidates() {

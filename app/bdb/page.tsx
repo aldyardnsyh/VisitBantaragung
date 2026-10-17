@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { getAllHomestay, getAllUMKM } from "@/lib/content";
 import PageHeader from "@/app/components/layout/PageHeader";
 import Reveal from "@/app/components/ui/Reveal";
