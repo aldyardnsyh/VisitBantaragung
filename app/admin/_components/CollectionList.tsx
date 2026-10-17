@@ -2,12 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { Pencil, Plus, Search, Trash2 } from "lucide-react";
-import EmptyState, {
-  PageHeader,
-  LoadingRows,
-  ErrorNotice,
-} from "./EmptyState";
+import { Pencil, Plus, Search, Trash2, X } from "lucide-react";
+import { PageHeader, Card } from "./Card";
+import EmptyState, { LoadingRows, ErrorNotice } from "./EmptyState";
 import Button from "./Button";
 import Dialog from "./Dialog";
 import { useToast } from "./Toast";
@@ -32,11 +29,7 @@ interface CollectionInfo {
   canCreate: boolean;
 }
 
-export default function CollectionList({
-  collection,
-}: {
-  collection: CollectionInfo;
-}) {
+export default function CollectionList({ collection }: { collection: CollectionInfo }) {
   const toast = useToast();
   const [records, setRecords] = useState<RecordSummary[] | null>(null);
   const [error, setError] = useState("");
@@ -92,37 +85,68 @@ export default function CollectionList({
     }
   }
 
+  const total = records?.length ?? 0;
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <PageHeader
+        eyebrow="Konten"
         title={collection.label}
         description={collection.description}
         actions={
           collection.canCreate ? (
             <Link
               href={`/admin/${collection.id}/baru`}
-              className="adm-ring adm-transition inline-flex h-10 items-center gap-2 rounded-[8px] bg-adm-primary px-4 text-sm font-medium text-white hover:bg-adm-primary-hover"
+              className="adm-ring adm-transition inline-flex h-9 items-center gap-1.5 rounded-[var(--radius-adm-sm)] bg-adm-primary px-3.5 text-[13.5px] font-medium text-white shadow-adm-xs hover:bg-adm-primary-hover"
             >
-              <Plus aria-hidden className="h-4 w-4" />
+              <Plus aria-hidden className="h-3.5 w-3.5" />
               Tambah {collection.labelSingular}
             </Link>
           ) : null
         }
       />
 
-      <div className="relative max-w-sm">
-        <Search
-          aria-hidden
-          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-adm-subtle"
-        />
-        <input
-          type="search"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder={`Cari ${collection.label.toLowerCase()}...`}
-          aria-label={`Cari ${collection.label}`}
-          className="adm-ring adm-transition h-10 w-full rounded-[8px] border border-adm-border bg-adm-surface pl-9 pr-3 text-sm text-adm-ink placeholder:text-adm-subtle focus:border-adm-primary"
-        />
+      {/* Bilah alat: pencarian + jumlah */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative w-full sm:max-w-xs">
+          <Search
+            aria-hidden
+            className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-adm-subtle"
+          />
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={`Cari ${collection.label.toLowerCase()}…`}
+            aria-label={`Cari ${collection.label}`}
+            className="adm-ring adm-transition h-9 w-full rounded-[var(--radius-adm-sm)] border border-adm-border bg-adm-surface pl-8 pr-8 text-[13px] text-adm-ink placeholder:text-adm-subtle/80 focus:border-adm-primary"
+          />
+          {query ? (
+            <button
+              type="button"
+              onClick={() => setQuery("")}
+              aria-label="Kosongkan pencarian"
+              className="adm-ring adm-transition absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-adm-subtle hover:bg-adm-muted hover:text-adm-ink"
+            >
+              <X aria-hidden className="h-3 w-3" />
+            </button>
+          ) : null}
+        </div>
+
+        {records ? (
+          <p className="text-[12px] text-adm-subtle">
+            {query ? (
+              <>
+                <span className="font-medium text-adm-ink">{filtered?.length ?? 0}</span> dari{" "}
+                {total} entri
+              </>
+            ) : (
+              <>
+                <span className="font-medium text-adm-ink">{total}</span> entri
+              </>
+            )}
+          </p>
+        ) : null}
       </div>
 
       {error ? <ErrorNotice message={error} onRetry={load} /> : null}
@@ -147,64 +171,66 @@ export default function CollectionList({
 
       {filtered && filtered.length === 0 && records && records.length > 0 ? (
         <EmptyState
-          title="Tidak ada hasil untuk pencarian ini"
-          description="Ubah kata kunci atau kosongkan kolom pencarian untuk melihat semua isi."
+          title="Tidak ada hasil"
+          description={`Tidak ada ${collection.label.toLowerCase()} yang cocok dengan "${query}". Ubah kata kunci atau kosongkan pencarian.`}
           action={{ label: "Kosongkan pencarian", onClick: () => setQuery("") }}
         />
       ) : null}
 
       {filtered && filtered.length > 0 ? (
         <>
-          {/* Tabel untuk layar lebar */}
-          <div className="hidden overflow-hidden rounded-[12px] border border-adm-border bg-adm-surface md:block">
-            <table className="w-full text-left text-sm">
+          {/* Tabel: layar sedang ke atas */}
+          <Card padded={false} className="hidden overflow-hidden md:block">
+            <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-adm-border bg-adm-muted text-xs font-semibold uppercase tracking-wide text-adm-subtle">
-                  <th scope="col" className="px-4 py-3">
+                <tr className="border-b border-adm-border bg-adm-surface-2">
+                  <th scope="col" className="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-adm-subtle">
                     Judul
                   </th>
-                  <th scope="col" className="px-4 py-3">
+                  <th scope="col" className="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-adm-subtle">
                     Slug
                   </th>
                   {collection.hasDate ? (
-                    <th scope="col" className="px-4 py-3">
+                    <th scope="col" className="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-adm-subtle">
                       Tanggal
                     </th>
                   ) : null}
-                  <th scope="col" className="px-4 py-3 text-right">
-                    Tindakan
+                  <th scope="col" className="w-[88px] px-4 py-2.5 text-right text-[11px] font-semibold uppercase tracking-[0.06em] text-adm-subtle">
+                    <span className="sr-only">Tindakan</span>
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-adm-divider">
                 {filtered.map((record) => (
-                  <tr
-                    key={record.slug}
-                    className="adm-transition border-b border-adm-divider last:border-0 hover:bg-adm-muted"
-                  >
-                    <td className="px-4 py-3">
+                  <tr key={record.slug} className="adm-transition group hover:bg-adm-surface-2">
+                    <td className="max-w-0 px-4 py-3">
                       <Link
                         href={`/admin/${collection.id}/${record.slug}`}
-                        className="adm-ring adm-transition rounded font-medium text-adm-ink hover:text-adm-primary"
+                        className="adm-ring block truncate rounded text-[13px] font-medium text-adm-ink group-hover:text-adm-primary"
                       >
                         {record.title}
                       </Link>
                       {record.subtitle ? (
-                        <p className="mt-0.5 line-clamp-1 max-w-xl text-xs text-adm-subtle">
-                          {record.subtitle}
-                        </p>
+                        <p className="mt-0.5 truncate text-[11.5px] text-adm-subtle">{record.subtitle}</p>
                       ) : null}
                     </td>
-                    <td className="px-4 py-3 font-mono text-xs text-adm-subtle">{record.slug}</td>
+                    <td className="px-4 py-3">
+                      <code className="rounded bg-adm-muted px-1.5 py-0.5 font-mono text-[11px] text-adm-text">
+                        {record.slug}
+                      </code>
+                    </td>
                     {collection.hasDate ? (
-                      <td className="px-4 py-3 text-adm-text">{record.date ?? "-"}</td>
+                      <td className="whitespace-nowrap px-4 py-3 text-[12.5px] text-adm-text">
+                        {record.date ? formatDate(record.date) : <span className="text-adm-subtle">—</span>}
+                      </td>
                     ) : null}
                     <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-1">
+                      <div className="flex items-center justify-end gap-1 opacity-70 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
                         <Link
                           href={`/admin/${collection.id}/${record.slug}`}
                           aria-label={`Ubah ${record.title}`}
-                          className="adm-ring adm-transition inline-flex h-9 w-9 items-center justify-center rounded-[8px] text-adm-subtle hover:bg-adm-divider hover:text-adm-ink"
+                          title="Ubah"
+                          className="adm-ring adm-transition inline-flex h-9 w-9 items-center justify-center rounded-[var(--radius-adm-sm)] text-adm-subtle hover:bg-adm-primary-soft hover:text-adm-primary"
                         >
                           <Pencil aria-hidden className="h-4 w-4" />
                         </Link>
@@ -212,7 +238,8 @@ export default function CollectionList({
                           type="button"
                           onClick={() => setPendingDelete(record)}
                           aria-label={`Hapus ${record.title}`}
-                          className="adm-ring adm-transition inline-flex h-9 w-9 items-center justify-center rounded-[8px] text-adm-subtle hover:bg-adm-danger-soft hover:text-adm-danger"
+                          title="Hapus"
+                          className="adm-ring adm-transition inline-flex h-9 w-9 items-center justify-center rounded-[var(--radius-adm-sm)] text-adm-subtle hover:bg-adm-danger-soft hover:text-adm-danger"
                         >
                           <Trash2 aria-hidden className="h-4 w-4" />
                         </button>
@@ -222,47 +249,42 @@ export default function CollectionList({
                 ))}
               </tbody>
             </table>
-          </div>
+          </Card>
 
-          {/* Daftar kartu untuk layar kecil */}
-          <ul className="space-y-3 md:hidden">
+          {/* Kartu: ponsel */}
+          <ul className="space-y-2.5 md:hidden">
             {filtered.map((record) => (
-              <li
-                key={record.slug}
-                className="rounded-[12px] border border-adm-border bg-adm-surface p-4"
-              >
+              <li key={record.slug} className="rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface">
                 <Link
                   href={`/admin/${collection.id}/${record.slug}`}
-                  className="adm-ring adm-transition rounded text-sm font-medium text-adm-ink"
+                  className="adm-ring block rounded-t-[var(--radius-adm-lg)] px-4 pb-3 pt-4"
                 >
-                  {record.title}
-                </Link>
-                {record.subtitle ? (
-                  <p className="mt-1 line-clamp-2 text-xs text-adm-subtle">{record.subtitle}</p>
-                ) : null}
-                <dl className="mt-3 space-y-1 text-xs">
-                  <div className="flex justify-between gap-3">
-                    <dt className="text-adm-subtle">Slug</dt>
-                    <dd className="font-mono text-adm-text">{record.slug}</dd>
-                  </div>
-                  {collection.hasDate ? (
-                    <div className="flex justify-between gap-3">
-                      <dt className="text-adm-subtle">Tanggal</dt>
-                      <dd className="text-adm-text">{record.date ?? "-"}</dd>
-                    </div>
+                  <p className="text-[13.5px] font-medium text-adm-ink">{record.title}</p>
+                  {record.subtitle ? (
+                    <p className="mt-0.5 line-clamp-2 text-[12px] text-adm-subtle">{record.subtitle}</p>
                   ) : null}
-                </dl>
-                <div className="mt-4 flex gap-2">
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <code className="rounded bg-adm-muted px-1.5 py-0.5 font-mono text-[10.5px] text-adm-text">
+                      {record.slug}
+                    </code>
+                    {collection.hasDate && record.date ? (
+                      <span className="text-[11px] text-adm-subtle">{formatDate(record.date)}</span>
+                    ) : null}
+                  </div>
+                </Link>
+                <div className="flex gap-2 border-t border-adm-divider px-3 py-2.5">
                   <Link
                     href={`/admin/${collection.id}/${record.slug}`}
-                    className="adm-ring adm-transition inline-flex h-9 flex-1 items-center justify-center rounded-[8px] border border-adm-border-strong text-[13px] font-medium text-adm-ink hover:bg-adm-muted"
+                    className="adm-ring adm-transition inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-[var(--radius-adm-sm)] border border-adm-border-strong text-[12.5px] font-medium text-adm-ink hover:bg-adm-muted"
                   >
+                    <Pencil aria-hidden className="h-3 w-3" />
                     Ubah
                   </Link>
                   <Button
-                    variant="secondary"
+                    variant="ghost"
                     size="small"
-                    className="h-9 flex-1"
+                    className="h-9 flex-1 border border-adm-border-strong text-adm-danger hover:bg-adm-danger-soft hover:border-[#f0c9c9]"
+                    icon={<Trash2 aria-hidden className="h-3 w-3" />}
                     onClick={() => setPendingDelete(record)}
                   >
                     Hapus
@@ -276,7 +298,7 @@ export default function CollectionList({
 
       <Dialog
         open={Boolean(pendingDelete)}
-        title={`Hapus ${collection.labelSingular.toLowerCase()} "${pendingDelete?.title ?? ""}"?`}
+        title={`Hapus "${pendingDelete?.title ?? ""}"?`}
         description="Konten ini akan dihapus dari situs. Tindakan ini tidak dapat dibatalkan, tetapi masih bisa dipulihkan lewat riwayat GitHub."
         confirmLabel="Hapus"
         destructive
@@ -286,6 +308,12 @@ export default function CollectionList({
       />
     </div>
   );
+}
+
+function formatDate(value: string): string {
+  const date = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric" }).format(date);
 }
 
 export function readError(failure: unknown): string {

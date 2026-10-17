@@ -1,9 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Check, Copy, Loader2, Trash2, Upload } from "lucide-react";
-import { PageHeader, LoadingRows, ErrorNotice } from "../../_components/EmptyState";
-import { Field } from "../../_components/Form";
+import { Check, Copy, ImagePlus, Loader2, Trash2, Upload, X } from "lucide-react";
+import { PageHeader, Card, CardHeader } from "../../_components/Card";
+import { LoadingRows, ErrorNotice, InfoNotice } from "../../_components/EmptyState";
 import Button from "../../_components/Button";
 import Dialog from "../../_components/Dialog";
 import { useToast } from "../../_components/Toast";
@@ -19,6 +19,7 @@ export default function MediaClient({ folders }: { folders: string[] }) {
   const [pendingDelete, setPendingDelete] = useState<MediaItem | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
+  const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(async () => {
@@ -97,37 +98,19 @@ export default function MediaClient({ folders }: { folders: string[] }) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <PageHeader
+        eyebrow="Sistem"
         title="Pustaka Gambar"
-        description="Semua gambar situs tersimpan di repositori aset dan disajikan lewat CDN. Unggahan baru selalu memakai nama berkas baru agar perubahan langsung terlihat."
-      />
-
-      <div className="grid gap-5 rounded-[12px] border border-adm-border bg-adm-surface p-5 sm:grid-cols-[240px_minmax(0,1fr)] sm:items-end">
-        <Field label="Folder" htmlFor="media-folder" help="Pilih bagian situs yang memakai gambar ini.">
-          <select
-            id="media-folder"
-            value={folder}
-            onChange={(event) => setFolder(event.target.value)}
-            className="adm-ring adm-transition h-10 w-full rounded-[8px] border border-adm-border bg-adm-surface px-3 text-sm text-adm-ink focus:border-adm-primary"
-          >
-            {folders.map((value) => (
-              <option key={value} value={value}>
-                {value}
-              </option>
-            ))}
-            <option value="berita">berita (berkas situs)</option>
-          </select>
-        </Field>
-
-        <div className="flex flex-wrap items-center gap-2">
+        description="Semua gambar situs tersimpan di repositori aset dan disajikan lewat CDN."
+        actions={
           <Button
             variant="primary"
             icon={
               uploading ? (
-                <Loader2 aria-hidden className="h-4 w-4 animate-spin" />
+                <Loader2 aria-hidden className="h-3.5 w-3.5 animate-spin" />
               ) : (
-                <Upload aria-hidden className="h-4 w-4" />
+                <Upload aria-hidden className="h-3.5 w-3.5" />
               )
             }
             disabled={uploading}
@@ -135,9 +118,80 @@ export default function MediaClient({ folders }: { folders: string[] }) {
           >
             {uploading ? "Mengunggah..." : "Unggah gambar"}
           </Button>
-          <p className="text-xs text-adm-subtle">
-            Gambar besar dikompresi otomatis di peramban (lebar maksimum 1920 px).
+        }
+      />
+
+      {/* Pemilih folder + area unggah */}
+      <div className="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <Card>
+          <CardHeader title="Folder" description="Pilih bagian situs yang memakai gambar ini." />
+          <div className="adm-scroll mt-3 flex max-h-[260px] flex-wrap gap-1.5 overflow-y-auto pr-1">
+            {folders.map((value) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setFolder(value)}
+                className={`adm-ring adm-transition rounded-full border px-2.5 py-1 font-mono text-[11.5px] ${
+                  folder === value
+                    ? "border-adm-primary bg-adm-primary-soft text-adm-primary-ink"
+                    : "border-adm-border text-adm-text hover:border-adm-border-strong hover:bg-adm-muted"
+                }`}
+              >
+                {value}
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={() => setFolder("berita")}
+              className={`adm-ring adm-transition rounded-full border px-2.5 py-1 font-mono text-[11.5px] ${
+                folder === "berita"
+                  ? "border-adm-primary bg-adm-primary-soft text-adm-primary-ink"
+                  : "border-adm-border text-adm-text hover:border-adm-border-strong hover:bg-adm-muted"
+              }`}
+            >
+              berita
+            </button>
+          </div>
+          <div className="mt-4 border-t border-adm-divider pt-3">
+            <p className="text-[11.5px] leading-relaxed text-adm-subtle">
+              Gambar besar dikompresi otomatis di peramban (lebar maks. 1920 px, WebP).
+            </p>
+          </div>
+        </Card>
+
+        <div
+          onDragOver={(event) => {
+            event.preventDefault();
+            setDragging(true);
+          }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={(event) => {
+            event.preventDefault();
+            setDragging(false);
+            if (event.dataTransfer.files?.length) void upload(event.dataTransfer.files);
+          }}
+          className={`adm-transition flex min-h-[150px] flex-col items-center justify-center gap-1.5 rounded-[var(--radius-adm-lg)] border border-dashed px-6 py-5 text-center ${
+            dragging
+              ? "border-adm-primary bg-adm-primary-soft"
+              : "border-adm-border-strong bg-adm-surface-2"
+          }`}
+        >
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-adm-surface text-adm-subtle shadow-adm-xs">
+            <ImagePlus aria-hidden className="h-[18px] w-[18px]" />
+          </span>
+          <p className="text-[13px] font-medium text-adm-ink">
+            Seret berkas ke sini, atau pilih folder lalu unggah
           </p>
+          <p className="text-[11.5px] text-adm-subtle">JPG, PNG, atau WebP. Maksimal 4 MB per berkas.</p>
+          <Button
+            size="small"
+            className="mt-1"
+            disabled={uploading}
+            onClick={() => inputRef.current?.click()}
+            icon={<Upload aria-hidden className="h-3 w-3" />}
+          >
+            Pilih berkas
+          </Button>
         </div>
 
         <input
@@ -153,24 +207,23 @@ export default function MediaClient({ folders }: { folders: string[] }) {
       </div>
 
       {folder === "berita" ? (
-        <div className="rounded-[12px] border border-[#fde68a] bg-adm-warning-soft px-4 py-3 text-[13px] leading-relaxed text-adm-warning">
-          Folder <code>berita</code> berada di repositori konten (bukan CDN) karena dipakai
-          crawler otomatis. Gambar di sini biasanya hanya untuk berita, dan pemilihannya
-          dilakukan dari formulir berita, bukan dari halaman ini.
-        </div>
+        <InfoNotice tone="warning">
+          Folder <code className="font-mono">berita</code> berada di repositori konten (bukan CDN)
+          karena dipakai crawler otomatis. Gambar di sini biasanya dipilih dari formulir berita.
+        </InfoNotice>
       ) : null}
 
       {error ? <ErrorNotice message={error} onRetry={load} /> : null}
-      {items === null && !error ? <LoadingRows rows={3} /> : null}
+      {items === null && !error ? <LoadingRows rows={2} /> : null}
 
       {items && items.length === 0 ? (
-        <div className="rounded-[12px] border border-dashed border-adm-border-strong bg-adm-surface px-6 py-12 text-center">
-          <p className="text-sm font-medium text-adm-ink">Belum ada gambar di folder ini</p>
-          <p className="mx-auto mt-1 max-w-md text-[13px] leading-relaxed text-adm-subtle">
-            Klik Unggah gambar untuk menambahkan berkas pertama ke folder {folder}.
+        <div className="rounded-[var(--radius-adm-lg)] border border-dashed border-adm-border-strong bg-adm-surface-2 px-6 py-14 text-center">
+          <p className="text-[13.5px] font-medium text-adm-ink">Belum ada gambar di folder ini</p>
+          <p className="mx-auto mt-1 max-w-sm text-[12.5px] leading-relaxed text-adm-subtle">
+            Seret berkas ke area unggah di atas, atau klik Unggah gambar.
           </p>
-          <div className="mt-4 flex justify-center">
-            <Button variant="primary" onClick={() => inputRef.current?.click()}>
+          <div className="mt-3 flex justify-center">
+            <Button variant="primary" size="small" onClick={() => inputRef.current?.click()}>
               Unggah gambar
             </Button>
           </div>
@@ -178,55 +231,59 @@ export default function MediaClient({ folders }: { folders: string[] }) {
       ) : null}
 
       {items && items.length > 0 ? (
-        <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {items.map((item) => (
-            <li
-              key={item.path}
-              className="overflow-hidden rounded-[12px] border border-adm-border bg-adm-surface"
-            >
-              <img
-                src={previewUrl(item.path, "assets")}
-                alt={item.name}
-                loading="lazy"
-                className="aspect-square w-full bg-adm-muted object-cover"
-              />
-              <div className="space-y-2 p-3">
-                <p className="truncate text-[13px] font-medium text-adm-ink" title={item.name}>
-                  {item.name}
-                </p>
-                <p className="text-xs text-adm-subtle">{formatBytes(item.size)}</p>
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => copyUrl(item)}
-                    aria-label={`Salin URL ${item.name}`}
-                    className="adm-ring adm-transition inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-[8px] border border-adm-border-strong text-xs font-medium text-adm-ink hover:bg-adm-muted"
-                  >
-                    {copied === item.path ? (
-                      <>
-                        <Check aria-hidden className="h-3.5 w-3.5" />
-                        Tersalin
-                      </>
-                    ) : (
-                      <>
+        <div>
+          <p className="mb-2.5 text-[12px] text-adm-subtle">
+            <span className="font-medium text-adm-ink">{items.length}</span> gambar di folder{" "}
+            <code className="font-mono">{folder}</code>
+          </p>
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {items.map((item) => (
+              <li
+                key={item.path}
+                className="group overflow-hidden rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface transition-shadow hover:shadow-adm-sm"
+              >
+                <div className="relative">
+                  <img
+                    src={previewUrl(item.path, "assets")}
+                    alt={item.name}
+                    loading="lazy"
+                    className="aspect-square w-full bg-adm-muted object-cover"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 flex justify-end gap-1 bg-gradient-to-t from-black/45 to-transparent p-1.5 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+                    <button
+                      type="button"
+                      onClick={() => copyUrl(item)}
+                      aria-label={`Salin URL ${item.name}`}
+                      title="Salin URL"
+                      className="adm-ring adm-transition inline-flex h-7 w-7 items-center justify-center rounded-[var(--radius-adm-xs)] bg-white/95 text-adm-ink hover:bg-white"
+                    >
+                      {copied === item.path ? (
+                        <Check aria-hidden className="h-3.5 w-3.5 text-adm-success" />
+                      ) : (
                         <Copy aria-hidden className="h-3.5 w-3.5" />
-                        Salin URL
-                      </>
-                    )}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPendingDelete(item)}
-                    aria-label={`Hapus ${item.name}`}
-                    className="adm-ring adm-transition inline-flex h-8 w-8 items-center justify-center rounded-[8px] text-adm-subtle hover:bg-adm-danger-soft hover:text-adm-danger"
-                  >
-                    <Trash2 aria-hidden className="h-3.5 w-3.5" />
-                  </button>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPendingDelete(item)}
+                      aria-label={`Hapus ${item.name}`}
+                      title="Hapus"
+                      className="adm-ring adm-transition inline-flex h-7 w-7 items-center justify-center rounded-[var(--radius-adm-xs)] bg-white/95 text-adm-danger hover:bg-white"
+                    >
+                      <Trash2 aria-hidden className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </li>
-          ))}
-        </ul>
+                <div className="px-2.5 py-2">
+                  <p className="truncate text-[11.5px] font-medium text-adm-ink" title={item.name}>
+                    {item.name}
+                  </p>
+                  <p className="mt-0.5 text-[10.5px] text-adm-subtle">{formatBytes(item.size)}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : null}
 
       <Dialog
@@ -234,9 +291,9 @@ export default function MediaClient({ folders }: { folders: string[] }) {
         title={`Hapus "${pendingDelete?.name ?? ""}"?`}
         description={
           <>
-            Gambar akan dihapus dari repositori aset. Bila gambar ini masih dipakai di sebuah
-            halaman, tampilan gambar di halaman tersebut akan kosong. Periksa dulu dengan
-            menyalin URL dan mencarinya di konten.
+            Gambar akan dihapus dari repositori aset. Bila gambar masih dipakai di sebuah halaman,
+            tampilan gambar tersebut akan kosong. Periksa dulu dengan menyalin URL dan mencarinya di
+            konten.
           </>
         }
         confirmLabel="Hapus"

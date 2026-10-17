@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import { apiSend } from "../_lib/api";
 import Button from "../_components/Button";
 import { Field, Input } from "../_components/Form";
@@ -37,13 +38,14 @@ export default function LoginForm({ nextPath }: { nextPath: string }) {
   }
 
   return (
-    <form onSubmit={submit} noValidate className="space-y-5">
+    <form onSubmit={submit} noValidate className="space-y-4">
       {error ? (
         <div
           role="alert"
-          className="rounded-[10px] border border-[#fecaca] bg-adm-danger-soft px-3 py-2.5 text-sm text-adm-danger"
+          className="flex items-start gap-2 rounded-[var(--radius-adm-md)] border border-[#f3d3d3] bg-adm-danger-soft px-3 py-2.5"
         >
-          {error}
+          <AlertCircle aria-hidden className="mt-px h-3.5 w-3.5 shrink-0 text-adm-danger" />
+          <p className="text-[12.5px] leading-relaxed text-adm-danger">{error}</p>
         </div>
       ) : null}
 
@@ -68,20 +70,25 @@ export default function LoginForm({ nextPath }: { nextPath: string }) {
             autoComplete="current-password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            className="pr-16"
+            className="pr-10"
             required
           />
           <button
             type="button"
             onClick={() => setShowPassword((value) => !value)}
-            className="adm-ring adm-transition absolute right-2 top-1/2 -translate-y-1/2 rounded px-2 py-1 text-xs font-medium text-adm-subtle hover:text-adm-ink"
+            aria-label={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
+            className="adm-ring adm-transition absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1.5 text-adm-subtle hover:bg-adm-muted hover:text-adm-ink"
           >
-            {showPassword ? "Sembunyi" : "Lihat"}
+            {showPassword ? (
+              <EyeOff aria-hidden className="h-3.5 w-3.5" />
+            ) : (
+              <Eye aria-hidden className="h-3.5 w-3.5" />
+            )}
           </button>
         </div>
       </Field>
 
-      <Button type="submit" variant="primary" loading={loading} className="h-11 w-full">
+      <Button type="submit" variant="primary" loading={loading} className="mt-1 h-10 w-full">
         {loading ? "Memeriksa..." : "Masuk"}
       </Button>
     </form>

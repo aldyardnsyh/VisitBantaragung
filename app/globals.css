@@ -30,6 +30,77 @@
 
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-display: Georgia, "Times New Roman", ui-serif, Cambria, serif;
+
+  /*
+   * Token dasbor admin.
+   *
+   * Didefinisikan DI SINI, bukan di app/admin/admin.css, karena Tailwind v4
+   * hanya membaca blok @theme pada berkas yang memuat @import "tailwindcss".
+   * Ketika token ini diletakkan di berkas terpisah, seluruh utility bg-adm-*,
+   * text-adm-*, dan border-adm-* tidak pernah dihasilkan sehingga dasbor
+   * tampil tanpa warna sama sekali.
+   *
+   * Token ini hanya variabel CSS: halaman publik tidak terpengaruh karena
+   * tidak ada satu pun kelas adm-* yang dipakai di luar /admin.
+   */
+
+  /* Permukaan */
+  --color-adm-page: #f7f6f2;
+  --color-adm-surface: #ffffff;
+  --color-adm-surface-2: #fbfaf7;
+  --color-adm-muted: #f4f2ec;
+  --color-adm-muted-2: #ecebe3;
+
+  /* Garis */
+  --color-adm-border: #e6e4dc;
+  --color-adm-border-strong: #d6d3c8;
+  --color-adm-divider: #f0eee7;
+
+  /* Teks */
+  --color-adm-ink: #14201c;
+  --color-adm-text: #384740;
+  --color-adm-subtle: #5d6b7e;
+
+  /* Aksi utama */
+  --color-adm-primary: #2d6a4f;
+  --color-adm-primary-hover: #245843;
+  --color-adm-primary-soft: #eaf2ed;
+  --color-adm-primary-ink: #1d4a37;
+
+  /* Aksen */
+  --color-adm-accent: #c96f4a;
+  --color-adm-accent-soft: #fbeee7;
+  --color-adm-accent-ink: #9c4f2f;
+
+  /* Status */
+  --color-adm-success: #15803d;
+  --color-adm-success-soft: #eefaf2;
+  --color-adm-success-ink: #14532d;
+  --color-adm-warning: #8a5306;
+  --color-adm-warning-soft: #fef6e7;
+  --color-adm-danger: #b91c1c;
+  --color-adm-danger-hover: #991b1b;
+  --color-adm-danger-soft: #fdefef;
+  --color-adm-info: #1d4ed8;
+  --color-adm-info-soft: #eff4ff;
+
+  /* Navigasi (sidebar terang) */
+  --color-adm-nav: #fbfaf7;
+  --color-adm-nav-hover: #f1efe8;
+  --color-adm-nav-active: #eaf2ed;
+
+  /* Radius */
+  --radius-adm-xs: 5px;
+  --radius-adm-sm: 7px;
+  --radius-adm-md: 9px;
+  --radius-adm-lg: 12px;
+  --radius-adm-xl: 16px;
+
+  /* Bayangan */
+  --shadow-adm-xs: 0 1px 2px rgba(20, 32, 28, 0.04);
+  --shadow-adm-sm: 0 1px 3px rgba(20, 32, 28, 0.06), 0 1px 2px rgba(20, 32, 28, 0.03);
+  --shadow-adm-md: 0 4px 12px rgba(20, 32, 28, 0.07), 0 2px 4px rgba(20, 32, 28, 0.03);
+  --shadow-adm-lg: 0 12px 32px rgba(20, 32, 28, 0.1), 0 4px 8px rgba(20, 32, 28, 0.04);
 }
 
 * {

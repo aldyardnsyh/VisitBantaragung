@@ -110,7 +110,7 @@ export function ImagePicker({ value, folder, target, onChange }: SinglePickerPro
 
   return (
     <div className="space-y-3">
-      <div className="overflow-hidden rounded-[10px] border border-adm-border bg-adm-muted">
+      <div className="overflow-hidden rounded-[var(--radius-adm-md)] border border-adm-border bg-adm-muted">
         {value ? (
           <img
             src={previewUrl(value, target)}
@@ -118,9 +118,9 @@ export function ImagePicker({ value, folder, target, onChange }: SinglePickerPro
             className="aspect-[4/3] w-full object-cover"
           />
         ) : (
-          <div className="flex aspect-[4/3] flex-col items-center justify-center gap-2 text-adm-subtle">
+          <div className="flex aspect-[4/3] flex-col items-center justify-center gap-1.5 text-adm-subtle">
             <ImagePlus aria-hidden className="h-6 w-6" />
-            <span className="text-xs">Belum ada gambar</span>
+            <span className="text-[11.5px]">Belum ada gambar</span>
           </div>
         )}
       </div>
@@ -239,7 +239,7 @@ export function GalleryPicker({ value, folder, target, onChange }: GalleryPicker
           {value.map((path, index) => (
             <li
               key={`${path}-${index}`}
-              className="overflow-hidden rounded-[8px] border border-adm-border bg-adm-muted"
+              className="overflow-hidden rounded-[var(--radius-adm-sm)] border border-adm-border bg-adm-muted"
             >
               <img
                 src={previewUrl(path, target)}
@@ -419,7 +419,7 @@ export function MediaLibraryDialog({
                             : [...current, item.path]
                         );
                       }}
-                      className={`adm-ring adm-transition w-full overflow-hidden rounded-[8px] border text-left ${
+                      className={`adm-ring adm-transition w-full overflow-hidden rounded-[var(--radius-adm-sm)] border text-left ${
                         isSelected
                           ? "border-adm-primary ring-1 ring-adm-primary"
                           : "border-adm-border hover:border-adm-border-strong"

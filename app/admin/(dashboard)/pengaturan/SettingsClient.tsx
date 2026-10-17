@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PageHeader } from "../../_components/EmptyState";
+import { PageHeader, Card } from "../../_components/Card";
 import { Field, Input, Textarea } from "../../_components/Form";
 import Button from "../../_components/Button";
 import Badge from "../../_components/Badge";
@@ -31,13 +31,18 @@ export default function SettingsClient({ site, seo, info, config }: SettingsClie
   const [tab, setTab] = useState<"situs" | "seo" | "sistem">("situs");
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <PageHeader
+        eyebrow="Sistem"
         title="Pengaturan Situs"
         description="Identitas situs, informasi kontak, dan metadata untuk mesin pencari."
       />
 
-      <div className="flex gap-1 border-b border-adm-divider">
+      <div
+        role="tablist"
+        aria-label="Bagian pengaturan"
+        className="inline-flex items-center gap-0.5 rounded-[var(--radius-adm-md)] border border-adm-border bg-adm-surface-2 p-0.5"
+      >
         {(
           [
             ["situs", "Identitas & Kontak"],
@@ -48,12 +53,13 @@ export default function SettingsClient({ site, seo, info, config }: SettingsClie
           <button
             key={value}
             type="button"
+            role="tab"
             onClick={() => setTab(value)}
-            aria-current={tab === value ? "page" : undefined}
-            className={`adm-ring adm-transition -mb-px border-b-2 px-4 pb-3 pt-1 text-sm font-medium ${
+            aria-selected={tab === value}
+            className={`adm-ring adm-transition rounded-[var(--radius-adm-sm)] px-3 py-1.5 text-[12.5px] font-medium ${
               tab === value
-                ? "border-adm-accent text-adm-ink"
-                : "border-transparent text-adm-subtle hover:text-adm-ink"
+                ? "bg-adm-surface text-adm-ink shadow-adm-xs"
+                : "text-adm-subtle hover:text-adm-ink"
             }`}
           >
             {label}
@@ -149,8 +155,8 @@ function SiteForm({
 
   return (
     <form onSubmit={submit} className="max-w-3xl space-y-8">
-      <section className="space-y-5 rounded-[12px] border border-adm-border bg-adm-surface p-5">
-        <h2 className="text-sm font-semibold text-adm-ink">Identitas situs</h2>
+      <section className="space-y-4 rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface p-5">
+        <h2 className="text-[13.5px] font-semibold tracking-[-0.01em] text-adm-ink">Identitas situs</h2>
         <Field label="Nama situs" htmlFor="site-name" required>
           <Input id="site-name" value={values.siteName} onChange={(e) => set("siteName", e.target.value)} />
         </Field>
@@ -162,8 +168,8 @@ function SiteForm({
         </Field>
       </section>
 
-      <section className="space-y-5 rounded-[12px] border border-adm-border bg-adm-surface p-5">
-        <h2 className="text-sm font-semibold text-adm-ink">Lokasi</h2>
+      <section className="space-y-4 rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface p-5">
+        <h2 className="text-[13.5px] font-semibold tracking-[-0.01em] text-adm-ink">Lokasi</h2>
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Desa" htmlFor="loc-village">
             <Input id="loc-village" value={values.village} onChange={(e) => set("village", e.target.value)} />
@@ -186,8 +192,8 @@ function SiteForm({
         </div>
       </section>
 
-      <section className="space-y-5 rounded-[12px] border border-adm-border bg-adm-surface p-5">
-        <h2 className="text-sm font-semibold text-adm-ink">Kontak</h2>
+      <section className="space-y-4 rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface p-5">
+        <h2 className="text-[13.5px] font-semibold tracking-[-0.01em] text-adm-ink">Kontak</h2>
         <Field label="Alamat" htmlFor="contact-address">
           <Input id="contact-address" value={values.address} onChange={(e) => set("address", e.target.value)} />
         </Field>
@@ -202,8 +208,8 @@ function SiteForm({
         </Field>
       </section>
 
-      <section className="space-y-5 rounded-[12px] border border-adm-border bg-adm-surface p-5">
-        <h2 className="text-sm font-semibold text-adm-ink">Media sosial</h2>
+      <section className="space-y-4 rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface p-5">
+        <h2 className="text-[13.5px] font-semibold tracking-[-0.01em] text-adm-ink">Media sosial</h2>
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Instagram" htmlFor="soc-ig">
             <Input id="soc-ig" value={values.instagram} onChange={(e) => set("instagram", e.target.value)} />
@@ -220,7 +226,7 @@ function SiteForm({
         </div>
       </section>
 
-      <div className="sticky bottom-4 flex items-center justify-between gap-4 rounded-[12px] border border-adm-border bg-adm-surface px-5 py-3">
+      <div className="sticky bottom-3 flex items-center justify-between gap-4 rounded-[var(--radius-adm-md)] border border-adm-border bg-adm-surface/95 px-4 py-2.5 shadow-adm-sm backdrop-blur-sm">
         <p className="text-xs text-adm-subtle">Perubahan tayang di situs dalam 1 sampai 2 menit.</p>
         <Button type="submit" variant="primary" loading={saving}>
           {saving ? "Menyimpan..." : "Simpan pengaturan"}
@@ -262,7 +268,7 @@ function SeoForm({
 
   return (
     <form onSubmit={submit} className="max-w-3xl space-y-5 rounded-[12px] border border-adm-border bg-adm-surface p-5">
-      <h2 className="text-sm font-semibold text-adm-ink">Metadata mesin pencari</h2>
+      <h2 className="text-[13.5px] font-semibold tracking-[-0.01em] text-adm-ink">Metadata mesin pencari</h2>
       <Field label="Judul default" htmlFor="seo-title" required help="Judul halaman utama di hasil pencarian.">
         <Input id="seo-title" value={values.defaultTitle} onChange={(e) => setValues((v) => ({ ...v, defaultTitle: e.target.value }))} />
       </Field>
@@ -301,8 +307,8 @@ function SystemInfo({
 }) {
   return (
     <div className="max-w-3xl space-y-6">
-      <section className="rounded-[12px] border border-adm-border bg-adm-surface p-5">
-        <h2 className="text-sm font-semibold text-adm-ink">Status dasbor</h2>
+      <section className="rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface p-5">
+        <h2 className="text-[13.5px] font-semibold tracking-[-0.01em] text-adm-ink">Status dasbor</h2>
         <dl className="mt-4 space-y-3">
           <div className="flex items-center justify-between gap-4">
             <dt className="text-[13px] text-adm-subtle">Token GitHub</dt>
@@ -335,8 +341,8 @@ function SystemInfo({
         </p>
       </section>
 
-      <section className="rounded-[12px] border border-adm-border bg-adm-surface p-5">
-        <h2 className="text-sm font-semibold text-adm-ink">Repositori</h2>
+      <section className="rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface p-5">
+        <h2 className="text-[13.5px] font-semibold tracking-[-0.01em] text-adm-ink">Repositori</h2>
         <dl className="mt-4 space-y-3">
           <SystemRow label="Konten" value={info.contentRepo} />
           <SystemRow label="Aset gambar" value={info.assetsRepo} />

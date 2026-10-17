@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Trash2 } from "lucide-react";
+import { ArrowLeft, ChevronRight, Trash2 } from "lucide-react";
 import ContentForm, { ClientCollection, Values } from "./ContentForm";
 import { GalleryPicker, ImagePicker } from "./MediaPicker";
 import Dialog from "./Dialog";
@@ -19,7 +19,6 @@ interface RecordEditorProps {
   initialValues: Values;
   initialSha?: string;
   originalSlug?: string;
-  /** Folder gambar yang dipakai koleksi ini. */
   mediaFolder: string;
 }
 
@@ -47,8 +46,6 @@ export default function RecordEditor({
   function update(key: string, value: string | string[]) {
     setValues((current) => {
       const next: Values = { ...current, [key]: value };
-      // Saat membuat entri baru, usulkan slug dari judul agar pengguna tidak
-      // perlu memikirkan alamat halaman maupun nama folder gambar.
       if (mode === "create" && key === collection.titleKey && typeof value === "string") {
         const slugKey = collection.slugKey;
         if (!String(current[slugKey] ?? "").trim()) {
@@ -65,8 +62,6 @@ export default function RecordEditor({
     });
   }
 
-  // Folder gambar mengikuti slug: satu folder per entri, konsisten dengan
-  // struktur repositori aset yang sudah berjalan.
   const slugValue = String(values[collection.slugKey] ?? "");
   const effectiveFolder = slugValue
     ? mediaFolder.replace(/[^/]+$/, slugify(slugValue))
@@ -75,8 +70,6 @@ export default function RecordEditor({
   async function save(event: React.FormEvent) {
     event.preventDefault();
 
-    // Validasi wajib-isi di klien lebih dulu: pengguna langsung melihat kolom
-    // mana yang kurang tanpa menunggu perjalanan ke server.
     const localErrors: Record<string, string> = {};
     for (const field of collection.fields) {
       if (!field.required) continue;
@@ -160,35 +153,71 @@ export default function RecordEditor({
       : String(values[collection.titleKey] ?? originalSlug ?? "");
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="min-w-0">
+    <div className="space-y-5">
+      {/* Kepala halaman: breadcrumb + judul + status */}
+      <div className="border-b border-adm-divider pb-4">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-[12px]">
           <Link
             href={`/admin/${collection.id}`}
-            className="adm-ring adm-transition inline-flex items-center gap-1 rounded text-[13px] text-adm-subtle hover:text-adm-ink"
+            className="adm-ring adm-transition inline-flex items-center gap-1 rounded text-adm-subtle hover:text-adm-ink"
           >
-            <ArrowLeft aria-hidden className="h-3.5 w-3.5" />
+            <ArrowLeft aria-hidden className="h-3 w-3" />
             {collection.label}
           </Link>
-          <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-adm-ink">
-            {mode === "create" ? `Tambah ${collection.labelSingular}` : title || collection.labelSingular}
-          </h1>
-          <div className="mt-2 flex items-center gap-2">
-            {dirty ? <Badge variant="warning">Ada perubahan belum disimpan</Badge> : <Badge variant="success">Tersimpan</Badge>}
-            <span className="text-xs text-adm-subtle">
-              {mode === "create" ? "Belum diterbitkan" : `Slug: ${originalSlug}`}
-            </span>
+          <ChevronRight aria-hidden className="h-3 w-3 text-adm-border-strong" />
+          <span className="truncate font-medium text-adm-ink">
+            {mode === "create" ? collection.labelSingular : "Ubah"}
+          </span>
+        </nav>
+
+        <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <h1 className="font-display text-[24px] font-semibold leading-tight tracking-[-0.02em] text-adm-ink">
+              {title}
+            </h1>
+            <div className="mt-1.5 flex flex-wrap items-center gap-2">
+              {dirty ? (
+                <Badge variant="warning" dot>
+                  Belum disimpan
+                </Badge>
+              ) : (
+                <Badge variant="success" dot>
+                  Tersimpan
+                </Badge>
+              )}
+              {mode === "create" ? (
+                <span className="text-[11.5px] text-adm-subtle">Belum diterbitkan</span>
+              ) : (
+                <code className="rounded bg-adm-muted px-1.5 py-0.5 font-mono text-[11px] text-adm-text">
+                  {originalSlug}
+                </code>
+              )}
+            </div>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-2">
+            <Button variant="ghost" size="small" onClick={() => router.push(`/admin/${collection.id}`)}>
+              Batal
+            </Button>
+            {mode === "edit" ? (
+              <Button
+                variant="ghost"
+                size="small"
+                className="text-adm-danger hover:bg-adm-danger-soft"
+                icon={<Trash2 aria-hidden className="h-3.5 w-3.5" />}
+                onClick={() => setDeleteOpen(true)}
+              >
+                Hapus
+              </Button>
+            ) : null}
+            <Button variant="primary" loading={saving} onClick={() => {
+              const form = document.getElementById("adm-record-form") as HTMLFormElement | null;
+              form?.requestSubmit();
+            }}>
+              {saving ? "Menyimpan..." : "Simpan"}
+            </Button>
           </div>
         </div>
-        {mode === "edit" ? (
-          <Button
-            variant="secondary"
-            icon={<Trash2 aria-hidden className="h-4 w-4" />}
-            onClick={() => setDeleteOpen(true)}
-          >
-            Hapus
-          </Button>
-        ) : null}
       </div>
 
       <ContentForm
@@ -200,11 +229,9 @@ export default function RecordEditor({
         onSubmit={save}
         onCancel={() => router.push(`/admin/${collection.id}`)}
         renderImageField={(field, value) => {
-          // Gambar disimpan di folder bernama slug. Pada entri baru, judul harus
-          // diisi lebih dulu supaya folder tujuannya jelas.
           if (mode === "create" && !slugValue) {
             return (
-              <p className="rounded-[8px] border border-dashed border-adm-border-strong px-3 py-4 text-[13px] leading-relaxed text-adm-subtle">
+              <p className="rounded-[var(--radius-adm-sm)] border border-dashed border-adm-border-strong px-3 py-4 text-[12px] leading-relaxed text-adm-subtle">
                 Isi judul lebih dulu. Folder gambar akan dibuat otomatis mengikuti slug.
               </p>
             );

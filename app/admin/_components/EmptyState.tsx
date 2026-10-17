@@ -2,125 +2,156 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { AlertCircle, RefreshCw } from "lucide-react";
+import Button from "./Button";
 
-/**
- * Keadaan kosong selalu menyebut sebab dan satu langkah berikutnya, bukan
- * sekadar "tidak ada data".
- */
+/* ------------------------------------------------------------------ */
+/* Keadaan kosong: selalu menyebut sebab + satu langkah berikutnya     */
+/* ------------------------------------------------------------------ */
 export default function EmptyState({
   title,
   description,
   action,
+  icon,
 }: {
   title: string;
   description: string;
   action?: { label: string; href: string } | { label: string; onClick: () => void };
+  icon?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-[12px] border border-adm-border bg-adm-surface px-6 py-12 text-center">
-      <EmptyGlyph />
-      <p className="text-sm font-medium text-adm-ink">{title}</p>
-      <p className="max-w-md text-[13px] leading-relaxed text-adm-subtle">{description}</p>
+    <div className="flex flex-col items-center gap-3 rounded-[var(--radius-adm-lg)] border border-dashed border-adm-border-strong bg-adm-surface-2 px-6 py-14 text-center">
+      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-adm-muted text-adm-subtle">
+        {icon ?? <EmptyGlyph />}
+      </span>
+      <p className="text-[14px] font-medium text-adm-ink">{title}</p>
+      <p className="max-w-sm text-[12.5px] leading-relaxed text-adm-subtle">{description}</p>
       {action ? (
         "href" in action ? (
           <Link
             href={action.href}
-            className="adm-ring adm-transition mt-1 inline-flex h-10 items-center rounded-[8px] bg-adm-primary px-4 text-sm font-medium text-white hover:bg-adm-primary-hover"
+            className="adm-ring adm-transition mt-1.5 inline-flex h-9 items-center rounded-[var(--radius-adm-sm)] bg-adm-primary px-4 text-[13.5px] font-medium text-white shadow-adm-xs hover:bg-adm-primary-hover"
           >
             {action.label}
           </Link>
         ) : (
-          <button
-            type="button"
-            onClick={action.onClick}
-            className="adm-ring adm-transition mt-1 inline-flex h-10 items-center rounded-[8px] bg-adm-primary px-4 text-sm font-medium text-white hover:bg-adm-primary-hover"
-          >
+          <Button variant="primary" className="mt-1.5" onClick={action.onClick}>
             {action.label}
-          </button>
+          </Button>
         )
       ) : null}
     </div>
   );
 }
 
-/** Penanda visual netral, bukan ilustrasi generik. */
 function EmptyGlyph() {
   return (
-    <svg aria-hidden viewBox="0 0 48 48" className="h-12 w-12 text-adm-border-strong">
-      <rect x="7" y="10" width="34" height="28" rx="4" fill="none" stroke="currentColor" strokeWidth="2" />
-      <path d="M7 19h34" stroke="currentColor" strokeWidth="2" />
-      <path d="M14 26h12M14 31h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <svg aria-hidden viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.6">
+      <path d="M4 7.5A1.5 1.5 0 0 1 5.5 6h13A1.5 1.5 0 0 1 20 7.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 16.5v-9Z" strokeLinecap="round" />
+      <path d="M4 10h16" strokeLinecap="round" />
+      <path d="M8 14h5" strokeLinecap="round" />
     </svg>
   );
 }
 
+/* ------------------------------------------------------------------ */
+/* Skeleton: meniru bentuk konten asli supaya tidak ada lompatan layout */
+/* ------------------------------------------------------------------ */
+export function SkeletonLine({ width = "100%", height = 12 }: { width?: string; height?: number }) {
+  return <div className="adm-skeleton rounded-[4px]" style={{ width, height }} />;
+}
+
 export function LoadingRows({ rows = 4 }: { rows?: number }) {
   return (
-    <div className="space-y-2" aria-hidden>
+    <div className="overflow-hidden rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface" aria-hidden>
+      <div className="flex items-center gap-4 border-b border-adm-divider bg-adm-surface-2 px-4 py-3">
+        <SkeletonLine width="35%" height={10} />
+        <SkeletonLine width="20%" height={10} />
+        <SkeletonLine width="15%" height={10} />
+      </div>
       {Array.from({ length: rows }).map((_, index) => (
-        <div
-          key={index}
-          className="h-[52px] animate-pulse rounded-[10px] border border-adm-border bg-adm-surface"
-        />
+        <div key={index} className="flex items-center gap-4 border-b border-adm-divider px-4 py-4 last:border-0">
+          <SkeletonLine width={`${45 + ((index * 13) % 25)}%`} />
+          <SkeletonLine width="18%" />
+          <SkeletonLine width="12%" />
+        </div>
       ))}
     </div>
   );
 }
 
+export function LoadingCards({ cards = 4 }: { cards?: number }) {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-hidden>
+      {Array.from({ length: cards }).map((_, index) => (
+        <div key={index} className="rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface p-5">
+          <SkeletonLine width="55%" height={10} />
+          <div className="mt-3.5">
+            <SkeletonLine width="30%" height={22} />
+          </div>
+          <div className="mt-4">
+            <SkeletonLine width="40%" height={10} />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Galat: pesan spesifik + tindakan pemulihan                          */
+/* ------------------------------------------------------------------ */
 export function ErrorNotice({
   message,
   onRetry,
+  retryLabel = "Coba lagi",
 }: {
   message: string;
   onRetry?: () => void;
+  retryLabel?: string;
 }) {
   return (
-    <div className="rounded-[12px] border border-[#fecaca] bg-adm-danger-soft px-4 py-3">
-      <p className="text-sm font-medium text-adm-danger">{message}</p>
-      {onRetry ? (
-        <button
-          type="button"
-          onClick={onRetry}
-          className="adm-ring adm-transition mt-2 rounded text-[13px] font-medium text-adm-danger underline"
-        >
-          Coba lagi
-        </button>
-      ) : null}
-    </div>
-  );
-}
-
-/** Kerangka halaman: judul + aksi kanan. */
-export function PageHeader({
-  title,
-  description,
-  actions,
-}: {
-  title: string;
-  description?: string;
-  actions?: ReactNode;
-}) {
-  return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-      <div>
-        <h1 className="font-display text-2xl font-semibold tracking-tight text-adm-ink">
-          {title}
-        </h1>
-        {description ? (
-          <p className="mt-1 max-w-2xl text-sm leading-relaxed text-adm-subtle">{description}</p>
+    <div
+      role="alert"
+      className="flex items-start gap-3 rounded-[var(--radius-adm-lg)] border border-[#f3d3d3] bg-adm-danger-soft px-4 py-3.5"
+    >
+      <AlertCircle aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-adm-danger" />
+      <div className="min-w-0 flex-1">
+        <p className="text-[13px] font-medium text-adm-danger">{message}</p>
+        {onRetry ? (
+          <button
+            type="button"
+            onClick={onRetry}
+            className="adm-ring adm-transition mt-1.5 inline-flex items-center gap-1.5 rounded text-[12.5px] font-medium text-adm-danger underline underline-offset-2 hover:text-adm-danger-hover"
+          >
+            <RefreshCw aria-hidden className="h-3 w-3" />
+            {retryLabel}
+          </button>
         ) : null}
       </div>
-      {actions ? <div className="flex shrink-0 items-center gap-2">{actions}</div> : null}
     </div>
   );
 }
 
-/** Baris status ringkas, dipakai di dasbor dan halaman koleksi. */
-export function StatRow({ label, value }: { label: string; value: string }) {
+/* ------------------------------------------------------------------ */
+/* Pita informasi netral                                               */
+/* ------------------------------------------------------------------ */
+export function InfoNotice({
+  children,
+  tone = "neutral",
+}: {
+  children: ReactNode;
+  tone?: "neutral" | "warning" | "info";
+}) {
+  const toneClass =
+    tone === "warning"
+      ? "border-[#f2e0bb] bg-adm-warning-soft text-adm-warning"
+      : tone === "info"
+        ? "border-[#d7e3fb] bg-adm-info-soft text-adm-info"
+        : "border-adm-border bg-adm-surface-2 text-adm-text";
   return (
-    <div className="flex items-baseline justify-between gap-4 border-b border-adm-divider py-2 last:border-0">
-      <span className="text-[13px] text-adm-subtle">{label}</span>
-      <span className="text-sm font-medium text-adm-ink">{value}</span>
+    <div className={`rounded-[var(--radius-adm-md)] border px-3.5 py-2.5 text-[12.5px] leading-relaxed ${toneClass}`}>
+      {children}
     </div>
   );
 }

@@ -1,10 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { ArrowDown, ArrowUp, Plus, Trash2, X } from "lucide-react";
 import { Field, Input, Select, Textarea } from "./Form";
 import Button from "./Button";
-import Badge from "./Badge";
 
 // Definisi field dikirim dari server (lib/admin/collections.ts) supaya hanya
 // ada satu sumber kebenaran untuk skema konten.
@@ -59,7 +58,6 @@ interface ContentFormProps {
   onChange: (key: string, value: string | string[]) => void;
   onSubmit: (event: React.FormEvent) => void;
   onCancel: () => void;
-  /** Komponen pemilih gambar, disuntikkan dari halaman. */
   renderImageField: (field: ClientField, value: string) => React.ReactNode;
 }
 
@@ -80,62 +78,103 @@ export default function ContentForm({
     (field) => field.type === "image" || field.type === "gallery"
   );
 
+  // Pecah field utama jadi dua kelompok supaya formulir panjang tetap terbaca:
+  // isi pokok (kiri) dan metadata (kanan, di panel samping).
+  const metaKeys = new Set([collection.slugKey, "date", "category", "author", "tags"]);
+  const isMeta = (key: string) => metaKeys.has(key);
+  const contentFields = primaryFields.filter((field) => !isMeta(field.key));
+  const metaFields = primaryFields.filter((field) => isMeta(field.key));
+
   return (
     <form
+      id="adm-record-form"
       onSubmit={onSubmit}
-      // noValidate: validasi ditangani sendiri (di klien dan server) supaya
-      // pesan galat muncul dalam Bahasa Indonesia di dekat kolomnya, bukan
-      // sebagai tooltip bawaan peramban yang tidak konsisten antar browser.
       noValidate
-      className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]"
+      className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start"
     >
-      <div className="space-y-6">
-        {primaryFields.map((field) => (
-          <FieldRenderer
-            key={field.key}
-            field={field}
-            collection={collection}
-            value={initialValues[field.key]}
-            error={errors[field.key]}
-            onChange={onChange}
-          />
-        ))}
+      {/* Kolom utama */}
+      <div className="space-y-5">
+        <div className="space-y-4 rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface p-5">
+          {contentFields.map((field) => (
+            <FieldRenderer
+              key={field.key}
+              field={field}
+              collection={collection}
+              value={initialValues[field.key]}
+              error={errors[field.key]}
+              onChange={onChange}
+            />
+          ))}
+        </div>
       </div>
 
-      <aside className="space-y-6">
-        <div className="rounded-[12px] border border-adm-border bg-adm-surface p-5">
-          <h2 className="text-sm font-semibold text-adm-ink">Terbitkan</h2>
-          <p className="mt-1 text-xs leading-relaxed text-adm-subtle">
-            Perubahan tersimpan langsung ke repositori dan tayang di situs dalam 1 sampai 2
-            menit.
-          </p>
-          <div className="mt-4 flex flex-col gap-2">
-            <Button type="submit" variant="primary" loading={saving}>
-              {saving ? "Menyimpan..." : "Simpan"}
-            </Button>
-            <Button variant="secondary" onClick={onCancel} disabled={saving}>
-              Batal
-            </Button>
+      {/* Panel samping: gambar, metadata, aksi */}
+      <aside className="space-y-4 lg:sticky lg:top-[72px]">
+        {imageFields.length ? (
+          <div className="space-y-4 rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface p-4">
+            <h2 className="text-[12.5px] font-semibold tracking-[-0.01em] text-adm-ink">Gambar</h2>
+            {imageFields.map((field) => (
+              <div key={field.key}>
+                <div className="mb-1.5 flex items-baseline justify-between gap-2">
+                  <span className="text-[11.5px] font-medium text-adm-text">{field.label}</span>
+                  {field.required ? (
+                    <span aria-hidden className="text-adm-danger">
+                      *
+                    </span>
+                  ) : null}
+                </div>
+                {renderImageField(field, String(initialValues[field.key] ?? ""))}
+                {field.help ? (
+                  <p className="mt-1.5 text-[11px] leading-relaxed text-adm-subtle">{field.help}</p>
+                ) : null}
+                {errors[field.key] ? (
+                  <p className="mt-1 text-[11.5px] font-medium text-adm-danger">{errors[field.key]}</p>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        ) : null}
+
+        {metaFields.length ? (
+          <div className="space-y-4 rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface p-4">
+            <h2 className="text-[12.5px] font-semibold tracking-[-0.01em] text-adm-ink">
+              Metadata
+            </h2>
+            {metaFields.map((field) => (
+              <FieldRenderer
+                key={field.key}
+                field={field}
+                collection={collection}
+                value={initialValues[field.key]}
+                error={errors[field.key]}
+                onChange={onChange}
+                compact
+              />
+            ))}
+          </div>
+        ) : null}
+
+        {/* Catatan: tombol Simpan hanya ada di kepala halaman (RecordEditor).
+            Panel ini sengaja tidak menampilkan tombol agar tidak ada dua tombol
+            berbeda untuk aksi yang sama. */}
+        <div className="rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface-2 p-3.5">
+          <div className="flex items-start gap-2">
+            <svg
+              aria-hidden
+              viewBox="0 0 20 20"
+              className="mt-0.5 h-3.5 w-3.5 shrink-0 text-adm-subtle"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+            >
+              <circle cx="10" cy="10" r="7.5" />
+              <path d="M10 6.5V10l2.2 1.6" strokeLinecap="round" />
+            </svg>
+            <p className="text-[11px] leading-relaxed text-adm-subtle">
+              Perubahan langsung tersimpan ke repositori dan tayang dalam 1 sampai 2 menit.
+            </p>
           </div>
         </div>
-
-        {imageFields.map((field) => (
-          <div
-            key={field.key}
-            className="rounded-[12px] border border-adm-border bg-adm-surface p-5"
-          >
-            <h2 className="text-sm font-semibold text-adm-ink">{field.label}</h2>
-            {field.help ? (
-              <p className="mt-1 text-xs leading-relaxed text-adm-subtle">{field.help}</p>
-            ) : null}
-            <div className="mt-3">
-              {renderImageField(field, String(initialValues[field.key] ?? ""))}
-            </div>
-            {errors[field.key] ? (
-              <p className="mt-2 text-xs font-medium text-adm-danger">{errors[field.key]}</p>
-            ) : null}
-          </div>
-        ))}
       </aside>
     </form>
   );
@@ -147,12 +186,14 @@ function FieldRenderer({
   value,
   error,
   onChange,
+  compact = false,
 }: {
   field: ClientField;
   collection: ClientCollection;
   value: string | string[] | undefined;
   error?: string;
   onChange: (key: string, value: string | string[]) => void;
+  compact?: boolean;
 }) {
   const locked = collection.lockedFields.includes(field.key);
   const id = `field-${field.key}`;
@@ -161,7 +202,7 @@ function FieldRenderer({
     return (
       <Field label={field.label} required={field.required} help={field.help} error={error}>
         <ParagraphEditor
-          value={typeof value === "string" ? value : ""}
+          value={Array.isArray(value) ? value : typeof value === "string" && value ? value.split("\n") : []}
           onChange={(next) => onChange(field.key, next)}
         />
       </Field>
@@ -181,7 +222,7 @@ function FieldRenderer({
 
   if (field.type === "select") {
     return (
-      <Field label={field.label} htmlFor={id} required={field.required} help={field.help} error={error}>
+      <Field label={field.label} htmlFor={id} required={field.required} help={compact ? undefined : field.help} error={error}>
         <Select
           id={id}
           value={typeof value === "string" ? value : ""}
@@ -213,6 +254,7 @@ function FieldRenderer({
   }
 
   if (field.type === "textarea") {
+    const text = typeof value === "string" ? value : "";
     return (
       <Field
         label={field.label}
@@ -220,27 +262,23 @@ function FieldRenderer({
         required={field.required}
         help={field.help}
         error={error}
+        hint={field.maxLength ? `${text.length}/${field.maxLength}` : undefined}
       >
         <Textarea
           id={id}
-          value={typeof value === "string" ? value : ""}
+          value={text}
           rows={field.rows ?? 4}
           invalid={Boolean(error)}
           placeholder={field.placeholder}
           onChange={(event) => onChange(field.key, event.target.value)}
         />
-        {field.maxLength ? (
-          <p className="text-right text-xs text-adm-subtle">
-            {(typeof value === "string" ? value : "").length}/{field.maxLength}
-          </p>
-        ) : null}
       </Field>
     );
   }
 
   if (field.type === "date") {
     return (
-      <Field label={field.label} htmlFor={id} required={field.required} help={field.help} error={error}>
+      <Field label={field.label} htmlFor={id} required={field.required} help={compact ? undefined : field.help} error={error}>
         <Input
           id={id}
           type="date"
@@ -253,10 +291,16 @@ function FieldRenderer({
   }
 
   const inputType = field.type === "number" ? "number" : field.type === "url" ? "url" : "text";
-  const inputMode = field.type === "whatsapp" ? "tel" : undefined;
+  const inputMode = field.type === "whatsapp" ? "tel" : field.type === "number" ? "decimal" : undefined;
 
   return (
-    <Field label={field.label} htmlFor={id} required={field.required} help={field.help} error={error}>
+    <Field
+      label={field.label}
+      htmlFor={id}
+      required={field.required}
+      help={compact ? undefined : field.help}
+      error={error}
+    >
       <Input
         id={id}
         type={inputType}
@@ -266,12 +310,13 @@ function FieldRenderer({
         placeholder={field.placeholder}
         invalid={Boolean(error)}
         disabled={locked}
+        className={`${field.type === "number" ? "adm-no-spinner" : ""} ${
+          locked ? "font-mono text-[12px]" : ""
+        }`}
         onChange={(event) => onChange(field.key, event.target.value)}
       />
       {locked ? (
-        <p className="text-xs text-adm-subtle">
-          Field ini dikunci karena dikelola otomatis oleh sistem.
-        </p>
+        <p className="text-[11px] text-adm-subtle">Dikunci karena dikelola otomatis oleh sistem.</p>
       ) : null}
     </Field>
   );
@@ -282,80 +327,77 @@ export function ParagraphEditor({
   value,
   onChange,
 }: {
-  value: string;
-  onChange: (next: string) => void;
+  value: string[];
+  onChange: (next: string[]) => void;
 }) {
-  const paragraphs = useMemo(
-    () => value.split("\n").map((line) => line.trim()),
-    [value]
-  );
-
-  function commit(next: string[]) {
-    onChange(next.join("\n"));
-  }
-
   return (
-    <div className="space-y-3">
-      <p className="text-xs leading-relaxed text-adm-subtle">
-        Tulis satu paragraf per blok. Gunakan tombol panah untuk mengubah urutan.
-      </p>
-      {paragraphs.length === 0 ? (
-        <p className="rounded-[8px] border border-dashed border-adm-border-strong px-3 py-4 text-center text-[13px] text-adm-subtle">
-          Belum ada paragraf. Tambahkan paragraf pertama di bawah.
+    <div className="space-y-2">
+      {value.length === 0 ? (
+        <p className="rounded-[var(--radius-adm-sm)] border border-dashed border-adm-border-strong px-3 py-5 text-center text-[12px] text-adm-subtle">
+          Belum ada paragraf. Klik tombol di bawah untuk menambahkan.
         </p>
       ) : null}
-      {paragraphs.map((paragraph, index) => (
-        <div key={index} className="rounded-[10px] border border-adm-border bg-adm-surface p-3">
-          <div className="mb-2 flex items-center justify-between gap-2">
-            <span className="text-xs font-medium text-adm-subtle">Paragraf {index + 1}</span>
-            <div className="flex items-center gap-1">
+
+      {value.map((paragraph, index) => (
+        <div
+          key={index}
+          className="group rounded-[var(--radius-adm-md)] border border-adm-border bg-adm-surface-2 p-2 transition-colors focus-within:border-adm-border-strong"
+        >
+          <div className="mb-1.5 flex items-center justify-between gap-2 px-0.5">
+            <span className="text-[10.5px] font-semibold uppercase tracking-[0.06em] text-adm-subtle">
+              Paragraf {index + 1}
+            </span>
+            <div className="flex items-center gap-0.5 opacity-60 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
               <IconAction
                 label={`Naikkan paragraf ${index + 1}`}
                 disabled={index === 0}
                 onClick={() => {
-                  const next = [...paragraphs];
+                  const next = [...value];
                   [next[index - 1], next[index]] = [next[index], next[index - 1]];
-                  commit(next);
+                  onChange(next);
                 }}
               >
-                <ArrowUp aria-hidden className="h-3.5 w-3.5" />
+                <ArrowUp aria-hidden className="h-3 w-3" />
               </IconAction>
               <IconAction
                 label={`Turunkan paragraf ${index + 1}`}
-                disabled={index === paragraphs.length - 1}
+                disabled={index === value.length - 1}
                 onClick={() => {
-                  const next = [...paragraphs];
+                  const next = [...value];
                   [next[index + 1], next[index]] = [next[index], next[index + 1]];
-                  commit(next);
+                  onChange(next);
                 }}
               >
-                <ArrowDown aria-hidden className="h-3.5 w-3.5" />
+                <ArrowDown aria-hidden className="h-3 w-3" />
               </IconAction>
               <IconAction
                 label={`Hapus paragraf ${index + 1}`}
                 danger
-                onClick={() => commit(paragraphs.filter((_, i) => i !== index))}
+                onClick={() => onChange(value.filter((_, i) => i !== index))}
               >
-                <Trash2 aria-hidden className="h-3.5 w-3.5" />
+                <Trash2 aria-hidden className="h-3 w-3" />
               </IconAction>
             </div>
           </div>
           <textarea
             value={paragraph}
             rows={3}
+            aria-label={`Isi paragraf ${index + 1}`}
             onChange={(event) => {
-              const next = [...paragraphs];
+              const next = [...value];
               next[index] = event.target.value;
-              commit(next);
+              onChange(next);
             }}
-            className="adm-ring adm-transition adm-textarea-auto w-full rounded-[8px] border border-adm-border bg-adm-surface px-3 py-2 text-sm leading-relaxed text-adm-ink focus:border-adm-primary"
+            className="adm-ring adm-transition adm-textarea-auto w-full rounded-[var(--radius-adm-sm)] border border-adm-border bg-adm-surface px-2.5 py-2 text-[13px] leading-relaxed text-adm-ink focus:border-adm-primary"
           />
         </div>
       ))}
+
       <Button
         size="small"
-        icon={<Plus aria-hidden className="h-3.5 w-3.5" />}
-        onClick={() => commit([...paragraphs, ""])}
+        variant="secondary"
+        icon={<Plus aria-hidden className="h-3 w-3" />}
+        onClick={() => onChange([...value, ""])}
       >
         Tambah paragraf
       </Button>
@@ -382,27 +424,29 @@ export function TagInput({
 
   return (
     <div>
-      <div className="flex flex-wrap gap-1.5">
-        {value.map((tag) => (
-          <span
-            key={tag}
-            className="inline-flex h-6 items-center gap-1 rounded-full border border-adm-border bg-adm-muted pl-2.5 pr-1 text-xs text-adm-text"
-          >
-            {tag}
-            <button
-              type="button"
-              onClick={() => onChange(value.filter((item) => item !== tag))}
-              aria-label={`Hapus tag ${tag}`}
-              className="adm-ring adm-transition rounded-full p-0.5 text-adm-subtle hover:text-adm-danger"
+      {value.length ? (
+        <div className="mb-1.5 flex flex-wrap gap-1">
+          {value.map((tag) => (
+            <span
+              key={tag}
+              className="inline-flex h-6 items-center gap-1 rounded-full border border-adm-border bg-adm-muted pl-2 pr-0.5 text-[11px] text-adm-text"
             >
-              <X aria-hidden className="h-3 w-3" />
-            </button>
-          </span>
-        ))}
-      </div>
+              {tag}
+              <button
+                type="button"
+                onClick={() => onChange(value.filter((item) => item !== tag))}
+                aria-label={`Hapus tag ${tag}`}
+                className="adm-ring adm-transition rounded-full p-0.5 text-adm-subtle hover:bg-adm-danger-soft hover:text-adm-danger"
+              >
+                <X aria-hidden className="h-2.5 w-2.5" />
+              </button>
+            </span>
+          ))}
+        </div>
+      ) : null}
       <Input
         value={draft}
-        placeholder="Tambah tag, tekan Enter..."
+        placeholder="Tambah tag, tekan Enter…"
         onChange={(event) => setDraft(event.target.value)}
         onKeyDown={(event) => {
           if (event.key === "Enter" || event.key === ",") {
@@ -414,7 +458,6 @@ export function TagInput({
           }
         }}
         onBlur={() => addTag(draft)}
-        className="mt-2"
       />
     </div>
   );
@@ -440,22 +483,13 @@ function IconAction({
       disabled={disabled}
       aria-label={label}
       title={label}
-      className={`adm-ring adm-transition inline-flex h-8 w-8 items-center justify-center rounded-[6px] disabled:cursor-not-allowed disabled:opacity-40 ${
+      className={`adm-ring adm-transition inline-flex h-6 w-6 items-center justify-center rounded-[var(--radius-adm-xs)] disabled:cursor-not-allowed disabled:opacity-40 ${
         danger
           ? "text-adm-subtle hover:bg-adm-danger-soft hover:text-adm-danger"
-          : "text-adm-subtle hover:bg-adm-divider hover:text-adm-ink"
+          : "text-adm-subtle hover:bg-adm-muted-2 hover:text-adm-ink"
       }`}
     >
       {children}
     </button>
-  );
-}
-
-/** Ringkasan status simpan untuk ditampilkan di atas form. */
-export function SaveHint({ dirty }: { dirty: boolean }) {
-  return dirty ? (
-    <Badge variant="warning">Ada perubahan belum disimpan</Badge>
-  ) : (
-    <Badge variant="success">Tersimpan</Badge>
   );
 }

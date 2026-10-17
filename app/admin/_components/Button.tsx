@@ -3,24 +3,26 @@
 import type { ButtonHTMLAttributes, ReactNode, Ref } from "react";
 import { Loader2 } from "lucide-react";
 
-type Variant = "primary" | "secondary" | "ghost" | "destructive" | "link";
-type Size = "default" | "small" | "icon";
+type Variant = "primary" | "secondary" | "ghost" | "destructive" | "link" | "soft";
+type Size = "default" | "small" | "icon" | "icon-sm";
 
 const VARIANT: Record<Variant, string> = {
   primary:
-    "bg-adm-primary text-white border border-transparent hover:bg-adm-primary-hover disabled:hover:bg-adm-primary",
+    "bg-adm-primary text-white shadow-adm-xs hover:bg-adm-primary-hover active:bg-adm-primary-hover",
   secondary:
-    "bg-adm-surface text-adm-ink border border-adm-border-strong hover:bg-adm-muted",
-  ghost: "bg-transparent text-adm-ink border border-transparent hover:bg-adm-divider",
+    "bg-adm-surface text-adm-ink border border-adm-border-strong shadow-adm-xs hover:bg-adm-muted hover:border-adm-border-strong",
+  ghost: "bg-transparent text-adm-text hover:bg-adm-muted hover:text-adm-ink",
+  soft: "bg-adm-primary-soft text-adm-primary-ink hover:bg-[#e0ebe4]",
   destructive:
-    "bg-adm-danger text-white border border-transparent hover:bg-[#991b1b] disabled:hover:bg-adm-danger",
-  link: "bg-transparent text-adm-primary border border-transparent hover:underline px-0",
+    "bg-adm-danger text-white shadow-adm-xs hover:bg-adm-danger-hover",
+  link: "bg-transparent text-adm-primary hover:underline underline-offset-4 px-0 h-auto",
 };
 
 const SIZE: Record<Size, string> = {
-  default: "h-10 px-4 text-sm gap-2",
+  default: "h-9 px-3.5 text-[13.5px] gap-2",
   small: "h-8 px-3 text-[13px] gap-1.5",
-  icon: "h-9 w-9 justify-center",
+  icon: "h-9 w-9",
+  "icon-sm": "h-8 w-8",
 };
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -43,13 +45,15 @@ export default function Button({
   ref,
   ...rest
 }: ButtonProps) {
-  const padding = variant === "link" ? "" : SIZE[size];
+  const isLink = variant === "link";
   return (
     <button
       ref={ref}
       type={type}
       disabled={disabled || loading}
-      className={`adm-ring adm-transition inline-flex items-center justify-center rounded-[8px] font-medium disabled:cursor-not-allowed disabled:opacity-50 ${VARIANT[variant]} ${padding} ${className}`}
+      className={`adm-ring adm-transition inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[var(--radius-adm-sm)] font-medium disabled:pointer-events-none disabled:opacity-50 ${
+        VARIANT[variant]
+      } ${isLink ? "" : SIZE[size]} ${className}`}
       {...rest}
     >
       {loading ? (
