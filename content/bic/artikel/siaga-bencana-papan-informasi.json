@@ -5,10 +5,10 @@
     "date": "2026-02-01",
     "category": "kebencanaan",
     "author": "Anindya Najwa Nareswari",
-    "cover": "bic/artikel/siaga-bencana-papan-informasi/cover.png",
+    "cover": "bic/artikel/siaga-bencana-papan-informasi/cover.webp",
     "gallery": [
-        "bic/artikel/siaga-bencana-papan-informasi/01.png",
-        "bic/artikel/siaga-bencana-papan-informasi/02.png"
+        "bic/artikel/siaga-bencana-papan-informasi/01.webp",
+        "bic/artikel/siaga-bencana-papan-informasi/02.webp"
     ],
     "content": [
         "Program ini mewujudkan papan informasi bencana sederhana sebagai sarana edukasi publik. Papan tersebut memuat tiga hal pokok: jenis bencana yang mungkin terjadi, langkah pencegahan yang bisa diambil, serta prosedur evakuasi yang jelas.",

@@ -8,6 +8,45 @@ import { toJsonLd } from "@/lib/jsonld";
 import GaleriClient from "./GaleriClient";
 import type { Metadata } from "next";
 
+/**
+ * Daftar foto galeri.
+ *
+ * Sebelumnya dibaca dari public/galeri sehingga 11,7 MB gambar ikut terkirim ke
+ * Vercel setiap deployment. Setelah dipindahkan ke repositori aset (CDN
+ * jsDelivr), daftar berkas dibaca dari content/galeri/galeri.json. Bila berkas
+ * itu belum ada, daftar cadangan dipakai supaya halaman tidak kosong.
+ */
+function muatDaftarGaleri(): string[] {
+    const jsonPath = path.join(process.cwd(), "content", "galeri", "galeri.json");
+    try {
+        const raw = JSON.parse(fs.readFileSync(jsonPath, "utf-8")) as { files?: unknown };
+        if (Array.isArray(raw.files)) {
+            const files = raw.files.filter((f): f is string => typeof f === "string" && f.length > 0);
+            if (files.length > 0) return files;
+        }
+    } catch {
+        // Berkas belum ada atau rusak: pakai daftar cadangan di bawah.
+    }
+    return DAFTAR_CADANGAN;
+}
+
+/** Dipakai hanya bila content/galeri/galeri.json belum tersedia. */
+const DAFTAR_CADANGAN = [
+    "curug-cipeuteuy.webp",
+    "edukasi-sekolah.webp",
+    "festival-budaya.webp",
+    "gotong-royong.webp",
+    "keberangkatan.webp",
+    "panen-bersama.webp",
+    "pelatihan-umkm.webp",
+    "penanaman-herbal.webp",
+    "Penerjunan.webp",
+    "penutupan.webp",
+    "penyambutan.webp",
+    "terasering.webp",
+    "workshop-jamu.webp",
+];
+
 export const metadata: Metadata = {
     title: "Galeri KKN-PPM UGM Simfoni Sindangwangi di Bantaragung",
     description:
@@ -78,11 +117,15 @@ const FAQ_KKN: { q: string; t?: string; a: ReactNode }[] = [
 ];
 
 export default function GaleriPage() {
-    const dir = path.join(process.cwd(), "public", "galeri");
-    const files = fs
-        .readdirSync(dir)
-        .filter((f) => /\.(png|jpe?g|webp|gif)$/i.test(f))
-        .sort();
+    // Daftar foto galeri.
+    //
+    // Sebelumnya dibaca dari public/galeri sehingga 11,7 MB gambar ikut terkirim
+    // ke Vercel pada setiap deployment. Setelah dipindahkan ke repositori aset
+    // (CDN jsDelivr), daftar berkas dibaca dari content/galeri/galeri.json agar
+    // penambahan atau penghapusan foto bisa dilakukan lewat dasbor.
+    // Bila berkas itu belum ada, daftar cadangan di bawah tetap dipakai supaya
+    // halaman tidak kosong.
+    const files = muatDaftarGaleri();
 
     const faqJsonLd = {
         "@context": "https://schema.org",

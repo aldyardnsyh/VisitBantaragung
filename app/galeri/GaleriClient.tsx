@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Reveal from "@/app/components/ui/Reveal";
+import { assetUrl } from "@/lib/asset";
 
 // Judul per foto (slug nama file -> judul).
 const CAPTIONS: Record<string, string> = {
@@ -124,7 +125,7 @@ export default function GaleriClient({ files }: { files: string[] }) {
                             >
                                 <div className="overflow-hidden">
                                     <img
-                                        src={`/galeri/${file}`}
+                                        src={assetUrl(`galeri/${file}`)}
                                         alt={caption}
                                         loading="lazy"
                                         decoding="async"
@@ -202,7 +203,7 @@ export default function GaleriClient({ files }: { files: string[] }) {
                     >
                         <div className="flex-1 overflow-auto flex items-start justify-center min-h-0">
                             <img
-                                src={`/galeri/${active}`}
+                                src={assetUrl(`galeri/${active}`)}
                                 alt={captionOf(active)}
                                 className="max-w-full h-auto max-h-[52vh] object-contain rounded-t-2xl transition-transform duration-300"
                                 style={{ transform: `scale(${zoom})`, transformOrigin: "top center" }}
@@ -253,7 +254,7 @@ export default function GaleriClient({ files }: { files: string[] }) {
                                     Reset
                                 </button>
                                 <a
-                                    href={`/galeri/${active}`}
+                                    href={assetUrl(`galeri/${active}`)}
                                     download={active}
                                     className="inline-flex items-center gap-2 min-h-[44px] px-4 rounded-full bg-gold-400 hover:brightness-95 transition text-forest-950 text-sm font-semibold"
                                 >

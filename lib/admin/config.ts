@@ -69,7 +69,7 @@ export function configStatus(): ConfigStatus {
 }
 
 /** Folder yang boleh menerima unggahan gambar di repo aset. */
-export const MEDIA_FOLDERS = ["wisata", "b2h", "bdb", "bic", "bmc", "galeri", "_brand"] as const;
+export const MEDIA_FOLDERS = ["wisata", "b2h", "bdb", "bic", "bmc", "galeri", "berita", "_brand"] as const;
 export type MediaFolder = (typeof MEDIA_FOLDERS)[number];
 
 export function isMediaFolder(value: string): value is MediaFolder {

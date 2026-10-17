@@ -1,0 +1,18 @@
+{
+    "_keterangan": "Daftar foto galeri. Berkas gambar berada di repositori aset (CDN), bukan lagi di public/galeri, supaya tidak ikut terkirim ke Vercel setiap deployment. Tambah atau hapus foto lewat dasbor admin.",
+    "files": [
+        "curug-cipeuteuy.webp",
+        "edukasi-sekolah.webp",
+        "festival-budaya.webp",
+        "gotong-royong.webp",
+        "keberangkatan.webp",
+        "panen-bersama.webp",
+        "pelatihan-umkm.webp",
+        "penanaman-herbal.webp",
+        "Penerjunan.webp",
+        "penutupan.webp",
+        "penyambutan.webp",
+        "terasering.webp",
+        "workshop-jamu.webp"
+    ]
+}

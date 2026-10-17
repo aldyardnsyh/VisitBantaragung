@@ -7,6 +7,7 @@ import {
   slugify,
 } from "./collections";
 import { commitAssetFiles, commitContentFiles, FileChange, getContentFile, getContentTree, listAssetDir, listContentDir, readRawFile } from "./github";
+import { listAllAssetFiles } from "./storage";
 import { formValuesToRecord, FormValues, validateFormValues, recordToFormValues } from "./transform";
 import { ApiError } from "./guard";
 
@@ -351,27 +352,40 @@ export type MediaTarget = "assets" | "local";
 
 /** Daftar gambar pada folder tertentu. */
 export async function listMedia(target: MediaTarget, folder: string): Promise<MediaItem[]> {
-  const entries =
-    target === "local"
-      ? await listContentDir(`public/${folder}`)
-      : await listAssetDir(folder);
+  // Repositori aset memakai struktur bersarang (mis.
+  // b2h/katalog-tanaman/<slug>/cover.webp), sehingga daftar harus ditelusuri
+  // sampai ke subfolder. Sebelumnya hanya satu tingkat, akibatnya sebagian
+  // besar gambar tidak muncul di pustaka.
+  if (target === "assets") {
+    const all = await listAllAssetFiles();
+    const prefix = folder.replace(/^\/+|\/+$/g, "");
+    const scoped = prefix ? all.filter((f) => f.path.startsWith(`${prefix}/`)) : all;
+    return scoped
+      .map((file) => ({
+        path: file.path,
+        name: file.name,
+        size: file.size,
+        sha: file.sha,
+        url: file.url,
+      }))
+      .sort((a, b) => a.path.localeCompare(b.path));
+  }
 
+  // Repo konten (cover berita disimpan di public/berita/<slug>).
+  const entries = await listContentDir(`public/${folder}`);
   const files = entries.filter(
     (e) => e.type === "file" && /\.(png|jpe?g|webp|gif|svg|avif)$/i.test(e.name)
   );
 
   return files
     .map((file) => ({
-      path: target === "local" ? file.path.replace(/^public/, "") : file.path,
+      path: file.path.replace(/^public/, ""),
       name: file.name,
       size: file.size,
       sha: file.sha,
-      url:
-        target === "local"
-          ? `/${file.path.replace(/^public\//, "")}`
-          : `${ADMIN.cdnBase}/${file.path}`,
+      url: `/${file.path.replace(/^public\//, "")}`,
     }))
-    .sort((a, b) => b.name.localeCompare(a.name));
+    .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export interface UploadInput {

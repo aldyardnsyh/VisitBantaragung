@@ -9,67 +9,67 @@
                 {
                     "id": "rw-01",
                     "title": "Peta RW 01",
-                    "image": "bmc/peta/rw/RW01.png",
+                    "image": "bmc/peta/rw/RW01.webp",
                     "description": "Peta wilayah Rukun Warga 01"
                 },
                 {
                     "id": "rw-02",
                     "title": "Peta RW 02",
-                    "image": "bmc/peta/rw/RW02.png",
+                    "image": "bmc/peta/rw/RW02.webp",
                     "description": "Peta wilayah Rukun Warga 02"
                 },
                 {
                     "id": "rw-03",
                     "title": "Peta RW 03",
-                    "image": "bmc/peta/rw/RW03.png",
+                    "image": "bmc/peta/rw/RW03.webp",
                     "description": "Peta wilayah Rukun Warga 03"
                 },
                 {
                     "id": "rw-04",
                     "title": "Peta RW 04",
-                    "image": "bmc/peta/rw/RW04.png",
+                    "image": "bmc/peta/rw/RW04.webp",
                     "description": "Peta wilayah Rukun Warga 04"
                 },
                 {
                     "id": "rw-05",
                     "title": "Peta RW 05",
-                    "image": "bmc/peta/rw/RW05.png",
+                    "image": "bmc/peta/rw/RW05.webp",
                     "description": "Peta wilayah Rukun Warga 05"
                 },
                 {
                     "id": "rw-06",
                     "title": "Peta RW 06",
-                    "image": "bmc/peta/rw/RW06.png",
+                    "image": "bmc/peta/rw/RW06.webp",
                     "description": "Peta wilayah Rukun Warga 06"
                 },
                 {
                     "id": "rw-07",
                     "title": "Peta RW 07",
-                    "image": "bmc/peta/rw/RW07.png",
+                    "image": "bmc/peta/rw/RW07.webp",
                     "description": "Peta wilayah Rukun Warga 07"
                 },
                 {
                     "id": "rw-08",
                     "title": "Peta RW 08",
-                    "image": "bmc/peta/rw/RW08.png",
+                    "image": "bmc/peta/rw/RW08.webp",
                     "description": "Peta wilayah Rukun Warga 08"
                 },
                 {
                     "id": "rw-09",
                     "title": "Peta RW 09",
-                    "image": "bmc/peta/rw/RW09.png",
+                    "image": "bmc/peta/rw/RW09.webp",
                     "description": "Peta wilayah Rukun Warga 09"
                 },
                 {
                     "id": "rw-10",
                     "title": "Peta RW 10",
-                    "image": "bmc/peta/rw/RW10.png",
+                    "image": "bmc/peta/rw/RW10.webp",
                     "description": "Peta wilayah Rukun Warga 10"
                 },
                 {
                     "id": "rw-11",
                     "title": "Peta RW 11",
-                    "image": "bmc/peta/rw/RW11.png",
+                    "image": "bmc/peta/rw/RW11.webp",
                     "description": "Peta wilayah Rukun Warga 11"
                 }
             ]
@@ -97,7 +97,7 @@
                 {
                     "id": "longsor-main",
                     "title": "Peta Sebaran Titik Longsor",
-                    "image": "bmc/peta/longsor/PETA_SEBARAN_TITIK_LONGSOR.png",
+                    "image": "bmc/peta/longsor/PETA_SEBARAN_TITIK_LONGSOR.webp",
                     "description": "Peta titik-titik rawan longsor di Desa Bantaragung"
                 }
             ]
@@ -111,7 +111,7 @@
                 {
                     "id": "homestay-01",
                     "title": "Peta Homestay Area 1",
-                    "image": "bmc/peta/homestay/PETA_HOMESTAY_01.png",
+                    "image": "bmc/peta/homestay/PETA_HOMESTAY_01.webp",
                     "description": "Peta sebaran homestay area 1"
                 },
                 {
@@ -131,7 +131,7 @@
                 {
                     "id": "umkm-main",
                     "title": "Peta UMKM Bantaragung",
-                    "image": "bmc/peta/umkm/PETA_UMKM.png",
+                    "image": "bmc/peta/umkm/PETA_UMKM.webp",
                     "description": "Peta sebaran UMKM di Desa Bantaragung"
                 }
             ]
@@ -145,7 +145,7 @@
                 {
                     "id": "imap-main",
                     "title": "Peta IMAP PUPR",
-                    "image": "bmc/peta/imap/PETA_IMAP_PUPR.png",
+                    "image": "bmc/peta/imap/PETA_IMAP_PUPR.webp",
                     "description": "Peta infrastruktur IMAP PUPR Desa Bantaragung"
                 }
             ]
@@ -159,25 +159,25 @@
                 {
                     "id": "dusun-tirtawana",
                     "title": "Peta Dusun Tirtawana",
-                    "image": "bmc/peta/dusun/DUSUN_TIRTAWANA.png",
+                    "image": "bmc/peta/dusun/DUSUN_TIRTAWANA.webp",
                     "description": "Peta wilayah Dusun Tirtawana"
                 },
                 {
                     "id": "dusun-pasirayu",
                     "title": "Peta Dusun Pasirayu",
-                    "image": "bmc/peta/dusun/DUSUN_PASIRAYU.png",
+                    "image": "bmc/peta/dusun/DUSUN_PASIRAYU.webp",
                     "description": "Peta wilayah Dusun Pasirayu"
                 },
                 {
                     "id": "dusun-mertasela",
                     "title": "Peta Dusun Mertasela",
-                    "image": "bmc/peta/dusun/DUSUN_MERTASELA.png",
+                    "image": "bmc/peta/dusun/DUSUN_MERTASELA.webp",
                     "description": "Peta wilayah Dusun Mertasela"
                 },
                 {
                     "id": "dusun-lokapraja",
                     "title": "Peta Dusun Lokapraja",
-                    "image": "bmc/peta/dusun/DUSUN_LOKAPRAJA.png",
+                    "image": "bmc/peta/dusun/DUSUN_LOKAPRAJA.webp",
                     "description": "Peta wilayah Dusun Lokapraja"
                 }
             ]
@@ -191,7 +191,7 @@
                 {
                     "id": "info-main",
                     "title": "Papan Informasi Desa",
-                    "image": "bmc/peta/informasi/PAPAN_INFORMASI.png",
+                    "image": "bmc/peta/informasi/PAPAN_INFORMASI.webp",
                     "description": "Peta papan informasi Desa Bantaragung"
                 }
             ]
