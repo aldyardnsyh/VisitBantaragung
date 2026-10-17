@@ -407,6 +407,6 @@ export function checkOutput(text: string, context = ""): OutputCheck {
 
 /** Pesan balasan siap pakai untuk kasus "tidak tahu". */
 export const UNKNOWN_REPLY =
-    "Maaf, informasi itu belum ada di situs Bantaragung. Untuk memastikan, " +
-    "silakan hubungi pengelola lewat WhatsApp di halaman Kontak  -  tim desa wisata " +
-    "akan menjawab langsung.";
+    "Saya belum menemukan jawaban pastinya di situs ini, dan saya tidak mau menebak. " +
+    "Coba sebutkan nama destinasi atau topiknya, atau tanyakan langsung ke pengelola " +
+    "lewat halaman Kontak - biasanya dijawab pada jam kerja.";

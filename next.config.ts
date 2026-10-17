@@ -54,6 +54,17 @@ const nextConfig: NextConfig = {
           { key: "Cache-Control", value: "no-store, max-age=0" },
         ],
       },
+      {
+        // Endpoint chatbot. Bukan halaman, tidak punya markup sendiri, dan
+        // isinya berbeda untuk setiap permintaan. Diberi noindex eksplisit
+        // supaya mesin pencari tidak pernah mencoba merayapinya sebagai
+        // halaman, dan tidak menyimpan respons percakapan pengunjung.
+        source: "/api/chat/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive, nosnippet" },
+          { key: "Cache-Control", value: "no-store, max-age=0" },
+        ],
+      },
     ];
   },
 };

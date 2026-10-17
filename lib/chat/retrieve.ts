@@ -6,6 +6,7 @@ import {
     type EntityCard,
     type TextChunk,
 } from "@/lib/chat/index";
+import { ANAPHORA_PATTERN } from "@/lib/chat/scope";
 
 /**
  * Pencarian konteks untuk chatbot.
@@ -151,8 +152,124 @@ function bm25(
     return scored;
 }
 
-export function retrieve(query: string): RetrievalResult {
+/**
+ * Kata rujukan yang menandakan pengunjung sedang membicarakan hal sebelumnya.
+ * Contoh nyata: "kalau yang itu fasilitasnya apa?" — tanpa riwayat, kata-kata
+ * ini tidak punya makna dan retrieval mengambil entitas acak.
+ */
+// Daftar kata rujukan diambil dari lib/chat/scope.ts agar penjaga cakupan dan
+// retrieval memakai daftar yang SAMA. Sebelumnya keduanya punya daftar
+// sendiri; akibatnya "harganya berapa?" dikenali sebagai lanjutan oleh
+// penjaga cakupan tetapi TIDAK oleh retrieval, sehingga retrieval berjalan
+// tanpa jangkar dan hasilnya kosong.
+const ANAPHORA_RE = ANAPHORA_PATTERN;
+
+/**
+ * Apakah pertanyaan ini merujuk pada hal yang sudah dibicarakan?
+ *
+ * Dua tanda: (a) memuat kata rujukan, atau (b) sangat pendek dan tidak
+ * menyebut entitas apa pun (mis. "fasilitasnya?", "harganya berapa?").
+ */
+function isFollowUp(query: string, terms: string[]): boolean {
+    if (ANAPHORA_RE.test(query)) return true;
+    // Pertanyaan pendek tanpa kata kunci bermakna hampir pasti lanjutan.
+    const words = query.trim().split(/\s+/).filter(Boolean);
+    return words.length <= 4 && terms.length === 0;
+}
+
+/**
+ * Cari entitas yang disebut pada riwayat percakapan.
+ *
+ * Ini yang membuat percakapan terasa nyambung. Tanpa langkah ini, pengunjung
+ * harus menyebut nama destinasi di setiap pertanyaan:
+ *
+ *   "Apa itu Curug Cipeuteuy?"  -> dijawab
+ *   "kalau yang itu fasilitasnya apa?" -> SALAH, menjawab Homestay Warga
+ *
+ * Dengan langkah ini, entitas yang muncul di giliran sebelumnya dipakai
+ * sebagai jangkar, lalu pertanyaan lanjutan dinilai terhadap entitas itu.
+ */
+function entitiesFromHistory(
+    history: { role: string; content: string }[],
+    maxTurns = 4
+): { card: EntityCard; score: number }[] {
     const index = buildIndex();
+    const recent = history.slice(-maxTurns * 2);
+    const scored = new Map<string, { card: EntityCard; score: number }>();
+
+    // Giliran yang lebih baru memberi bobot lebih besar, karena itulah topik
+    // yang sedang berlangsung.
+    recent.forEach((msg, i) => {
+        if (msg.role !== "user" && msg.role !== "assistant") return;
+        const recency = (i + 1) / recent.length; // 0..1
+        const text = String(msg.content ?? "").toLowerCase();
+        if (!text) return;
+
+        for (const card of index.cards) {
+            // Nama entitas harus disebut utuh; mencocokkan kata umum akan
+            // menarik terlalu banyak entitas.
+            const name = card.title.toLowerCase();
+            const mentioned =
+                text.includes(name) ||
+                (card.kind === "wisata" && text.includes(card.href.split("/").pop() ?? "\u0000"));
+            if (!mentioned) continue;
+
+            const prev = scored.get(card.id);
+            const add = 6 * recency + (msg.role === "user" ? 2 : 0);
+            if (prev) prev.score += add;
+            else scored.set(card.id, { card, score: add });
+        }
+    });
+
+    return [...scored.values()].sort((a, b) => b.score - a.score);
+}
+
+export function retrieve(
+    query: string,
+    history: { role: string; content: string }[] = []
+): RetrievalResult {
+    const index = buildIndex();
+    const terms = tokenize(query);
+
+    /**
+     * Langkah 0: bila pertanyaan bersifat lanjutan, tanya ulang dengan
+     * menyertakan entitas yang sedang dibicarakan. Jadi "kalau yang itu
+     * fasilitasnya apa?" menjadi "curug cipeuteuy fasilitasnya apa" untuk
+     * keperluan pencarian; pertanyaan asli tetap dikirim ke model apa adanya.
+     */
+    //
+    // Sebelumnya hanya berjalan bila `terms.length < 4`. Akibatnya pertanyaan
+    // seperti "kalau yang itu cara pakainya gimana?" (5 kata bermakna) tetap
+    // dinilai tanpa jangkar, sehingga mengambil entitas acak. Sekarang cukup
+    // syarat "merupakan lanjutan" dan ada entitas terbawa dari riwayat.
+    const carried = isFollowUp(query, terms) ? entitiesFromHistory(history) : [];
+    if (carried.length) {
+        const anchor = carried[0].card;
+        // Kata rujukan dibuang dari kueri agar tidak mengganggu skoring.
+        const cleaned = query.replace(ANAPHORA_RE, " ").replace(/\s{2,}/g, " ").trim();
+        const resolved = retrieveInternal(`${anchor.title} ${cleaned}`, index);
+        if (resolved.cards.length || resolved.chunks.length) {
+            // Pastikan entitas jangkar tetap di urutan teratas.
+            const hasAnchor = resolved.cards.some((c) => c.card.id === anchor.id);
+            if (!hasAnchor) {
+                resolved.cards.unshift({ card: anchor, score: 20 });
+                resolved.cards = resolved.cards.slice(0, MAX_CARDS);
+            } else {
+                // Naikkan jangkar ke posisi pertama tanpa mengubah skornya.
+                const i = resolved.cards.findIndex((c) => c.card.id === anchor.id);
+                if (i > 0) {
+                    const [found] = resolved.cards.splice(i, 1);
+                    resolved.cards.unshift(found);
+                }
+            }
+            return resolved;
+        }
+    }
+
+    return retrieveInternal(query, index);
+}
+
+function retrieveInternal(query: string, index: ReturnType<typeof buildIndex>): RetrievalResult {
     const terms = tokenize(query);
 
     // Pertanyaan tentang konten terbaru ("artikel terbaru", "kabar terkini")
@@ -216,7 +333,14 @@ export function renderContext(result: RetrievalResult): {
     const blocks: string[] = [];
     let n = 0;
 
+    // Satu artikel bisa menghasilkan beberapa chunk (judul + isi). Tanpa
+    // penyaringan, daftar Sumber menampilkan judul yang sama dua kali, dan
+    // model mengira itu dua dokumen berbeda lalu mengutipnya berulang.
+    const seenHref = new Set<string>();
+
     for (const { card } of result.cards) {
+        if (seenHref.has(card.href)) continue;
+        seenHref.add(card.href);
         n++;
         sources.push({ n, title: card.title, href: card.href });
         const lines = Object.entries(card.facts)
@@ -227,6 +351,8 @@ export function renderContext(result: RetrievalResult): {
     }
 
     for (const { chunk } of result.chunks) {
+        if (seenHref.has(chunk.href)) continue;
+        seenHref.add(chunk.href);
         n++;
         sources.push({ n, title: chunk.title, href: chunk.href });
         const meta = `${chunk.category}${chunk.date ? `, ${chunk.date}` : ""}`;

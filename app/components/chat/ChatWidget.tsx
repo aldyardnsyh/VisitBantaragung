@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-import { useChat, type ChatMessageItem } from "@/app/components/chat/useChat";
+import { useChat, type ChatCard, type ChatMessageItem } from "@/app/components/chat/useChat";
+import { assetUrl } from "@/lib/asset";
 
 /**
  * Widget pemandu digital.
@@ -32,10 +33,20 @@ const QUICK_QUESTIONS = [
     "Tanaman herbal untuk imun apa?",
 ];
 
+/** Penanda "badge sudah dilihat". localStorage, bukan bagian isi percakapan. */
+const BADGE_KEY = "bantaragung-chat-badge-seen";
+
 export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
     const pathname = usePathname();
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState("");
+    // Konfirmasi sebelum menghapus. Menghapus seluruh percakapan tidak bisa
+    // dibatalkan, jadi tombol langsung-hapus terlalu berisiko (mudah tersenggol
+    // di layar sentuh).
+    const [confirmClear, setConfirmClear] = useState(false);
+    // Badge notifikasi. Disimpan di localStorage (bukan sessionStorage) karena
+    // tujuannya menandai "sudah pernah dibuka", bukan menyimpan isi percakapan.
+    const [showBadge, setShowBadge] = useState(false);
     const { messages, busy, send, clear } = useChat();
 
     const panelRef = useRef<HTMLDivElement>(null);
@@ -43,10 +54,43 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
     const triggerRef = useRef<HTMLButtonElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
 
+    // Badge notifikasi muncul sampai pengguna membuka chat pertama kali.
+    //
+    // Status awal `null` = belum diketahui (server & render pertama). Nilai
+    // dibaca setelah mount supaya markup server dan klien tidak berbeda.
+    // Penulisan localStorage dilakukan di handler buka, bukan di efek, agar
+    // tidak memicu render berantai.
+    useEffect(() => {
+        let seen = false;
+        try {
+            seen = Boolean(localStorage.getItem(BADGE_KEY));
+        } catch {
+            seen = false;
+        }
+        // Jadwalkan lewat microtask: menjaga efek tidak setState sinkron.
+        void Promise.resolve().then(() => setShowBadge(!seen));
+    }, []);
+
     // Fokus otomatis saat panel dibuka.
     useEffect(() => {
         if (open) inputRef.current?.focus();
     }, [open]);
+
+    /** Buka/tutup panel; membuka panel menandai badge sudah dilihat. */
+    const toggleOpen = () => {
+        setOpen((v) => {
+            const next = !v;
+            if (next) {
+                setShowBadge(false);
+                try {
+                    localStorage.setItem(BADGE_KEY, "1");
+                } catch {
+                    /* localStorage diblokir: badge tetap hilang untuk sesi ini */
+                }
+            }
+            return next;
+        });
+    };
 
     // Gulir ke pesan terbaru.
     useEffect(() => {
@@ -84,7 +128,7 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
                     role="dialog"
                     aria-modal="false"
                     aria-label="Pemandu digital Desa Wisata Bantaragung"
-                    className="fixed bottom-0 right-0 z-[60] flex h-[85vh] w-full flex-col overflow-hidden rounded-t-3xl border border-forest-200 bg-white shadow-2xl sm:bottom-24 sm:right-6 sm:h-[600px] sm:max-h-[80vh] sm:w-[400px] sm:rounded-3xl"
+                    className="fixed bottom-0 right-0 relative z-[60] flex h-[85vh] w-full flex-col overflow-hidden rounded-t-3xl border border-forest-200 bg-white shadow-2xl sm:bottom-24 sm:right-6 sm:h-[600px] sm:max-h-[80vh] sm:w-[400px] sm:rounded-3xl"
                 >
                     {/* Kepala */}
                     <header className="flex items-center gap-3 bg-forest-900 px-4 py-3 text-white">
@@ -110,10 +154,16 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
                         {messages.length > 0 && (
                             <button
                                 type="button"
-                                onClick={clear}
-                                className="rounded-lg px-2 py-1 text-xs text-white/70 transition hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold-400"
+                                onClick={() => setConfirmClear(true)}
+                                aria-label="Hapus seluruh percakapan"
+                                title="Hapus seluruh percakapan"
+                                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-white/25 bg-white/10 px-2.5 py-1.5 text-xs font-medium text-white transition hover:border-red-300/60 hover:bg-red-500/20 hover:text-white active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400"
                             >
-                                Hapus
+                                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3M4 7h16" />
+                                </svg>
+                                <span className="hidden sm:inline">Hapus percakapan</span>
+                                <span className="sm:hidden">Hapus</span>
                             </button>
                         )}
                         <button
@@ -184,6 +234,54 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
                         </a>
                     </div>
 
+                    {/* Konfirmasi hapus. Ditampilkan sebagai lapisan di atas
+                        isi percakapan, bukan dialog peramban, agar gayanya
+                        konsisten dan tetap terbaca di layar kecil. */}
+                    {confirmClear && (
+                        <div
+                            role="alertdialog"
+                            aria-modal="true"
+                            aria-labelledby="hapus-judul"
+                            aria-describedby="hapus-desc"
+                            className="absolute inset-0 z-10 flex items-center justify-center bg-forest-950/50 p-4 backdrop-blur-sm"
+                        >
+                            <div className="w-full max-w-xs rounded-2xl bg-white p-5 shadow-2xl">
+                                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-red-50 text-red-600">
+                                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                                    </svg>
+                                </div>
+                                <h3 id="hapus-judul" className="text-base font-semibold text-forest-800">
+                                    Hapus seluruh percakapan?
+                                </h3>
+                                <p id="hapus-desc" className="mt-1 text-sm text-slate-600">
+                                    Semua pesan di layar ini akan dihapus dan tidak bisa dikembalikan.
+                                </p>
+                                <div className="mt-4 flex gap-2">
+                                    <button
+                                        type="button"
+                                        autoFocus
+                                        onClick={() => setConfirmClear(false)}
+                                        className="flex-1 rounded-xl border border-forest-200 bg-white px-3 py-2.5 text-sm font-medium text-forest-700 transition hover:bg-forest-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest-500"
+                                    >
+                                        Batal
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            clear();
+                                            setConfirmClear(false);
+                                            inputRef.current?.focus();
+                                        }}
+                                        className="flex-1 rounded-xl bg-red-600 px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
+                                    >
+                                        Ya, hapus
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Kolom tulis */}
                     <form
                         onSubmit={(e) => {
@@ -226,25 +324,100 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
             <button
                 ref={triggerRef}
                 type="button"
-                onClick={() => setOpen((v) => !v)}
+                onClick={toggleOpen}
                 aria-expanded={open}
-                aria-label={open ? "Tutup pemandu digital" : "Buka pemandu digital"}
+                aria-label={
+                    open
+                        ? "Tutup pemandu digital"
+                        : `Buka pemandu digital${showBadge ? " (belum pernah dibuka)" : ""}`
+                }
                 className="fixed bottom-5 right-5 z-[60] flex items-center gap-2 rounded-full bg-forest-700 px-4 py-3.5 text-sm font-semibold text-white shadow-xl transition hover:bg-forest-800 hover:shadow-2xl active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400"
             >
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                    />
-                </svg>
+                <span className="relative flex">
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                        />
+                    </svg>
+
+                    {/* Titik notifikasi: memberi tahu ada yang bisa ditanyakan,
+                        tanpa menghalangi ikon. Hilang setelah chat pertama kali
+                        dibuka dan tidak muncul lagi (disimpan di localStorage),
+                        supaya tidak terasa mengganggu pada kunjungan berikutnya. */}
+                    {showBadge && !open && (
+                        <span className="pointer-events-none absolute -right-1.5 -top-1.5 flex h-3 w-3">
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
+                            <span className="relative inline-flex h-3 w-3 rounded-full border border-white bg-red-500" />
+                        </span>
+                    )}
+                </span>
                 <span className="hidden sm:inline">Tanya Bantaragung</span>
             </button>
         </>
     );
 }
 
+/**
+ * Kartu pratinjau satu entitas: gambar kecil, judul, satu fakta utama.
+ *
+ * Tujuan: jawaban tidak hanya teks dan tautan, tetapi memperlihatkan bahwa
+ * yang dibicarakan memang punya halaman dan gambar di situs. Klik kartu =
+ * membuka halaman detailnya.
+ *
+ * Bila gambar gagal dimuat (CDN bermasalah atau berkas hilang), blok gambar
+ * dilepas dan kartu menyusut rapi tanpa kotak kosong.
+ */
+function SourceCard({ card }: { card: ChatCard }) {
+    const [imgFailed, setImgFailed] = useState(false);
+    const showImage = Boolean(card.cover) && !imgFailed;
+
+    return (
+        <Link
+            href={card.href}
+            className="group flex items-start gap-2.5 rounded-xl border border-forest-200/70 bg-forest-50/50 p-2 transition hover:border-forest-400 hover:bg-forest-50 hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest-500"
+        >
+            {showImage && (
+                <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-forest-100">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        src={assetUrl(card.cover as string)}
+                        alt=""
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        onError={() => setImgFailed(true)}
+                    />
+                </span>
+            )}
+
+            <span className="min-w-0 flex-1">
+                <span className="block truncate text-[13px] font-semibold text-forest-800">
+                    {card.title}
+                </span>
+                {card.highlight ? (
+                    <span className="mt-0.5 block truncate text-[11px] font-medium text-clay-600">
+                        {card.highlight}
+                    </span>
+                ) : null}
+                <span className="mt-0.5 line-clamp-2 block text-[11px] leading-snug text-slate-500">
+                    {card.summary}
+                </span>
+            </span>
+
+            <svg
+                className="mt-1 h-3.5 w-3.5 shrink-0 text-forest-400 transition-transform group-hover:translate-x-0.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden
+            >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+        </Link>
+    );
+}
 function Bubble({ message }: { message: ChatMessageItem }) {
     if (message.role === "user") {
         return (
@@ -272,6 +445,18 @@ function Bubble({ message }: { message: ChatMessageItem }) {
         <div className="flex justify-start">
             <div className="max-w-[90%] space-y-2 rounded-2xl rounded-bl-sm bg-white px-3.5 py-2.5 text-sm text-slate-800 shadow-sm">
                 <RichText text={message.text} />
+
+                {/* Kartu pratinjau entitas yang dibicarakan. Gambar dimuat
+                    malas (lazy) supaya tidak memperlambat panel, dan
+                    disembunyikan bila gagal dimuat agar tidak menyisakan
+                    kotak kosong. */}
+                {message.cards && message.cards.length > 0 && (
+                    <div className="space-y-2 border-t border-forest-100 pt-2">
+                        {message.cards.map((c) => (
+                            <SourceCard key={`${c.href}-${c.title}`} card={c} />
+                        ))}
+                    </div>
+                )}
 
                 {message.sources && message.sources.length > 0 && (
                     <div className="border-t border-forest-100 pt-2">

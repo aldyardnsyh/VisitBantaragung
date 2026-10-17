@@ -7,6 +7,8 @@ import { buildMessages } from "@/lib/chat/prompt";
 import { isProviderConfigured } from "@/lib/chat/provider";
 import { clientKey, releaseSlot, takeSlot } from "@/lib/chat/ratelimit";
 import { renderContext, retrieve } from "@/lib/chat/retrieve";
+import { checkScope } from "@/lib/chat/scope";
+import * as indexModule from "@/lib/chat/index";
 import { buildStructuredAnswer, buildFromRetrieval, detectStructuredIntent } from "@/lib/chat/structured";
 
 /**
@@ -37,6 +39,133 @@ function json(payload: unknown, status: number, headers: Record<string, string> 
         status,
         headers: { "Content-Type": "application/json", "Cache-Control": "no-store", ...headers },
     });
+}
+
+/**
+ * Bentuk ringkas entitas untuk kartu pratinjau di widget.
+ *
+ * Dikirim bersama jawaban agar gelembung chat bisa menampilkan gambar kecil,
+ * judul, dan satu fakta utama. Sengaja dibatasi 3 kartu dan tanpa `facts` utuh:
+ * cukup untuk tampilan, tanpa membocorkan seluruh isi indeks ke peramban.
+ */
+interface SourceCard {
+    title: string;
+    href: string;
+    /** Path sampul relatif CDN; kosong bila entitas tidak punya gambar. */
+    cover?: string;
+    /** Satu kalimat ringkas. */
+    summary: string;
+    /** Satu fakta paling relevan, mis. "Harga mulai: Rp 15.000 per orang". */
+    highlight?: string;
+    kind?: string;
+}
+
+const HIGHLIGHT_KEYS = [
+    "Harga mulai",
+    "Harga",
+    "Kapasitas",
+    "Khasiat",
+    "Jam operasional",
+    "Fasilitas",
+];
+
+/**
+ * Kartu untuk jalur terstruktur.
+ *
+ * Jalur itu tidak memakai `retrieve()`, sehingga tidak punya `result`. Kartu
+ * dibangun dengan mencocokkan `href` sumber ke indeks. Hanya diambil 3 pertama
+ * agar widget tidak penuh ketika jawabannya berupa daftar panjang.
+ */
+function toSourceCardsFromSources(
+    sources: { n: number; title: string; href: string }[],
+    max = 3
+): SourceCard[] {
+    const { buildIndex } = getIndexModule();
+    const cards = buildIndex().cards;
+    const out: SourceCard[] = [];
+    const seenTitle = new Set<string>();
+
+    for (const src of sources) {
+        const card = cards.find((c) => c.href === src.href);
+        if (!card) continue;
+
+        const titleKey = card.title.toLowerCase().trim();
+        if (seenTitle.has(titleKey)) continue;
+        seenTitle.add(titleKey);
+
+        let highlight: string | undefined;
+        for (const key of HIGHLIGHT_KEYS) {
+            const v = card.facts[key];
+            if (v && v.trim()) {
+                highlight = `${key}: ${v.length > 90 ? `${v.slice(0, 87)}...` : v}`;
+                break;
+            }
+        }
+
+        out.push({
+            title: card.title,
+            href: card.href,
+            cover: card.cover,
+            summary: card.summary.length > 140 ? `${card.summary.slice(0, 137)}...` : card.summary,
+            highlight,
+            kind: card.kind,
+        });
+        if (out.length >= max) break;
+    }
+
+    return out;
+}
+
+/**
+ * Akses malas ke modul indeks.
+ *
+ * `buildIndex` berat (membaca ratusan berkas JSON) dan sudah di-cache di
+ * modulnya sendiri, jadi impor statis tidak menambah biaya. Dibungkus fungsi
+ * agar berkas route tidak memuat indeks saat modul dievaluasi di tepi
+ * (mis. untuk rute yang tidak menyentuh chatbot).
+ */
+function getIndexModule() {
+    return indexModule;
+}
+
+function toSourceCards(result: ReturnType<typeof retrieve>, max = 3): SourceCard[] {
+    const out: SourceCard[] = [];
+    const seenHref = new Set<string>();
+    const seenTitle = new Set<string>();
+
+    for (const { card } of result.cards) {
+        if (seenHref.has(card.href)) continue;
+
+        // Entitas yang sama bisa punya dua kartu (mis. destinasi dan titik
+        // peta dengan nama identik). Menampilkan keduanya membuat kartu
+        // terasa berulang, jadi cukup satu wakil per judul.
+        const titleKey = card.title.toLowerCase().trim();
+        if (seenTitle.has(titleKey)) continue;
+
+        seenHref.add(card.href);
+        seenTitle.add(titleKey);
+
+        let highlight: string | undefined;
+        for (const key of HIGHLIGHT_KEYS) {
+            const v = card.facts[key];
+            if (v && v.trim()) {
+                highlight = `${key}: ${v.length > 90 ? `${v.slice(0, 87)}...` : v}`;
+                break;
+            }
+        }
+
+        out.push({
+            title: card.title,
+            href: card.href,
+            cover: card.cover,
+            summary: card.summary.length > 140 ? `${card.summary.slice(0, 137)}...` : card.summary,
+            highlight,
+            kind: card.kind,
+        });
+        if (out.length >= max) break;
+    }
+
+    return out;
 }
 
 export async function POST(req: NextRequest) {
@@ -78,6 +207,31 @@ export async function POST(req: NextRequest) {
     try {
         const question = body.message ?? "";
 
+        // --- 2b. Penjaga cakupan --------------------------------------------
+        //
+        // Dijalankan SEBELUM retrieval. Tanpa ini, pertanyaan di luar cakupan
+        // tetap "dicocokkan" dengan data terdekat dan menghasilkan jawaban
+        // yang tampak meyakinkan tetapi tidak relevan, misalnya:
+        //   "1 tambah 3 dikurang 2 berapa?" -> daftar 3 destinasi
+        //   "elon musk itu siapa?"          -> daftar artikel berita
+        //   "harga bawang hari ini"         -> profil toko kelontong
+        // Penolakan tidak memakai kuota LLM.
+        // Pertanyaan lanjutan mewarisi topik dari giliran sebelumnya, jadi
+        // cakupannya dinilai dengan mempertimbangkan riwayat.
+        const hasHistory = (body.history ?? []).length > 0;
+        const scope = checkScope(question, hasHistory);
+        if (!scope.inScope) {
+            return json(
+                {
+                    answer: normalizeTypography(scope.reply),
+                    sources: [],
+                    reason: `out_of_scope:${scope.reason}`,
+                    model: null,
+                },
+                200
+            );
+        }
+
         // --- 3a. Pertanyaan berpola (daftar, harga, terbaru) -----------------
         //
         // Dijawab langsung dari indeks, TANPA LLM. Alasannya bukan sekadar
@@ -86,12 +240,19 @@ export async function POST(req: NextRequest) {
         // dan menyertakan data yang tidak ditanyakan. Lihat lib/chat/structured.ts.
         const structuredKind = detectStructuredIntent(question);
         if (structuredKind) {
-            const structured = buildStructuredAnswer(question, structuredKind);
+            // Bila percakapan sedang membahas satu entitas, jawaban terstruktur
+            // yang bersifat umum (mis. daftar semua harga) harus mundur agar
+            // giliran itu dijawab tentang entitas tersebut.
+            const anchored = (body.history ?? []).some((m) => m.role === "user");
+            const structured = buildStructuredAnswer(question, structuredKind, anchored);
             if (structured) {
                 return json(
                     {
                         answer: normalizeTypography(stripSlop(structured.answer)),
                         sources: structured.sources,
+                        // Jalur ini menjawab langsung dari indeks tanpa retrieval,
+                        // jadi kartu diambil dari indeks memakai judul sumbernya.
+                        cards: toSourceCardsFromSources(structured.sources),
                         reason: "structured",
                         model: null,
                         structured: structured.kind,
@@ -102,7 +263,7 @@ export async function POST(req: NextRequest) {
         }
 
         // --- 3b. Ambil konteks ---------------------------------------------
-        const result = retrieve(question);
+        const result = retrieve(question, body.history ?? []);
         const { text: contextText, sources } = renderContext(result);
 
         // Tidak ada satu pun kartu atau potongan yang cocok: jangan buang
@@ -164,6 +325,7 @@ export async function POST(req: NextRequest) {
                     {
                         answer: normalizeTypography(stripSlop(dyn.answer)),
                         sources: dyn.sources,
+                        cards: toSourceCards(result),
                         reason: "all_models_failed",
                         model: null,
                         mode: "structured_fallback",
@@ -176,6 +338,7 @@ export async function POST(req: NextRequest) {
                 {
                     answer: normalizeTypography(stripSlop(fb.answer)),
                     sources: fb.sources,
+                    cards: toSourceCards(result),
                     reason: "all_models_failed",
                     model: null,
                 },
@@ -203,6 +366,7 @@ export async function POST(req: NextRequest) {
                     {
                         answer: normalizeTypography(stripSlop(dyn.answer)),
                         sources: dyn.sources,
+                        cards: toSourceCards(result),
                         reason: "output_rejected",
                         model: chain.model,
                         mode: "structured_fallback",
@@ -221,6 +385,7 @@ export async function POST(req: NextRequest) {
             {
                 answer: filtered.cleaned,
                 sources,
+                cards: toSourceCards(result),
                 reason: null,
                 model: chain.model,
                 // Latensi & percobaan berguna untuk memantau kesehatan model

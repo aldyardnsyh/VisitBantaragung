@@ -15,11 +15,23 @@ export interface ChatSource {
     href: string;
 }
 
+/** Kartu pratinjau entitas yang ditampilkan di dalam gelembung jawaban. */
+export interface ChatCard {
+    title: string;
+    href: string;
+    cover?: string;
+    summary: string;
+    highlight?: string;
+    kind?: string;
+}
+
 export interface ChatMessageItem {
     id: string;
     role: "user" | "assistant";
     text: string;
     sources?: ChatSource[];
+    /** Kartu pratinjau (gambar + judul + satu fakta). */
+    cards?: ChatCard[];
     /** Penanda internal untuk menampilkan hasil non-LLM secara jujur. */
     degraded?: boolean;
     pending?: boolean;
@@ -111,6 +123,7 @@ export function useChat() {
                 const data = (await res.json()) as {
                     answer: string;
                     sources?: ChatSource[];
+                    cards?: ChatCard[];
                     reason?: string | null;
                 };
 
@@ -128,6 +141,7 @@ export function useChat() {
                                   pending: false,
                                   text: data.answer ?? "Maaf, terjadi kesalahan.",
                                   sources: data.sources ?? [],
+                                  cards: data.cards ?? [],
                                   degraded,
                               }
                             : m

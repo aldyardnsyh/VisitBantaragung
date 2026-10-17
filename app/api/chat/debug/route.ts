@@ -23,11 +23,14 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Tidak tersedia." }, { status: 404 });
     }
 
-    const body = (await req.json().catch(() => ({}))) as { message?: string };
+    const body = (await req.json().catch(() => ({}))) as {
+        message?: string;
+        history?: { role: string; content: string }[];
+    };
     const q = String(body.message ?? "").trim();
     if (!q) return NextResponse.json({ error: "message wajib diisi" }, { status: 400 });
 
-    const result = retrieve(q);
+    const result = retrieve(q, body.history ?? []);
     const { text, sources } = renderContext(result);
     const fallback = buildFallbackAnswer(result, q);
 

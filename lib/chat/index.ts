@@ -50,6 +50,12 @@ export interface EntityCard {
     href: string;
     /** Ringkasan satu baris. */
     summary: string;
+    /**
+     * Path gambar sampul relatif terhadap basis aset (CDN), mis.
+     * "wisata/curug-cipeuteuy/cover.webp". Dipakai widget untuk kartu
+     * pratinjau di dalam gelembung percakapan.
+     */
+    cover?: string;
     /** Fakta terstruktur: label -> nilai. Dirender apa adanya ke konteks. */
     facts: Record<string, string>;
     /** Teks untuk dicocokkan saat pencarian (nama + alias + kategori). */
@@ -210,6 +216,7 @@ export function buildIndex(): ChatIndex {
             title: w.title,
             href: `/wisata/${w.slug}`,
             summary: w.excerpt,
+            cover: w.cover,
             facts,
             keywords: [
                 w.title,
@@ -269,6 +276,7 @@ export function buildIndex(): ChatIndex {
             title: h.name,
             href: `/b2h/katalog/${h.slug}`,
             summary: h.excerpt,
+            cover: h.cover,
             facts,
             keywords: `${h.name} ${h.latin} ${h.slug.replace(/-/g, " ")} tanaman herbal obat`.toLowerCase(),
             bodyTokens: [h.excerpt, h.description, ...(h.benefits ?? []), ...(h.usage ?? [])]
@@ -297,6 +305,7 @@ export function buildIndex(): ChatIndex {
             title: h.name,
             href: `/bdb/homestay/${h.slug}`,
             summary: h.excerpt,
+            cover: h.cover,
             facts,
             keywords: `${h.name} ${h.slug.replace(/-/g, " ")} homestay penginapan inap nginep kapasitas`.toLowerCase(),
             bodyTokens: [h.excerpt, h.description, ...(h.facilities ?? []), h.address ?? ""]
@@ -321,6 +330,7 @@ export function buildIndex(): ChatIndex {
             title: u.name,
             href: `/bdb/umkm/${u.slug}`,
             summary: u.excerpt,
+            cover: u.cover,
             facts,
             keywords: `${u.name} ${u.slug.replace(/-/g, " ")} umkm usaha warung toko`.toLowerCase(),
             bodyTokens: [u.excerpt, u.description].join(" ").toLowerCase(),
@@ -335,6 +345,7 @@ export function buildIndex(): ChatIndex {
             title: l.name,
             href: `/bmc/lokasi/${l.slug}`,
             summary: l.excerpt,
+            cover: l.cover,
             facts: {
                 Kategori: l.category,
                 Ringkasan: l.excerpt,

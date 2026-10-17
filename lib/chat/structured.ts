@@ -331,6 +331,10 @@ function artikelTerbaru(limit = 5): StructuredAnswer {
     const heads = index.chunks
         .filter((c) => c.id.endsWith(":head"))
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        // Deduplikasi per artikel. Satu artikel bisa punya lebih dari satu
+        // chunk kepala (mis. slug sama di dua folder), dan tanpa ini judul
+        // yang sama muncul dua kali di daftar sekaligus di blok Sumber.
+        .filter((c, i, arr) => arr.findIndex((x) => x.href === c.href) === i)
         .slice(0, limit);
 
     const sources: { n: number; title: string; href: string }[] = [];
@@ -427,7 +431,9 @@ function hargaDestinasi(): StructuredAnswer | null {
 
 export function buildStructuredAnswer(
     question: string,
-    kind: StructuredKind
+    kind: StructuredKind,
+    /** true bila ada entitas yang sedang dibicarakan dari giliran sebelumnya. */
+    followUpAnchor = false
 ): StructuredAnswer | null {
     switch (kind) {
         case "artikel_terbaru":
@@ -445,7 +451,11 @@ export function buildStructuredAnswer(
         case "harga_homestay":
             return hargaHomestay();
         case "harga_destinasi":
-            return hargaDestinasi();
+            // Daftar harga umum HANYA bila tidak ada entitas yang sedang
+            // dibicarakan. Bila pengunjung baru membahas Curug lalu bertanya
+            // "harganya berapa?", maksudnya harga Curug, bukan daftar semua
+            // harga destinasi.
+            return followUpAnchor ? null : hargaDestinasi();
         default:
             return null;
     }
