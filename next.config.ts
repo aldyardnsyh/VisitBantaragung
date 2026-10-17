@@ -17,6 +17,29 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        // Dasbor admin tidak boleh masuk indeks mesin pencari.
+        //
+        // robots.txt saja tidak cukup: berkas itu hanya mencegah perayapan,
+        // bukan mencegah URL muncul di hasil pencarian bila ditemukan dari
+        // sumber lain (misalnya tautan di tempat lain). Header X-Robots-Tag
+        // bekerja pada tingkat respons HTTP sehingga berlaku untuk halaman
+        // maupun berkas apa pun di bawah /admin.
+        source: "/admin/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive, nosnippet" },
+          // Dasbor tidak perlu dirujuk sebagai sumber saat pengguna berpindah.
+          { key: "Referrer-Policy", value: "no-referrer" },
+        ],
+      },
+      {
+        // API internal admin juga tidak boleh diindeks atau diarsipkan.
+        source: "/api/admin/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+          { key: "Cache-Control", value: "no-store, max-age=0" },
+        ],
+      },
     ];
   },
 };

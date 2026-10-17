@@ -14,9 +14,13 @@ const FAILURE_DELAY_MS = 500;
 
 export async function POST(request: NextRequest) {
   try {
-    if (!ADMIN.sessionSecret) {
+    // Pesan galat sengaja generik dan tidak menyebut nama variabel environment
+    // apa pun. Rincian konfigurasi hanya muncul di halaman /admin/login yang
+    // memang sudah diketahui pemilik, bukan di respons API yang bisa dipanggil
+    // siapa saja.
+    if (!ADMIN.sessionSecret || !ADMIN.passwordHash && !ADMIN.passwordPlain) {
       return NextResponse.json(
-        { error: "Dasbor belum dikonfigurasi (ADMIN_SESSION_SECRET kosong)." },
+        { error: "Dasbor belum dikonfigurasi. Hubungi pengelola situs." },
         { status: 503 }
       );
     }
