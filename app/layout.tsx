@@ -3,6 +3,7 @@ import Navbar from "@/app/components/layout/Navbar";
 import { getSeoSettings } from "@/lib/content";
 import type { Metadata } from "next";
 import Footer from "@/app/components/layout/Footer";
+import SiteChrome from "@/app/components/layout/SiteChrome";
 import { assetUrl } from "@/lib/asset";
 
 
@@ -134,9 +135,11 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body>
-        <Navbar />
-        {children}
-        <Footer />
+        {/* Navbar/Footer publik tidak dirender di rute /admin yang punya
+            tata letak sendiri. Halaman publik tetap identik seperti sebelumnya. */}
+        <SiteChrome navbar={<Navbar />} footer={<Footer />}>
+          {children}
+        </SiteChrome>
       </body>
     </html>
   );

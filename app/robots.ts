@@ -10,7 +10,8 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         // Parameter query tidak pernah menghasilkan halaman unik, jadi jangan
         // dirayapi agar tidak menguras kuota crawl untuk URL duplikat.
-        disallow: ["/*?*", "/api/"],
+        // /admin adalah dasbor internal, bukan konten publik.
+        disallow: ["/*?*", "/api/", "/admin/"],
       },
     ],
     sitemap: [`${siteUrl}/sitemap.xml`, `${siteUrl}/news-sitemap.xml`],

@@ -1,0 +1,117 @@
+/*
+ * Token & gaya khusus dasbor admin.
+ *
+ * Sengaja dipisah dari app/globals.css supaya situs publik yang sudah berjalan
+ * tidak tersentuh sama sekali. Palet tetap memakai DNA merek (forest, sand,
+ * clay) tetapi dengan permukaan yang lebih bersih dan kontras yang aman WCAG AA.
+ *
+ * Tema hanya terang (light). Tidak ada varian gelap, tidak ada glassmorphism,
+ * tidak ada glow, dan bayangan dipakai seminimal mungkin sebagai penanda elevasi.
+ */
+
+@theme {
+  --color-adm-page: #fbf8f1;
+  --color-adm-surface: #ffffff;
+  --color-adm-muted: #f5f1e6;
+  --color-adm-border: #e4e7dc;
+  --color-adm-border-strong: #cde0d0;
+  --color-adm-divider: #eef0e8;
+
+  --color-adm-ink: #1b2a26;
+  --color-adm-text: #334155;
+  /* Abu ini dipilih agar tetap lolos 4,5:1 di atas permukaan krem (bukan hanya
+     di atas putih). Nilai #64748b hanya mencapai 4,49:1 di atas krem. */
+  --color-adm-subtle: #5d6b7e;
+
+  --color-adm-sidebar: #0c1f16;
+  --color-adm-sidebar-active: #163024;
+  --color-adm-sidebar-text: #e8f0e6;
+  --color-adm-sidebar-muted: #a8c4ad;
+
+  --color-adm-primary: #2d6a4f;
+  --color-adm-primary-hover: #1f3d2e;
+  --color-adm-accent: #c96f4a;
+  --color-adm-accent-soft: #f6e4db;
+  /* Terakota gelap khusus untuk teks di atas latar aksen muda: #c96f4a hanya
+     mencapai 2,91:1 sehingga tidak layak dipakai sebagai warna teks. */
+  --color-adm-accent-ink: #9c4f2f;
+
+  --color-adm-success: #15803d;
+  --color-adm-success-soft: #ecfdf5;
+  /* Amber lebih gelap: #a16207 hanya 4,42:1 di atas latar kuning muda. */
+  --color-adm-warning: #8a5306;
+  --color-adm-warning-soft: #fef3c7;
+  --color-adm-danger: #b91c1c;
+  --color-adm-danger-soft: #fef2f2;
+  --color-adm-info: #1d4ed8;
+  --color-adm-info-soft: #eff6ff;
+
+  --radius-adm-sm: 6px;
+  --radius-adm-md: 8px;
+  --radius-adm-lg: 12px;
+}
+
+/* Cincin fokus tunggal untuk seluruh dasbor: kontras, konsisten, terlihat jelas
+   saat navigasi keyboard. */
+.adm-ring:focus-visible {
+  outline: 2px solid var(--color-adm-primary);
+  outline-offset: 2px;
+}
+
+/* Transisi hanya pada properti warna: memberi umpan balik hover/focus tanpa
+   animasi dekoratif. Menghormati prefers-reduced-motion. */
+.adm-transition {
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adm-transition {
+    transition: none;
+  }
+}
+
+/* Dialog masuk/keluar ringan, tanpa bounce atau scale. */
+@keyframes adm-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes adm-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.adm-overlay-in {
+  animation: adm-fade-in 150ms ease-out both;
+}
+
+.adm-dialog-in {
+  animation: adm-rise 200ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adm-overlay-in,
+  .adm-dialog-in {
+    animation: none;
+  }
+}
+
+/* Editor paragraf: textarea tumbuh mengikuti isi. */
+.adm-textarea-auto {
+  field-sizing: content;
+  min-height: 4.5rem;
+  max-height: 40rem;
+}
