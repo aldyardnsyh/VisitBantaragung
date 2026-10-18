@@ -8,6 +8,7 @@ import { isProviderConfigured } from "@/lib/chat/provider";
 import { clientKey, releaseSlot, takeSlot } from "@/lib/chat/ratelimit";
 import { renderContext, retrieve } from "@/lib/chat/retrieve";
 import { checkScope } from "@/lib/chat/scope";
+import { buildSocialAnswer, detectSocial } from "@/lib/chat/social";
 import { findMentionedEntity, type EntityMention } from "@/lib/chat/mention";
 import type { EntityCard } from "@/lib/chat/index";
 import * as indexModule from "@/lib/chat/index";
@@ -258,6 +259,33 @@ export async function POST(req: NextRequest) {
                     answer: normalizeTypography(scope.reply),
                     sources: [],
                     reason: `out_of_scope:${scope.reason}`,
+                    model: null,
+                },
+                200
+            );
+        }
+
+        // --- 2c. Percakapan sosial ------------------------------------------
+        //
+        // Ucapan terima kasih, pujian, sapaan, dan penutup BUKAN pertanyaan.
+        // Kalimat seperti "oke terima kasih sangat membantu informasinya" dulu
+        // lolos penjaga cakupan (dianggap lanjutan percakapan), lalu diteruskan
+        // ke retrieval yang menjaring entitas dari riwayat dan membalas profil
+        // lengkapnya lagi  -  mengulang info yang baru dibaca pengunjung.
+        //
+        // Di sini kalimat semacam itu dijawab sebagai manusia: singkat, hangat,
+        // tanpa mengulang data dan tanpa memakai kuota LLM. Penyebutan nama
+        // tempat membatalkan jalur ini, supaya "makasih, curug cipeteuy keren"
+        // tetap bisa dijawab dengan konteks tempat.
+        const socialKind = findMentionedEntity(question) ? null : detectSocial(question);
+        if (socialKind) {
+            const topicTitle = currentTopic(body.history ?? [], null)?.title ?? null;
+            const social = buildSocialAnswer(socialKind, topicTitle);
+            return json(
+                {
+                    answer: normalizeTypography(stripSlop(social.answer)),
+                    sources: [],
+                    reason: `social:${social.kind}`,
                     model: null,
                 },
                 200

@@ -20,18 +20,44 @@ const cases = [
         mustNot: /genjring|https?:\/\//i,
         check: "fokus curug walau typo, tanpa URL mentah",
     },
+    // Kasus laporan: pengunjung menutup percakapan setelah membahas Kopi
+    // Pakuwon. Dulu dibalas profil lengkap Kopi Pakuwon lagi (mengulang data).
+    // Sekarang harus dibalas sebagai percakapan sosial yang singkat.
+    {
+        q: "oke terima kasih sangat membantu informasinya",
+        history: [
+            { role: "user", content: "kopi pakuwon itu apa" },
+            { role: "assistant", content: "Kopi Pakuwon: kedai kopi scenic di Jalan Ciboer." },
+        ],
+        expect: /sama-sama|senang bisa membantu/i,
+        mustNot: /Fasilitas:|Kategori:|Aktivitas:|Terkait juga:|https?:\/\//i,
+        check: "balas terima kasih, bukan ulang profil",
+    },
+    {
+        q: "terima kasih",
+        history: [
+            { role: "user", content: "berapa tiket curug cipeuteuy" },
+            { role: "assistant", content: "Tiket Curug Cipeuteuy Rp 10.000." },
+        ],
+        expect: /sama-sama/i,
+        mustNot: /Fasilitas:|Kategori:/i,
+        check: "terima kasih singkat tanpa mengulang data",
+    },
 ];
 
 let fail = 0;
 console.log(`\n=== Uji kasus laporan pemilik @ ${BASE} ===\n`);
 
 for (const c of cases) {
+    // `history` per kasus: perlu untuk menguji jawaban lanjutan (mis. ucapan
+    // terima kasih setelah membahas satu tempat).
+    const payload = { message: c.q, history: c.history ?? [] };
     const res = await fetch(`${BASE}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: c.q, history: [] }),
+        body: JSON.stringify(payload),
     });
-    const b = await res.json();
+    let b = await res.json();
 
     // Rate limit 4/menit per IP juga berlaku untuk pengujian. Bila kena,
     // tunggu lalu ulangi; jangan dihitung sebagai kegagalan kualitas.
@@ -41,7 +67,7 @@ for (const c of cases) {
         const retry = await fetch(`${BASE}/api/chat`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: c.q, history: [] }),
+            body: JSON.stringify(payload),
         });
         b = await retry.json();
     }
