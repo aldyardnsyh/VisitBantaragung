@@ -171,8 +171,15 @@ export default function Home() {
             <Reveal delay={100}>
             <div className="rounded-2xl bg-white/70 border border-forest-200/60 shadow-sm hover:shadow-lg hover:-translate-y-1 transition p-8 text-center h-full">
               <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-forest-100 text-forest-700 mb-4">
+                {/*
+                  Ikon tanaman (daun bertangkai + tunas). Sebelumnya kartu ini
+                  memakai ikon tanda seru dalam lingkaran yang tidak berkaitan
+                  dengan "Kampung Herbal", sehingga maknanya membingungkan.
+                */}
                 <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21a9 9 0 100-18 9 9 0 000 18zM12 8v4m0 4h.01" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21v-6" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15c0-4.5 3-7.5 8-8-.5 5-3.5 8-8 8z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15c0-3.5-2.5-6-7-6.5.5 4 3 6.5 7 6.5z" />
                 </svg>
               </div>
               <h3 className="font-bold text-lg text-forest-800 mb-2">Kampung Herbal</h3>
