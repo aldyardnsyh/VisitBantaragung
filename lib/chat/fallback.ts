@@ -19,11 +19,40 @@ export interface FallbackAnswer {
     grounded: boolean;
 }
 
+/**
+ * Nilai fakta yang aman ditampilkan di gelembung chat.
+ *
+ * Tautan mentah tidak boleh ikut tercetak. Dua alasan nyata:
+ *
+ * 1. URL "Arah Google Maps" yang panjang membuat teks meluber keluar
+ *    gelembung percakapan (laporan pengunjung).
+ * 2. Di chat, tautan sudah diwakili kartu pratinjau dan daftar Sumber, jadi
+ *    mencetak URL mentah hanya menambah bising.
+ *
+ * Fragmen seperti "6281... (https://wa.me/6281...)" dibersihkan menjadi
+ * nomornya saja; bila seluruh nilainya berupa URL (mis. "Arah Google Maps"),
+ * hasilnya kosong dan fakta itu dilewati.
+ *
+ * Diekspor karena dipakai juga oleh penyusun jawaban terstruktur
+ * (lib/chat/structured.ts).
+ */
+export function cleanFactValue(raw: string): string {
+    return String(raw ?? "")
+        .replace(/https?:\/\/\S+/g, " ")
+        // Sisa tanda kurung setelah URL dibuang, mis. "6281... (" -> "6281...".
+        .replace(/\(\s*\)/g, " ")
+        .replace(/[(\[]\s*$/, "")
+        .replace(/^\s*[)\]]/, "")
+        .replace(/\s{2,}/g, " ")
+        .replace(/\s+([,.;:])/g, "$1")
+        .trim();
+}
+
 function factPreview(facts: Record<string, string>, keys: string[]): string[] {
     const out: string[] = [];
     for (const key of keys) {
-        const v = facts[key];
-        if (v && v.trim()) out.push(`${key}: ${v}`);
+        const v = cleanFactValue(facts[key] ?? "");
+        if (v) out.push(`${key}: ${v}`);
     }
     return out;
 }

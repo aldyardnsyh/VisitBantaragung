@@ -14,6 +14,12 @@ const cases = [
     { q: "paket wisata apa saja", expect: /paket/i, mustNot: null, check: "daftar paket" },
     { q: "tanaman herbal apa saja", expect: /tanaman|herbal/i, mustNot: null, check: "daftar herbal" },
     { q: "umkm apa saja", expect: /umkm/i, mustNot: null, check: "daftar umkm" },
+    {
+        q: "Saya ingin ke curug cipeteuy ini gimana caranya dan dimana letak lokasinya tolong detailkan",
+        expect: /cipeuteuy/i,
+        mustNot: /genjring|https?:\/\//i,
+        check: "fokus curug walau typo, tanpa URL mentah",
+    },
 ];
 
 let fail = 0;

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { renderContext, retrieve } from "@/lib/chat/retrieve";
 import { buildFallbackAnswer } from "@/lib/chat/fallback";
+import { findMentionedEntity } from "@/lib/chat/mention";
 
 /**
  * Endpoint uji retrieval.
@@ -30,12 +31,17 @@ export async function POST(req: NextRequest) {
     const q = String(body.message ?? "").trim();
     if (!q) return NextResponse.json({ error: "message wajib diisi" }, { status: 400 });
 
-    const result = retrieve(q, body.history ?? []);
+    // Sama seperti jalur produksi: entitas yang disebut pengunjung (toleran
+    // salah ketik) dipakai sebagai jangkar retrieval. Tanpa ini, debug bisa
+    // memberi hasil yang berbeda dari yang dialami pengunjung.
+    const mention = findMentionedEntity(q);
+    const result = retrieve(q, body.history ?? [], mention?.card ?? null);
     const { text, sources } = renderContext(result);
     const fallback = buildFallbackAnswer(result, q);
 
     return NextResponse.json({
         query: q,
+        mention: mention ? { title: mention.card.title, strong: mention.strong } : null,
         terms: result.terms,
         cards: result.cards.map((c) => ({
             id: c.card.id,

@@ -1,6 +1,9 @@
 // Uji retrieval lewat endpoint debug (TANPA memanggil LLM, hemat kuota).
 // Jalankan: npm run dev   (terminal lain, CHAT_ENABLED boleh false)
 // lalu    : node scripts/chat/test-retrieval.mjs
+//
+// `top`  : bila diisi, kartu TERATAS harus cocok (bukan sekadar ada di daftar).
+// `history`: riwayat percakapan yang dikirim, untuk menguji jangkar lanjutan.
 
 const BASE = process.env.CHAT_TEST_BASE ?? "http://localhost:3111";
 
@@ -21,6 +24,28 @@ const cases = [
     { q: "harga paket edu wisata family gathering", expect: /eduwisata|family|gathering|paket/i, want: "Eduwisata", label: "paket eduwisata" },
     { q: "bumi perkemahan awilega bisa camping?", expect: /awilega|perkemahan/i, want: "Awilega", label: "awilega" },
     { q: "curug cipetoy tiket berapa", expect: /curug/i, want: "Cipeuteuy", label: "salah ketik (cipetoy)" },
+    {
+        q: "saya ingin ke curug cipeteuy ini gimana caranya dan dimana letak lokasinya tolong detailkan",
+        expect: /curug/i,
+        top: /curug/i,
+        want: "Curug Cipeuteuy",
+        label: "typo cipeteuy + minta detail",
+    },
+    {
+        q: "saya ingin ke curug cipeteuy ini gimana caranya dan dimana letak lokasinya tolong detailkan",
+        history: [
+            { role: "user", content: "Destinasi wisata apa saja yang ada?" },
+            {
+                role: "assistant",
+                content:
+                    "Bantaragung punya banyak destinasi: Atraksi Genjring Kuda Jaya, Domba Ketangkasan, Curug Cipeuteuy, Terasering Ciboer, Telaga Nila, dan lainnya.",
+            },
+        ],
+        expect: /curug/i,
+        top: /curug/i,
+        want: "Curug Cipeuteuy",
+        label: "typo + riwayat daftar",
+    },
     { q: "homestay pak jamal", expect: /jamal/i, want: "Jamal", label: "homestay pak jamal" },
     { q: "tanaman lidah buaya manfaat", expect: /lidah buaya/i, want: "Lidah Buaya", label: "lidah buaya" },
     { q: "villa gardenstone harga", expect: /gardenstone/i, want: "Gardenstone", label: "villa gardenstone" },
@@ -37,7 +62,7 @@ for (const c of cases) {
         const res = await fetch(`${BASE}/api/chat/debug`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: c.q }),
+            body: JSON.stringify({ message: c.q, history: c.history ?? [] }),
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         j = await res.json();
@@ -49,13 +74,22 @@ for (const c of cases) {
 
     const titles = j.cards.map((x) => x.title).join(" | ");
     const hay = `${titles} ${j.fallbackAnswer} ${j.chunks.map((x) => x.title).join(" ")}`;
-    const hit = c.expect.test(hay) && !/tidak menemukan informasi/i.test(j.fallbackAnswer);
+    const top = j.cards[0]?.title ?? "(tidak ada kartu)";
+    const topHit = c.top ? c.top.test(top) : true;
+    const hit =
+        c.expect.test(hay) &&
+        topHit &&
+        !/tidak menemukan informasi/i.test(j.fallbackAnswer);
     if (!hit) fail++;
 
-    const top = j.cards[0]?.title ?? "(tidak ada kartu)";
-    console.log(`${hit ? "  ok  " : "  FAIL"} ${c.label.padEnd(24)} ${String(j.cards.length).padStart(2)} kartu, ${String(j.chunks.length).padStart(1)} chunk | teratas: ${top}`);
+    const mentionLabel = j.mention
+        ? `${j.mention.title}${j.mention.strong ? "" : " (lemah)"}`
+        : "-";
+    console.log(
+        `${hit ? "  ok  " : "  FAIL"} ${c.label.padEnd(24)} ${String(j.cards.length).padStart(2)} kartu, ${String(j.chunks.length).padStart(1)} chunk | teratas: ${top} | jangkar: ${mentionLabel}`
+    );
     if (!hit) {
-        console.log(`         harap: ${c.expect}`);
+        console.log(`         harap: ${c.expect}${c.top ? ` (teratas: ${c.top})` : ""}`);
         console.log(`         dapat: ${titles || "(kosong)"}`);
     }
 }

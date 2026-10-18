@@ -32,22 +32,22 @@ let fail = 0;
 const GAP_MS = Number(process.env.CHAT_TEST_GAP ?? 65000);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-async function ask(message) {
+async function ask(message, history = []) {
     const res = await fetch(`${BASE}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message, history: [] }),
+        body: JSON.stringify({ message, history }),
     });
     return { status: res.status, body: await res.json() };
 }
 
 /** Jeda panjang hanya bila kena batas per-IP (4/menit). */
-async function askWithRetry(message, budgetMs = GAP_MS) {
-    const first = await ask(message);
+async function askWithRetry(message, history = [], budgetMs = GAP_MS) {
+    const first = await ask(message, history);
     if (first.body?.reason !== "ip_limit") return first;
     console.log(`         (kena batas 4/menit, menunggu ${Math.round(budgetMs / 1000)}s...)`);
     await sleep(budgetMs);
-    return ask(message);
+    return ask(message, history);
 }
 
 console.log(`\n=== E2E /api/chat @ ${BASE} (tanpa kuota LLM) ===`);
@@ -60,6 +60,47 @@ for (const c of cases) {
     if (!hit) fail++;
     console.log(`${hit ? "  ok  " : "  FAIL"} ${c.label.padEnd(24)} reason=${String(body.reason ?? "-").padEnd(18)} src=${(body.sources ?? []).length}`);
     if (!hit) console.log(`         jawab: ${String(body.answer).slice(0, 160)}`);
+}
+
+// Regresi laporan pengunjung:
+//   "Saya ingin ke curug cipeteuy ini gimana caranya dan dimana letak
+//    lokasinya tolong detailkan"  -> harus fokus Curug Cipeuteuy (walau typo),
+//    TIDAK boleh melenceng ke Atraksi Genjring, tanpa URL mentah di teks,
+//    dan kartu pratinjau harus kartu Curug (bukan hasil retrieval mentah).
+console.log(`\n--- Regresi laporan: fokus entitas & tanpa URL mentah ---`);
+{
+    const qList = "Destinasi wisata apa saja yang ada?";
+    const qTypo =
+        "Saya ingin ke curug cipeteuy ini gimana caranya dan dimana letak lokasinya tolong detailkan";
+
+    const a1 = await askWithRetry(qList);
+    const solo = (await askWithRetry(qTypo)).body;
+    const withHist = (
+        await askWithRetry(qTypo, [
+            { role: "user", content: qList },
+            { role: "assistant", content: a1.body.answer },
+        ])
+    ).body;
+
+    const check = (label, b) => {
+        const ans = String(b.answer ?? "");
+        const topCard = b.cards?.[0]?.href ?? "";
+        const okFocus = /cipeuteuy/i.test(ans) && !/genjring/i.test(ans);
+        const okCard = topCard.includes("curug-cipeuteuy");
+        const okNoUrl = !/https?:\/\//.test(ans);
+        const ok = okFocus && okCard && okNoUrl;
+        if (!ok) fail++;
+        console.log(
+            `${ok ? "  ok  " : "  FAIL"} ${label.padEnd(30)} reason=${String(b.reason ?? "-").padEnd(18)} kartu[0]=${topCard || "-"}`
+        );
+        if (!ok) {
+            console.log(`         fokus=${okFocus} kartu=${okCard} tanpa-url=${okNoUrl}`);
+            console.log(`         jawab: ${ans.slice(0, 200)}`);
+        }
+    };
+
+    check("curug cipeteuy tanpa riwayat", solo);
+    check("curug cipeteuy setelah daftar", withHist);
 }
 
 console.log(`\n--- Jailbreak harus DITOLAK (tidak memakai kuota LLM) ---`);

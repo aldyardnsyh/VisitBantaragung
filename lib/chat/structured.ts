@@ -3,7 +3,7 @@ import "server-only";
 import { getPublicContact } from "@/lib/content";
 import { buildIndex, type EntityCard } from "@/lib/chat/index";
 import type { RetrievalResult } from "@/lib/chat/retrieve";
-import { pickKeys } from "@/lib/chat/fallback";
+import { cleanFactValue, pickKeys } from "@/lib/chat/fallback";
 
 /**
  * Jawaban terstruktur untuk pertanyaan berpola daftar dan harga.
@@ -514,12 +514,14 @@ function topFacts(card: EntityCard, question: string, n = 3): string[] {
     const out: string[] = [];
     const seen = new Set<string>();
     for (const k of ordered) {
-        const v = card.facts[k];
-        if (!v || !String(v).trim()) continue;
+        // Tautan mentah dibuang di sini (lihat cleanFactValue): URL panjang
+        // pernah membuat teks meluber keluar gelembung chat, dan di chat
+        // tautan sudah diwakili kartu pratinjau + daftar Sumber.
+        const val = cleanFactValue(card.facts[k] ?? "");
+        if (!val) continue;
 
         // Jangan ulangi ringkasan yang sudah ditampilkan sebagai paragraf
         // pembuka  -  dulu jawaban memuat kalimat yang sama dua kali.
-        const val = String(v).trim();
         if (val === summary || summary.startsWith(val.slice(0, 60))) continue;
         if (seen.has(val)) continue;
         seen.add(val);
@@ -545,11 +547,49 @@ function relatedTitles(cards: EntityCard[], exclude: string, n = 2): string[] {
     return out;
 }
 
+/** Apakah pertanyaannya menyangkut lokasi/rute, sehingga petunjuk peta berguna. */
+function asksLocation(question: string): boolean {
+    return /lokasi|alamat|di mana|dimana|arah|rute|maps|jalan|ke sana|kesana|menuju|letak/i.test(
+        question
+    );
+}
+
+/** Jawaban utuh untuk SATU entitas: ringkasan, fakta relevan, petunjuk peta. */
+function answerForEntity(card: EntityCard, question: string): StructuredAnswer {
+    const contact = getPublicContact();
+    const facts = topFacts(card, question, 4);
+    const body = facts.length ? `\n\n${facts.join("\n")}` : "";
+
+    // Tautan arah disimpan di fakta sebagai URL mentah dan sengaja tidak
+    // dicetak (lihat cleanFactValue). Agar pertanyaan "dimana lokasinya"
+    // tetap terjawab, arahkan ke kartu/halaman yang memuat tautannya.
+    const hasMapLink = Boolean(card.facts["Arah Google Maps"] || card.facts["Google Maps"]);
+    const mapHint =
+        asksLocation(question) && hasMapLink
+            ? `\n\nPeta dan tautan arah tersedia di halaman ${card.title}.`
+            : "";
+
+    return {
+        kind: "harga_destinasi",
+        answer:
+            `${card.title} (${cardKindLabel(card)})\n\n${card.summary}${body}${mapHint}\n\n` +
+            `Detail lengkapnya ada di halaman terkait. Kalau perlu kepastian, ` +
+            `pengelola bisa dihubungi di WhatsApp ${contact.whatsappDisplay}.`,
+        sources: [{ n: 1, title: card.title, href: card.href }],
+    };
+}
+
 export function buildFromRetrieval(
     result: RetrievalResult,
-    question: string
+    question: string,
+    /**
+     * Entitas yang DISEBUT pengunjung pada giliran ini (dari findMentionedEntity,
+     * toleran salah ketik). Bila ada, jawaban wajib fokus ke entitas itu  -
+     * jangan melenceng ke tempat lain yang ikut terjaring retrieval, dan jangan
+     * menempelkan "Terkait juga" yang tidak ditanyakan.
+     */
+    focus: EntityCard | null = null
 ): StructuredAnswer | null {
-    const contact = getPublicContact();
     const cards = result.cards.map((c) => c.card);
 
     // --- Hanya potongan artikel (pertanyaan tentang cerita/berita) ---------
@@ -577,20 +617,12 @@ export function buildFromRetrieval(
 
     if (!cards.length) return null;
 
-    // --- Satu entitas disebut: jawab entitas itu secara utuh ---------------
-    if (cards.length === 1) {
-        const card = cards[0];
-        const facts = topFacts(card, question, 4);
-        const body = facts.length ? `\n\n${facts.join("\n")}` : "";
-        return {
-            kind: "harga_destinasi",
-            answer:
-                `${card.title} (${cardKindLabel(card)})\n\n${card.summary}${body}\n\n` +
-                `Detail lengkapnya ada di halaman terkait. Kalau perlu kepastian, ` +
-                `pengelola bisa dihubungi di WhatsApp ${contact.whatsappDisplay}.`,
-            sources: [{ n: 1, title: card.title, href: card.href }],
-        };
-    }
+    // --- Satu entitas: jawab entitas itu secara utuh -----------------------
+    //
+    // `focus` menang atas segalanya: pengunjung menyebut tempatnya, jadi
+    // jawaban harus tentang tempat itu.
+    const main = focus ?? (cards.length === 1 ? cards[0] : null);
+    if (main) return answerForEntity(main, question);
 
     // --- Beberapa entitas sejenis: sajikan sebagai daftar ringkas ----------
     const sameKind = cards.every((c) => c.kind === cards[0].kind);
@@ -601,10 +633,9 @@ export function buildFromRetrieval(
             const keys = pickKeys(question).filter((k) => k !== "Halaman");
             const bits: string[] = [];
             for (const k of keys) {
-                const v = c.facts[k];
-                if (!v || !String(v).trim()) continue;
-                const val = String(v).length > 100 ? `${String(v).slice(0, 97)}...` : String(v);
-                bits.push(val);
+                const val = cleanFactValue(c.facts[k] ?? "");
+                if (!val) continue;
+                bits.push(val.length > 100 ? `${val.slice(0, 97)}...` : val);
                 if (bits.length >= 2) break;
             }
             return bullet(i + 1, c.title, bits.join(" | "));
@@ -630,7 +661,7 @@ export function buildFromRetrieval(
             `${card.title}\n\n${card.summary}\n\n` +
             `${facts.join("\n")}` +
             (others ? `\n\nTerkait juga: ${others}.` : "") +
-            `\n\nKalau butuh kepastian, pengelola bisa dihubungi di WhatsApp ${contact.whatsappDisplay}.`,
+            `\n\nKalau butuh kepastian, pengelola bisa dihubungi di WhatsApp ${getPublicContact().whatsappDisplay}.`,
         sources: cards.slice(0, 3).map((c, i) => ({ n: i + 1, title: c.title, href: c.href })),
     };
 }

@@ -33,8 +33,34 @@ const QUICK_QUESTIONS = [
     "Tanaman herbal untuk imun apa?",
 ];
 
+/**
+ * Sapaan berkala di dekat tombol mengambang.
+ *
+ * Tujuannya mengundang klik tanpa memaksa: muncul beberapa detik setelah
+ * halaman siap, lalu berganti pesan dengan jeda yang cukup longgar. Urutan
+ * pesan diacak per kunjungan sehingga pengunjung yang berbeda (dan kunjungan
+ * berulang) tidak selalu melihat kalimat yang sama.
+ *
+ * Aturan yang dijaga: tidak muncul saat panel terbuka, berhenti total setelah
+ * ditutup pengunjung (disimpan di sessionStorage), dan tidak mencuri fokus.
+ */
+const GREETINGS = [
+    "Sampurasun! Ada yang bisa saya bantu soal wisata Bantaragung?",
+    "Mau tanya tiket Curug Cipeuteuy atau rute menuju lokasi?",
+    "Butuh rekomendasi destinasi yang cocok untuk keluarga?",
+    "Saya bisa bantu cari homestay, paket edukasi, atau kampung herbal.",
+    "Bingung mulai dari mana? Saya pemandu digital desa, silakan tanya.",
+];
+
+/** Jeda sebelum sapaan pertama, lalu jeda antar sapaan berikutnya (ms). */
+const GREET_FIRST_MS = 8000;
+const GREET_EVERY_MS = 30000;
+
 /** Penanda "badge sudah dilihat". localStorage, bukan bagian isi percakapan. */
 const BADGE_KEY = "bantaragung-chat-badge-seen";
+
+/** Penanda "sapaan sudah ditutup" untuk satu sesi peramban. */
+const GREET_OFF_KEY = "bantaragung-chat-greet-off";
 
 export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
     const pathname = usePathname();
@@ -43,12 +69,18 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
     // Badge notifikasi. Disimpan di localStorage (bukan sessionStorage) karena
     // tujuannya menandai "sudah pernah dibuka", bukan menyimpan isi percakapan.
     const [showBadge, setShowBadge] = useState(false);
+    // Sapaan yang sedang tampil (null = tidak ada gelembung).
+    const [greet, setGreet] = useState<string | null>(null);
+    // Pengunjung menutup sapaan: jangan ganggu lagi pada sesi ini.
+    const [greetOff, setGreetOff] = useState(false);
     const { messages, busy, send, clear } = useChat();
 
     const panelRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const triggerRef = useRef<HTMLButtonElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
+    const greetOrder = useRef<number[]>([]);
+
 
     // Badge notifikasi muncul sampai pengguna membuka chat pertama kali.
     //
@@ -66,6 +98,69 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
         // Jadwalkan lewat microtask: menjaga efek tidak setState sinkron.
         void Promise.resolve().then(() => setShowBadge(!seen));
     }, []);
+
+    // Baca preferensi "sapaan sudah ditutup" untuk sesi ini.
+    useEffect(() => {
+        let off = false;
+        try {
+            off = sessionStorage.getItem(GREET_OFF_KEY) === "1";
+        } catch {
+            off = false;
+        }
+        void Promise.resolve().then(() => setGreetOff(off));
+    }, []);
+
+    /**
+     * Ambil sapaan berikutnya dari antrean acak.
+     *
+     * Antrean diisi ulang setelah habis, dan pesan pertama sebuah kunjungan
+     * ditentukan oleh Math.random(): pengunjung berbeda bisa mendapat kalimat
+     * pembuka berbeda. Tidak ada pesan yang sama muncul dua kali berurutan.
+     */
+    const pickGreeting = useCallback(() => {
+        if (greetOrder.current.length === 0) {
+            const order = GREETINGS.map((_, i) => i);
+            for (let i = order.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [order[i], order[j]] = [order[j], order[i]];
+            }
+            greetOrder.current = order;
+        }
+        const next = greetOrder.current.shift() as number;
+        return GREETINGS[next];
+    }, []);
+
+    // Sapaan berkala. Timer berhenti saat panel terbuka atau setelah ditutup.
+    // Tetap tidak muncul bila tab sedang tidak terlihat, supaya pesan tidak
+    // "terbuang" saat pengunjung berpindah tab.
+    useEffect(() => {
+        if (open || greetOff) return;
+        let cancelled = false;
+        let first = true;
+        let timer: ReturnType<typeof setTimeout>;
+
+        const schedule = () => {
+            timer = setTimeout(() => {
+                if (cancelled) return;
+                if (document.visibilityState === "visible") {
+                    setGreet(pickGreeting());
+                    // Titik merah menyala lagi bersama sapaan baru: penanda
+                    // "ada yang bisa ditanyakan" yang terlihat juga di layar
+                    // ponsel (dulu hanya tampil sekali lalu hilang selamanya).
+                    setShowBadge(true);
+                }
+                schedule();
+            }, first ? GREET_FIRST_MS : GREET_EVERY_MS);
+            first = false;
+        };
+
+        schedule();
+        return () => {
+            cancelled = true;
+            clearTimeout(timer);
+        };
+    }, [open, greetOff, pickGreeting]);
+
 
     // Fokus otomatis saat panel dibuka.
     useEffect(() => {
@@ -87,6 +182,9 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
     }, [clear]);
 
     const toggleOpen = () => {
+        // Gelembung sapaan selalu ditutup saat panel dibuka atau ditutup.
+        setGreet(null);
+
         if (open) {
             closePanel();
             return;
@@ -99,6 +197,18 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
             /* localStorage diblokir: badge tetap hilang untuk sesi ini */
         }
     };
+
+    /** Tutup sapaan untuk sesi ini: pengunjung sudah memutuskan sendiri. */
+    const dismissGreet = () => {
+        setGreet(null);
+        setGreetOff(true);
+        try {
+            sessionStorage.setItem(GREET_OFF_KEY, "1");
+        } catch {
+            /* sessionStorage diblokir: sapaan tidak kembali selama halaman ini */
+        }
+    };
+
 
     // Gulir ke pesan terbaru.
     useEffect(() => {
@@ -280,6 +390,41 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
                 </div>
             )}
 
+            {/* Gelembung sapaan berkala: muncul di atas tombol mengambang,
+                lebar dibatasi agar tidak melewati tepi layar ponsel sempit. */}
+            {greet && !open && (
+                <div className="animate-fade-up fixed bottom-[5.75rem] right-4 z-[59] w-[min(17rem,calc(100vw-2rem))] sm:bottom-24 sm:right-6">
+                    <div className="relative rounded-2xl border border-forest-200 bg-white p-3 pr-9 shadow-xl">
+                        <p className="text-[13px] leading-snug break-words text-slate-700 [overflow-wrap:anywhere]">
+                            {greet}
+                        </p>
+                        <button
+                            type="button"
+                            onClick={toggleOpen}
+                            className="mt-2 rounded-full bg-forest-700 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-forest-800 active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400"
+                        >
+                            Tanya sekarang
+                        </button>
+                        <button
+                            type="button"
+                            onClick={dismissGreet}
+                            aria-label="Tutup sapaan"
+                            title="Tutup sapaan"
+                            className="absolute right-1.5 top-1.5 rounded-full p-1 text-slate-400 transition hover:bg-forest-50 hover:text-slate-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-forest-500"
+                        >
+                            <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                        {/* Ekor gelembung: menunjuk ke tombol mengambang di bawahnya. */}
+                        <span
+                            aria-hidden
+                            className="absolute -bottom-1.5 right-6 h-3 w-3 rotate-45 border-b border-r border-forest-200 bg-white"
+                        />
+                    </div>
+                </div>
+            )}
+
             {/* Tombol mengambang */}
             <button
                 ref={triggerRef}
@@ -293,29 +438,30 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
                 }
                 className="fixed bottom-5 right-5 z-[60] flex items-center gap-2 rounded-full bg-forest-700 px-4 py-3.5 text-sm font-semibold text-white shadow-xl transition hover:bg-forest-800 hover:shadow-2xl active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400"
             >
-                <span className="relative flex">
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                        />
-                    </svg>
-
-                    {/* Titik notifikasi: memberi tahu ada yang bisa ditanyakan,
-                        tanpa menghalangi ikon. Hilang setelah chat pertama kali
-                        dibuka dan tidak muncul lagi (disimpan di localStorage),
-                        supaya tidak terasa mengganggu pada kunjungan berikutnya. */}
-                    {showBadge && !open && (
-                        <span className="pointer-events-none absolute -right-1.5 -top-1.5 flex h-3 w-3">
-                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
-                            <span className="relative inline-flex h-3 w-3 rounded-full border border-white bg-red-500" />
-                        </span>
-                    )}
-                </span>
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                    />
+                </svg>
                 <span className="hidden sm:inline">Tanya Bantaragung</span>
+
+                {/* Titik notifikasi: memberi tahu ada yang bisa ditanyakan,
+                    tanpa menghalangi ikon. Diletakkan di sudut tombol (bukan
+                    di dalam ikon) supaya tetap terbaca di layar ponsel tempat
+                    label teks disembunyikan dan tombolnya menyusut. Ukurannya
+                    sedikit lebih besar di ponsel. Padam saat panel dibuka dan
+                    menyala lagi bila sapaan baru muncul. */}
+                {showBadge && !open && (
+                    <span className="pointer-events-none absolute -right-0.5 -top-0.5 flex h-3.5 w-3.5 sm:-right-1 sm:-top-1 sm:h-3 sm:w-3">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
+                        <span className="relative inline-flex h-full w-full rounded-full border border-white bg-red-500" />
+                    </span>
+                )}
             </button>
+
         </>
     );
 }
@@ -382,7 +528,7 @@ function Bubble({ message }: { message: ChatMessageItem }) {
     if (message.role === "user") {
         return (
             <div className="flex justify-end">
-                <p className="max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-br-sm bg-forest-700 px-3.5 py-2.5 text-sm text-white">
+                <p className="max-w-[85%] whitespace-pre-wrap break-words rounded-2xl rounded-br-sm bg-forest-700 px-3.5 py-2.5 text-sm text-white [overflow-wrap:anywhere]">
                     {message.text}
                 </p>
             </div>
@@ -403,7 +549,9 @@ function Bubble({ message }: { message: ChatMessageItem }) {
 
     return (
         <div className="flex justify-start">
-            <div className="max-w-[90%] space-y-2 rounded-2xl rounded-bl-sm bg-white px-3.5 py-2.5 text-sm text-slate-800 shadow-sm">
+            {/* break-words + overflow-wrap:anywhere: tautan atau kata panjang
+                tidak boleh meluber keluar gelembung (laporan pengunjung). */}
+            <div className="max-w-[90%] space-y-2 break-words rounded-2xl rounded-bl-sm bg-white px-3.5 py-2.5 text-sm text-slate-800 shadow-sm [overflow-wrap:anywhere]">
                 <RichText text={message.text} />
 
                 {/* Kartu pratinjau entitas yang dibicarakan. Gambar dimuat
@@ -448,29 +596,61 @@ function Bubble({ message }: { message: ChatMessageItem }) {
 }
 
 /**
+ * Bentuk pendek URL untuk ditampilkan di dalam teks: domain + potongan path.
+ *
+ * Tautan mentah yang panjang (mis. Arah Google Maps) pernah membuat teks
+ * meluber keluar gelembung. Di sini tautan tetap bisa diklik, tetapi labelnya
+ * dipendekkan dan dipatahkan di mana saja (break-all).
+ */
+function shortUrl(url: string): string {
+    let label = url;
+    try {
+        const u = new URL(url);
+        label = `${u.hostname}${u.pathname}${u.search}`.replace(/\/$/, "");
+    } catch {
+        label = url.replace(/^https?:\/\//, "");
+    }
+    return label.length > 44 ? `${label.slice(0, 41)}...` : label;
+}
+
+/**
  * Penampil teks sederhana untuk balasan.
  *
- * Balasan berisi penanda ringan: **tebal** dan baris berawalan angka
+ * Balasan berisi penanda ringan: **tebal**, tautan, dan baris berawalan angka
  * ("1. ...") atau tanda hubung. Tanpa ini, tanda bintang tampil apa adanya
- * sehingga jawaban terlihat seperti kode mentah. Tidak memakai markdown
- * penuh agar tidak ada ketergantungan baru dan tidak ada risiko HTML.
+ * sehingga jawaban terlihat seperti kode mentah. Tidak memakai markdown penuh
+ * agar tidak ada ketergantungan baru dan tidak ada risiko HTML.
  */
 function RichText({ text }: { text: string }) {
     const blocks = text.split(/\n{2,}/);
 
     const renderInline = (line: string, key: number) => {
-        const parts = line.split(/(\*\*[^*]+\*\*)/g);
+        const parts = line.split(/(\*\*[^*]+\*\*|https?:\/\/[^\s)]+)/g);
         return (
             <span key={key}>
-                {parts.map((p, i) =>
-                    p.startsWith("**") && p.endsWith("**") ? (
-                        <strong key={i} className="font-semibold text-forest-800">
-                            {p.slice(2, -2)}
-                        </strong>
-                    ) : (
-                        <span key={i}>{p}</span>
-                    )
-                )}
+                {parts.map((p, i) => {
+                    if (p.startsWith("**") && p.endsWith("**")) {
+                        return (
+                            <strong key={i} className="font-semibold text-forest-800">
+                                {p.slice(2, -2)}
+                            </strong>
+                        );
+                    }
+                    if (/^https?:\/\//.test(p)) {
+                        return (
+                            <a
+                                key={i}
+                                href={p}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="break-all font-medium text-forest-600 underline underline-offset-2 hover:text-clay-600"
+                            >
+                                {shortUrl(p)}
+                            </a>
+                        );
+                    }
+                    return <span key={i}>{p}</span>;
+                })}
             </span>
         );
     };
@@ -499,7 +679,7 @@ function RichText({ text }: { text: string }) {
                                         <span className="shrink-0 text-forest-500 tabular-nums">
                                             {marker}
                                         </span>
-                                        <span className="min-w-0 flex-1 whitespace-pre-wrap">
+                                        <span className="min-w-0 flex-1 whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
                                             {renderInline(body, li)}
                                         </span>
                                     </div>
@@ -510,7 +690,7 @@ function RichText({ text }: { text: string }) {
                 }
 
                 return (
-                    <p key={bi} className="whitespace-pre-wrap">
+                    <p key={bi} className="whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
                         {block.split("\n").map((line, li) =>
                             li === 0 ? (
                                 renderInline(line, li)

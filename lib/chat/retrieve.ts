@@ -205,6 +205,7 @@ function entitiesFromHistory(
         const text = String(msg.content ?? "").toLowerCase();
         if (!text) return;
 
+        const hits: EntityCard[] = [];
         for (const card of index.cards) {
             // Nama entitas harus disebut utuh; mencocokkan kata umum akan
             // menarik terlalu banyak entitas.
@@ -212,8 +213,21 @@ function entitiesFromHistory(
             const mentioned =
                 text.includes(name) ||
                 (card.kind === "wisata" && text.includes(card.href.split("/").pop() ?? "\u0000"));
-            if (!mentioned) continue;
+            if (mentioned) hits.push(card);
+        }
 
+        // Jawaban daftar BUKAN topik pembicaraan.
+        //
+        // Saat bot menjawab "destinasi apa saja?", teks jawabannya menyebut
+        // puluhan nama destinasi sekaligus. Dulu semua kartu itu mendapat skor
+        // sama, lalu urutan indeks yang menentukan jangkar  -  akibatnya
+        // pertanyaan lanjutan "saya ingin ke curug cipeteuy..." dijawab
+        // tentang Atraksi Genjring Kuda Jaya yang kebetulan kartu pertama.
+        // Satu pesan yang menyebut lebih dari dua entitas diperlakukan
+        // sebagai daftar, bukan topik.
+        if (msg.role === "assistant" && hits.length > 2) return;
+
+        for (const card of hits) {
             const prev = scored.get(card.id);
             const add = 6 * recency + (msg.role === "user" ? 2 : 0);
             if (prev) prev.score += add;
@@ -224,12 +238,44 @@ function entitiesFromHistory(
     return [...scored.values()].sort((a, b) => b.score - a.score);
 }
 
+/** Pindahkan jangkar ke urutan pertama; sisipkan bila tidak ikut terjaring. */
+function withAnchorFirst(result: RetrievalResult, anchor: EntityCard): RetrievalResult {
+    const i = result.cards.findIndex((c) => c.card.id === anchor.id);
+    if (i === 0) return result;
+    if (i > 0) {
+        const [found] = result.cards.splice(i, 1);
+        result.cards.unshift(found);
+        return result;
+    }
+    result.cards.unshift({ card: anchor, score: 20 });
+    result.cards = result.cards.slice(0, MAX_CARDS);
+    return result;
+}
+
 export function retrieve(
     query: string,
-    history: { role: string; content: string }[] = []
+    history: { role: string; content: string }[] = [],
+    /**
+     * Entitas yang disebut pengunjung pada giliran INI. Diketeksi pemanggil
+     * dengan toleransi salah ketik (lib/chat/mention.ts), mis. "curug cipeteuy"
+     * tetap menunjuk Curug Cipeuteuy. Bila ada, riwayat tidak boleh menggeser
+     * topiknya.
+     */
+    anchor: EntityCard | null = null
 ): RetrievalResult {
     const index = buildIndex();
     const terms = tokenize(query);
+    // Kata rujukan dibuang dari kueri agar tidak mengganggu skoring.
+    const cleaned = query.replace(ANAPHORA_RE, " ").replace(/\s{2,}/g, " ").trim();
+
+    // Jangkar eksplisit paling kuat: pengunjung MENYEBUT tempatnya sendiri.
+    // Contoh nyata yang diperbaiki: setelah bot menjawab daftar 24 destinasi,
+    // "saya ingin ke curug cipeteuy ini..." harus fokus ke Curug, bukan ke
+    // entitas yang kebetulan paling baru disebut bot.
+    if (anchor) {
+        const focused = retrieveInternal(`${anchor.title} ${cleaned}`, index);
+        return withAnchorFirst(focused, anchor);
+    }
 
     /**
      * Langkah 0: bila pertanyaan bersifat lanjutan, tanya ulang dengan
@@ -244,25 +290,10 @@ export function retrieve(
     // syarat "merupakan lanjutan" dan ada entitas terbawa dari riwayat.
     const carried = isFollowUp(query, terms) ? entitiesFromHistory(history) : [];
     if (carried.length) {
-        const anchor = carried[0].card;
-        // Kata rujukan dibuang dari kueri agar tidak mengganggu skoring.
-        const cleaned = query.replace(ANAPHORA_RE, " ").replace(/\s{2,}/g, " ").trim();
-        const resolved = retrieveInternal(`${anchor.title} ${cleaned}`, index);
+        const topic = carried[0].card;
+        const resolved = retrieveInternal(`${topic.title} ${cleaned}`, index);
         if (resolved.cards.length || resolved.chunks.length) {
-            // Pastikan entitas jangkar tetap di urutan teratas.
-            const hasAnchor = resolved.cards.some((c) => c.card.id === anchor.id);
-            if (!hasAnchor) {
-                resolved.cards.unshift({ card: anchor, score: 20 });
-                resolved.cards = resolved.cards.slice(0, MAX_CARDS);
-            } else {
-                // Naikkan jangkar ke posisi pertama tanpa mengubah skornya.
-                const i = resolved.cards.findIndex((c) => c.card.id === anchor.id);
-                if (i > 0) {
-                    const [found] = resolved.cards.splice(i, 1);
-                    resolved.cards.unshift(found);
-                }
-            }
-            return resolved;
+            return withAnchorFirst(resolved, topic);
         }
     }
 

@@ -8,6 +8,8 @@ import { isProviderConfigured } from "@/lib/chat/provider";
 import { clientKey, releaseSlot, takeSlot } from "@/lib/chat/ratelimit";
 import { renderContext, retrieve } from "@/lib/chat/retrieve";
 import { checkScope } from "@/lib/chat/scope";
+import { findMentionedEntity, type EntityMention } from "@/lib/chat/mention";
+import type { EntityCard } from "@/lib/chat/index";
 import * as indexModule from "@/lib/chat/index";
 import { buildNeedAnswer, detectNeed } from "@/lib/chat/needs";
 import { buildStructuredAnswer, buildFromRetrieval, detectStructuredIntent } from "@/lib/chat/structured";
@@ -135,22 +137,25 @@ function getIndexModule() {
  * Dipakai agar jawaban menyambung: "saya ingin mandi di mana?" setelah
  * membahas Curug Cipeuteuy sebaiknya menyebut Curug lebih dulu, bukan
  * memulai dari nol seolah belum pernah ngobrol.
+ *
+ * Sumber topik hanya giliran USER. Jawaban bot yang berupa daftar (mis.
+ * "destinasi apa saja?") menyebut puluhan nama sekaligus; memeriksanya
+ * membuat bot mengira semua tempat itu sedang dibahas, dan giliran lanjutan
+ * bisa dijawab tentang tempat yang salah. Deteksi memakai findMentionedEntity
+ * supaya salah ketik seperti "curug cipeteuy" tetap dikenali.
  */
 function currentTopic(
-    history: { role: string; content: string }[]
-): ReturnType<typeof buildIndex>["cards"][number] | null {
+    history: { role: string; content: string }[],
+    mention: EntityMention | null
+): EntityCard | null {
+    if (mention) return mention.card;
     if (!history.length) return null;
-    const { buildIndex } = getIndexModule();
-    const cards = buildIndex().cards;
 
-    // Telusuri dari giliran terbaru ke belakang.
+    // Telusuri dari giliran pengguna terbaru ke belakang.
     for (let i = history.length - 1; i >= 0; i--) {
-        const text = String(history[i]?.content ?? "").toLowerCase();
-        if (!text) continue;
-        const found = cards.find(
-            (c) => c.kind === "wisata" && text.includes(c.title.toLowerCase())
-        );
-        if (found) return found;
+        if (history[i]?.role !== "user") continue;
+        const found = findMentionedEntity(String(history[i]?.content ?? ""));
+        if (found) return found.card;
     }
     return null;
 }
@@ -259,7 +264,17 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // --- 3. Rekomendasi berbasis kebutuhan -------------------------------
+        // --- 3. Entitas yang disebut pengunjung -------------------------------
+        //
+        // findMentionedEntity mengenali nama tempat yang disebut pengunjung
+        // DENGAN toleransi salah ketik: "curug cipeteuy" tetap menunjuk Curug
+        // Cipeuteuy. Hasilnya dipakai sebagai jangkar (anchor) untuk seluruh
+        // jalur jawaban di bawah, sehingga giliran ini tidak bisa melenceng ke
+        // tempat lain  -  termasuk saat riwayat berisi jawaban daftar yang
+        // menyebut banyak nama.
+        const mention = findMentionedEntity(question);
+
+        // --- 3b. Rekomendasi berbasis kebutuhan -------------------------------
         //
         // Pengunjung sering bertanya dengan kalimat kebutuhan, bukan nama
         // tempat: "saya ingin mandi di mana?", "yang bisa berenang?", "mau
@@ -269,34 +284,13 @@ export async function POST(req: NextRequest) {
         //
         // Dijalankan SEBELUM retrieval karena retrieval akan memilih entitas
         // berdasarkan kata kunci, bukan berdasarkan kecocokan kebutuhan.
-        // Bila pertanyaan MENYEBUT nama entitas tertentu (mis. "homestay pak
+        // Bila pertanyaan menyebut entitas tertentu (mis. "homestay pak
         // jamal"), itu bukan permintaan rekomendasi umum. Tangani lewat
         // retrieval agar entitas yang disebut benar-benar dijawab.
-        const mentionsNamedEntity = (() => {
-            const qq = question.toLowerCase();
-            const { buildIndex } = getIndexModule();
-            return buildIndex().cards.some((c) => {
-                // Kata >= 3 huruf ikut dinilai supaya nama pendek seperti "ani"
-                // pada "Homestay Bu Ani" terdeteksi. Sapaan (pak/ibu) dibuang
-                // karena bukan pembeda, dan pencocokan memakai batas kata agar
-                // "ani" tidak cocok dengan "petani" atau "temani".
-                const words = c.title
-                    .toLowerCase()
-                    .split(/\s+/)
-                    .filter((w) => w.length >= 3 && !/^(homestay|penginapan|kampung|paket|wisata|desa|pak|ibu)$/.test(w));
-                return (
-                    words.length > 0 &&
-                    words.every((w) =>
-                        new RegExp(`\\b${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`).test(qq)
-                    )
-                );
-            });
-        })();
-
-        const needKind = mentionsNamedEntity ? null : detectNeed(question);
+        const needKind = mention ? null : detectNeed(question);
         if (needKind) {
             // Entitas yang sedang dibicarakan, untuk menyambung percakapan.
-            const topic = currentTopic(body.history ?? []);
+            const topic = currentTopic(body.history ?? [], mention);
             const need = buildNeedAnswer(question, needKind, topic);
             if (need) {
                 return json(
@@ -319,12 +313,18 @@ export async function POST(req: NextRequest) {
         // hemat kuota: pertanyaan seperti "destinasi apa saja?" harus lengkap
         // dan urut, sedangkan model free sering memotong daftar jadi 3 item
         // dan menyertakan data yang tidak ditanyakan. Lihat lib/chat/structured.ts.
-        const structuredKind = detectStructuredIntent(question);
+        //
+        // Bila pengunjung MENYEBUT satu tempat, jawaban daftar/harga umum
+        // mundur: "homestay bu ani apa saja fasilitasnya?" harus dijawab
+        // tentang Bu Ani, bukan seluruh daftar homestay. Pengecualian bila
+        // jelas minta tambahan ("selain X, apa saja lagi?").
+        const asksOthers = /\b(selain|lainnya|lain|dll)\b/i.test(question);
+        const structuredKind = mention && !asksOthers ? null : detectStructuredIntent(question);
         if (structuredKind) {
             // Bila percakapan sedang membahas satu entitas, jawaban terstruktur
             // yang bersifat umum (mis. daftar semua harga) harus mundur agar
             // giliran itu dijawab tentang entitas tersebut.
-            const anchored = (body.history ?? []).some((m) => m.role === "user");
+            const anchored = Boolean(mention) || (body.history ?? []).some((m) => m.role === "user");
             const structured = buildStructuredAnswer(question, structuredKind, anchored);
             if (structured) {
                 return json(
@@ -343,8 +343,12 @@ export async function POST(req: NextRequest) {
             }
         }
 
-        // --- 3b. Ambil konteks ---------------------------------------------
-        const result = retrieve(question, body.history ?? []);
+        // --- 4b. Ambil konteks ----------------------------------------------
+        //
+        // Entitas yang disebut pengunjung dikirim sebagai jangkar: retrieval
+        // menyusun hasil di sekitar entitas itu, dan riwayat (mis. jawaban
+        // daftar panjang) tidak boleh menggeser topiknya.
+        const result = retrieve(question, body.history ?? [], mention?.card ?? null);
         const { text: contextText, sources } = renderContext(result);
 
         // Tidak ada satu pun kartu atau potongan yang cocok: jangan buang
@@ -363,7 +367,16 @@ export async function POST(req: NextRequest) {
         if (!isProviderConfigured()) {
             const fb = buildFallbackAnswer(result, question);
             return json(
-                { answer: normalizeTypography(stripSlop(fb.answer)), sources: fb.sources, reason: "no_api_key", model: null },
+                {
+                    answer: normalizeTypography(stripSlop(fb.answer)),
+                    sources: fb.sources,
+                    // Kartu pratinjau dibangun dari sumber jawaban, bukan dari
+                    // seluruh hasil retrieval, supaya yang tampil di gelembung
+                    // benar-benar yang dibahas.
+                    cards: toSourceCardsFromSources(fb.sources),
+                    reason: "no_api_key",
+                    model: null,
+                },
                 200
             );
         }
@@ -399,14 +412,15 @@ export async function POST(req: NextRequest) {
             // Model tidak bisa dipakai (rate limit / kuota / slot bersamaan).
             // Hasil retrieval sudah ada di tangan dan faktanya benar, jadi
             // susun jawaban layak darinya alih-alih menyerahkan format kartu
-            // generik kepada pengunjung.
-            const dyn = buildFromRetrieval(result, question);
+            // generik kepada pengunjung. `mention` memastikan jawabannya
+            // fokus ke tempat yang disebut pengunjung.
+            const dyn = buildFromRetrieval(result, question, mention?.card ?? null);
             if (dyn) {
                 return json(
                     {
                         answer: normalizeTypography(stripSlop(dyn.answer)),
                         sources: dyn.sources,
-                        cards: toSourceCards(result),
+                        cards: toSourceCardsFromSources(dyn.sources),
                         reason: "all_models_failed",
                         model: null,
                         mode: "structured_fallback",
@@ -419,7 +433,7 @@ export async function POST(req: NextRequest) {
                 {
                     answer: normalizeTypography(stripSlop(fb.answer)),
                     sources: fb.sources,
-                    cards: toSourceCards(result),
+                    cards: toSourceCardsFromSources(fb.sources),
                     reason: "all_models_failed",
                     model: null,
                 },
@@ -441,13 +455,13 @@ export async function POST(req: NextRequest) {
             // JANGAN buang hasil retrieval. Turunkan ke jawaban terstruktur
             // yang dibangun dari data yang sama  -  pengunjung tetap mendapat
             // informasi benar, hanya tanpa gaya bahasa model.
-            const dyn = buildFromRetrieval(result, question);
+            const dyn = buildFromRetrieval(result, question, mention?.card ?? null);
             if (dyn) {
                 return json(
                     {
                         answer: normalizeTypography(stripSlop(dyn.answer)),
                         sources: dyn.sources,
-                        cards: toSourceCards(result),
+                        cards: toSourceCardsFromSources(dyn.sources),
                         reason: "output_rejected",
                         model: chain.model,
                         mode: "structured_fallback",
