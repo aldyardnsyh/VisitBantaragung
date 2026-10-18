@@ -136,7 +136,7 @@ export interface OutputCheck {
 }
 
 /** Karakter yang sah untuk jawaban bahasa Indonesia. */
-const ALLOWED_SYMBOLS = ".,;:!?'\"()[]/%+-*#&@";
+
 
 /**
  * Buang penanda "slop" yang membuat jawaban terasa seperti template AI:

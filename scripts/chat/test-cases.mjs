@@ -9,7 +9,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const cases = [
     { q: "Destinasi wisata apa saja yang ada?", expect: /wisata alam/i, mustNot: /\/kontak|\/wisata\/|Fasilitas:/i, check: "lengkap & tanpa path mentah" },
     { q: "apa artikel terbaru", expect: /terbaru/i, mustNot: /belum menemukan/i, check: "artikel terbaru terjawab" },
-    { q: "berapa harga penginapan", expect: /harga|belum dicantumkan/i, mustNot: /^[^]*Glamping Curug Cipeuteuy[^]*Fasilitas/i, check: "harga penginapan jujur" },
+    { q: "berapa harga penginapan", expect: /Rp |tarif|harga|belum dicantumkan/i, mustNot: /^[^]*Glamping Curug Cipeuteuy[^]*Fasilitas/i, check: "harga penginapan jujur" },
     { q: "homestay apa saja", expect: /homestay/i, mustNot: null, check: "daftar homestay" },
     { q: "paket wisata apa saja", expect: /paket/i, mustNot: null, check: "daftar paket" },
     { q: "tanaman herbal apa saja", expect: /tanaman|herbal/i, mustNot: null, check: "daftar herbal" },

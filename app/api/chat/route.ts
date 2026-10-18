@@ -9,6 +9,7 @@ import { clientKey, releaseSlot, takeSlot } from "@/lib/chat/ratelimit";
 import { renderContext, retrieve } from "@/lib/chat/retrieve";
 import { checkScope } from "@/lib/chat/scope";
 import * as indexModule from "@/lib/chat/index";
+import { buildNeedAnswer, detectNeed } from "@/lib/chat/needs";
 import { buildStructuredAnswer, buildFromRetrieval, detectStructuredIntent } from "@/lib/chat/structured";
 
 /**
@@ -128,6 +129,32 @@ function getIndexModule() {
     return indexModule;
 }
 
+/**
+ * Entitas yang sedang dibicarakan pada percakapan.
+ *
+ * Dipakai agar jawaban menyambung: "saya ingin mandi di mana?" setelah
+ * membahas Curug Cipeuteuy sebaiknya menyebut Curug lebih dulu, bukan
+ * memulai dari nol seolah belum pernah ngobrol.
+ */
+function currentTopic(
+    history: { role: string; content: string }[]
+): ReturnType<typeof buildIndex>["cards"][number] | null {
+    if (!history.length) return null;
+    const { buildIndex } = getIndexModule();
+    const cards = buildIndex().cards;
+
+    // Telusuri dari giliran terbaru ke belakang.
+    for (let i = history.length - 1; i >= 0; i--) {
+        const text = String(history[i]?.content ?? "").toLowerCase();
+        if (!text) continue;
+        const found = cards.find(
+            (c) => c.kind === "wisata" && text.includes(c.title.toLowerCase())
+        );
+        if (found) return found;
+    }
+    return null;
+}
+
 function toSourceCards(result: ReturnType<typeof retrieve>, max = 3): SourceCard[] {
     const out: SourceCard[] = [];
     const seenHref = new Set<string>();
@@ -232,7 +259,61 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // --- 3a. Pertanyaan berpola (daftar, harga, terbaru) -----------------
+        // --- 3. Rekomendasi berbasis kebutuhan -------------------------------
+        //
+        // Pengunjung sering bertanya dengan kalimat kebutuhan, bukan nama
+        // tempat: "saya ingin mandi di mana?", "yang bisa berenang?", "mau
+        // makan di sekitar sini". Jalur ini menerjemahkannya menjadi saran
+        // konkret lengkap dengan alasan dan harga, sehingga jawaban terasa
+        // seperti pemandu, bukan daftar hasil pencarian.
+        //
+        // Dijalankan SEBELUM retrieval karena retrieval akan memilih entitas
+        // berdasarkan kata kunci, bukan berdasarkan kecocokan kebutuhan.
+        // Bila pertanyaan MENYEBUT nama entitas tertentu (mis. "homestay pak
+        // jamal"), itu bukan permintaan rekomendasi umum. Tangani lewat
+        // retrieval agar entitas yang disebut benar-benar dijawab.
+        const mentionsNamedEntity = (() => {
+            const qq = question.toLowerCase();
+            const { buildIndex } = getIndexModule();
+            return buildIndex().cards.some((c) => {
+                // Kata >= 3 huruf ikut dinilai supaya nama pendek seperti "ani"
+                // pada "Homestay Bu Ani" terdeteksi. Sapaan (pak/ibu) dibuang
+                // karena bukan pembeda, dan pencocokan memakai batas kata agar
+                // "ani" tidak cocok dengan "petani" atau "temani".
+                const words = c.title
+                    .toLowerCase()
+                    .split(/\s+/)
+                    .filter((w) => w.length >= 3 && !/^(homestay|penginapan|kampung|paket|wisata|desa|pak|ibu)$/.test(w));
+                return (
+                    words.length > 0 &&
+                    words.every((w) =>
+                        new RegExp(`\\b${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`).test(qq)
+                    )
+                );
+            });
+        })();
+
+        const needKind = mentionsNamedEntity ? null : detectNeed(question);
+        if (needKind) {
+            // Entitas yang sedang dibicarakan, untuk menyambung percakapan.
+            const topic = currentTopic(body.history ?? []);
+            const need = buildNeedAnswer(question, needKind, topic);
+            if (need) {
+                return json(
+                    {
+                        answer: normalizeTypography(stripSlop(need.answer)),
+                        sources: need.sources,
+                        cards: toSourceCardsFromSources(need.sources),
+                        reason: "recommendation",
+                        model: null,
+                        structured: need.kind,
+                    },
+                    200
+                );
+            }
+        }
+
+        // --- 4. Pertanyaan berpola (daftar, harga, terbaru) -----------------
         //
         // Dijawab langsung dari indeks, TANPA LLM. Alasannya bukan sekadar
         // hemat kuota: pertanyaan seperti "destinasi apa saja?" harus lengkap

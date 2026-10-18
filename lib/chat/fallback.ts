@@ -45,7 +45,7 @@ const FIELD_HINTS: { re: RegExp; keys: string[] }[] = [
     { re: /kapasitas|muat|orang|tamu/i, keys: ["Kapasitas"] },
     { re: /jam|buka|operasional|libur/i, keys: ["Jam operasional"] },
     { re: /kontak|whatsapp|wa\b|email|hubungi|telepon/i, keys: ["WhatsApp", "WhatsApp pengelola", "Email"] },
-    { re: /lokasi|alamat|di mana|dimana|arah|rute|maps/i, keys: ["Lokasi", "Alamat", "Google Maps"] },
+    { re: /lokasi|alamat|di mana|dimana|arah|rute|maps|jalan|kesana|ke sana|menuju/i, keys: ["Lokasi", "Alamat", "Arah Google Maps", "Google Maps"] },
     { re: /aktivitas|kegiatan|bisa apa|atraksi/i, keys: ["Aktivitas"] },
     { re: /program|prioritas|unggulan/i, keys: ["Program prioritas"] },
     { re: /potensi/i, keys: ["Potensi fisik", "Potensi non-fisik"] },

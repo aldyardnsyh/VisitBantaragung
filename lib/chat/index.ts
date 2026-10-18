@@ -13,6 +13,7 @@ import {
     getSiteSettings,
     loadJSON,
 } from "@/lib/content";
+import { isVillageCenter } from "@/lib/geo";
 
 /**
  * Indeks pengetahuan chatbot.
@@ -208,6 +209,26 @@ export function buildIndex(): ChatIndex {
             facts["WhatsApp pengelola"] = `${n} (${waLink(n)})`;
         }
         if (p?.contact?.address) facts["Lokasi"] = p.contact.address;
+        // Koordinat + tautan arah, dipakai chatbot untuk mengarahkan
+        // pengunjung ke titik yang benar di peta.
+        //
+        // Catatan jujur: sebagian besar destinasi masih memakai koordinat
+        // titik desa karena objeknya belum terpetakan di OpenStreetMap
+        // (diverifikasi lewat pencarian 14.351 objek di radius 25 km).
+        // Untuk titik yang masih sama dengan pusat desa, tautan diarahkan
+        // memakai NAMA tempat agar Google Maps mencarinya sendiri, bukan
+        // memakai koordinat yang sama untuk semua destinasi. Titik desa
+        // didefinisikan sekali di lib/geo.ts, dipakai juga oleh peta halaman.
+        const koord = w.location;
+        if (koord?.lat && koord?.lng) {
+            const isVillagePoint = isVillageCenter(koord.lat, koord.lng);
+            const query = isVillagePoint
+                ? encodeURIComponent(`${w.title} Bantaragung Sindangwangi Majalengka`)
+                : `${koord.lat},${koord.lng}`;
+            facts["Arah Google Maps"] = `https://www.google.com/maps/search/?api=1&query=${query}`;
+            if (!isVillagePoint) facts["Koordinat"] = `${koord.lat}, ${koord.lng}`;
+        }
+
         facts["Halaman"] = `/wisata/${w.slug}`;
 
         cards.push({

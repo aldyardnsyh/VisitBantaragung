@@ -57,6 +57,22 @@ const DOMAIN_HINTS: RegExp[] = [
     /berita|artikel|kabar|kegiatan|program|kkn|ugm|prestasi|penghargaan|adwi|profil|sejarah|tentang desa/i,
     /fasilitas|toilet|musholla|mushola|parkir|gazebo|saung|wifi/i,
     /pemandu|guide|tour|trip|rombongan|sekolah|study tour/i,
+
+    /**
+     * Kebutuhan dasar pengunjung. Ini bagian penting dari peran "guide":
+     * tamu sering bertanya dengan kalimat kebutuhan, bukan nama tempat.
+     * Sebelum ditambahkan, "saya ingin mandi di mana?" DITOLAK sebagai
+     * di luar cakupan padahal Curug Cipeuteuy dan Telaga Nila menyediakan
+     * tempat berenang. Kata seperti "mandi" juga dipakai untuk kamar mandi
+     * dan MCK, jadi wajib dikenali.
+     */
+    /mandi|berenang|renang|kolam|cemplung|main air|toilet|kamar kecil|mck|wc|buang air|cuci tangan|wudu|wudhu|sholat|salat|ibadah/i,
+    /makan|minum|lapar|haus|sarapan|makan siang|makan malam|ngopi|kopi|warung makan|kuliner|cicip|jajanan|oleh oleh/i,
+    /tidur|istirahat|nginep|menginap|kemah|camping|berkhemah|api unggun/i,
+    /foto|selfie|swafoto|spot foto|pemandangan|view|sunrise|senja|sunset/i,
+    /anak|keluarga|balita|orang tua|lansia|rombongan|grup|kelompok/i,
+    /capek|lelah|penat|segar|hiking|trekking|jalan kaki|naik gunung maupun/i,
+    /parkir|akses jalan|jalan rusak|kendaraan|motor|mobil|bus|angkot|ojek|transportasi/i,
 ];
 
 /** Penanda pertanyaan yang jelas BUKAN tentang desa. */

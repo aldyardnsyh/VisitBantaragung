@@ -10,8 +10,9 @@ const BASE = process.env.CHAT_TEST_BASE ?? "http://localhost:3112";
 const GAP = Number(process.env.CHAT_TEST_GAP ?? 61000);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Pertanyaan NARATIF: tidak masuk jalur terstruktur, jadi benar-benar menguji
-// buildFromRetrieval ketika model gagal.
+// Pertanyaan NARATIF / kebutuhan: tidak masuk jalur daftar terstruktur, jadi
+// menguji buildFromRetrieval saat model gagal; pertanyaan kebutuhan dijawab
+// jalur rekomendasi deterministik (juga tanpa LLM).
 const cases = [
     { q: "Tiket Curug Cipeuteuy berapa?", expect: /15\.000|cipeuteuy/i, label: "harga curug" },
     { q: "Jahe buat apa aja sih?", expect: /jahe|menghangatkan|imun/i, label: "khasiat jahe" },
@@ -38,7 +39,13 @@ for (const c of cases) {
     }
 
     const text = String(b.answer ?? "");
-    const usedFallback = b.reason === "all_models_failed" || b.reason === "output_rejected";
+    // Jalur deterministik yang sah saat LLM tidak bisa dipakai: hasil
+    // buildFromRetrieval (all_models_failed/output_rejected) ATAU rekomendasi
+    // berbasis kebutuhan yang memang tidak memanggil LLM sama sekali.
+    const usedFallback =
+        b.reason === "all_models_failed" ||
+        b.reason === "output_rejected" ||
+        b.reason === "recommendation";
     const informative = c.expect.test(text);
     const generic = /^Berikut yang saya temukan di situs Bantaragung/.test(text);
     const hasPath = /\/[a-z]+\/[a-z-]+/i.test(text);

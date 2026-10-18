@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useChat, type ChatCard, type ChatMessageItem } from "@/app/components/chat/useChat";
 import { assetUrl } from "@/lib/asset";
@@ -40,10 +40,6 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
     const pathname = usePathname();
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState("");
-    // Konfirmasi sebelum menghapus. Menghapus seluruh percakapan tidak bisa
-    // dibatalkan, jadi tombol langsung-hapus terlalu berisiko (mudah tersenggol
-    // di layar sentuh).
-    const [confirmClear, setConfirmClear] = useState(false);
     // Badge notifikasi. Disimpan di localStorage (bukan sessionStorage) karena
     // tujuannya menandai "sudah pernah dibuka", bukan menyimpan isi percakapan.
     const [showBadge, setShowBadge] = useState(false);
@@ -76,20 +72,32 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
         if (open) inputRef.current?.focus();
     }, [open]);
 
-    /** Buka/tutup panel; membuka panel menandai badge sudah dilihat. */
+    /**
+     * Tutup panel sekaligus mengakhiri percakapan.
+     *
+     * Dipakai oleh tombol X, tombol Esc, dan tombol mengambang. Riwayat chat
+     * selalu dihapus di sini supaya perilakunya konsisten: menutup = selesai.
+     * Dengan begitu tidak ada sisa percakapan lama yang membingungkan, dan
+     * aman untuk perangkat bersama (komputer publik/warung internet).
+     */
+    const closePanel = useCallback(() => {
+        setOpen(false);
+        clear();
+        setInput("");
+    }, [clear]);
+
     const toggleOpen = () => {
-        setOpen((v) => {
-            const next = !v;
-            if (next) {
-                setShowBadge(false);
-                try {
-                    localStorage.setItem(BADGE_KEY, "1");
-                } catch {
-                    /* localStorage diblokir: badge tetap hilang untuk sesi ini */
-                }
-            }
-            return next;
-        });
+        if (open) {
+            closePanel();
+            return;
+        }
+        setOpen(true);
+        setShowBadge(false);
+        try {
+            localStorage.setItem(BADGE_KEY, "1");
+        } catch {
+            /* localStorage diblokir: badge tetap hilang untuk sesi ini */
+        }
     };
 
     // Gulir ke pesan terbaru.
@@ -103,13 +111,13 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
         if (!open) return;
         const onKey = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
-                setOpen(false);
+                closePanel();
                 triggerRef.current?.focus();
             }
         };
         window.addEventListener("keydown", onKey);
         return () => window.removeEventListener("keydown", onKey);
-    }, [open]);
+    }, [open, closePanel]);
 
     const submit = (text: string) => {
         setInput("");
@@ -128,7 +136,7 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
                     role="dialog"
                     aria-modal="false"
                     aria-label="Pemandu digital Desa Wisata Bantaragung"
-                    className="fixed bottom-0 right-0 relative z-[60] flex h-[85vh] w-full flex-col overflow-hidden rounded-t-3xl border border-forest-200 bg-white shadow-2xl sm:bottom-24 sm:right-6 sm:h-[600px] sm:max-h-[80vh] sm:w-[400px] sm:rounded-3xl"
+                    className="fixed bottom-0 right-0 z-[60] flex h-[85vh] w-full flex-col overflow-hidden rounded-t-3xl border border-forest-200 bg-white shadow-2xl sm:bottom-24 sm:right-6 sm:h-[600px] sm:max-h-[80vh] sm:w-[400px] sm:rounded-3xl"
                 >
                     {/* Kepala */}
                     <header className="flex items-center gap-3 bg-forest-900 px-4 py-3 text-white">
@@ -154,7 +162,7 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
                         {messages.length > 0 && (
                             <button
                                 type="button"
-                                onClick={() => setConfirmClear(true)}
+                                onClick={clear}
                                 aria-label="Hapus seluruh percakapan"
                                 title="Hapus seluruh percakapan"
                                 className="flex shrink-0 items-center gap-1.5 rounded-lg border border-white/25 bg-white/10 px-2.5 py-1.5 text-xs font-medium text-white transition hover:border-red-300/60 hover:bg-red-500/20 hover:text-white active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400"
@@ -169,7 +177,7 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
                         <button
                             type="button"
                             onClick={() => {
-                                setOpen(false);
+                                closePanel();
                                 triggerRef.current?.focus();
                             }}
                             aria-label="Tutup pemandu digital"
@@ -233,54 +241,6 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
                             Chat pengelola via WhatsApp {whatsappDisplay}
                         </a>
                     </div>
-
-                    {/* Konfirmasi hapus. Ditampilkan sebagai lapisan di atas
-                        isi percakapan, bukan dialog peramban, agar gayanya
-                        konsisten dan tetap terbaca di layar kecil. */}
-                    {confirmClear && (
-                        <div
-                            role="alertdialog"
-                            aria-modal="true"
-                            aria-labelledby="hapus-judul"
-                            aria-describedby="hapus-desc"
-                            className="absolute inset-0 z-10 flex items-center justify-center bg-forest-950/50 p-4 backdrop-blur-sm"
-                        >
-                            <div className="w-full max-w-xs rounded-2xl bg-white p-5 shadow-2xl">
-                                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-red-50 text-red-600">
-                                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-                                    </svg>
-                                </div>
-                                <h3 id="hapus-judul" className="text-base font-semibold text-forest-800">
-                                    Hapus seluruh percakapan?
-                                </h3>
-                                <p id="hapus-desc" className="mt-1 text-sm text-slate-600">
-                                    Semua pesan di layar ini akan dihapus dan tidak bisa dikembalikan.
-                                </p>
-                                <div className="mt-4 flex gap-2">
-                                    <button
-                                        type="button"
-                                        autoFocus
-                                        onClick={() => setConfirmClear(false)}
-                                        className="flex-1 rounded-xl border border-forest-200 bg-white px-3 py-2.5 text-sm font-medium text-forest-700 transition hover:bg-forest-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest-500"
-                                    >
-                                        Batal
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            clear();
-                                            setConfirmClear(false);
-                                            inputRef.current?.focus();
-                                        }}
-                                        className="flex-1 rounded-xl bg-red-600 px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
-                                    >
-                                        Ya, hapus
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
 
                     {/* Kolom tulis */}
                     <form
