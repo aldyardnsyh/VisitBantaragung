@@ -554,20 +554,42 @@ function asksLocation(question: string): boolean {
     );
 }
 
+/**
+ * Tautan peta untuk sebuah entitas.
+ *
+ * Diambil dari fakta `Arah Google Maps` bila ada. Bila entitas hanya punya
+ * `Koordinat` (mis. titik peta), tautan dibangun dari koordinat itu sehingga
+ * pengunjung tetap mendapat tautan yang bisa diklik  -  bukan angka mentah
+ * yang tidak berguna di ponsel.
+ */
+function mapLinkFor(card: EntityCard): string | null {
+    const direct = String(card.facts["Arah Google Maps"] ?? "").trim();
+    if (direct) return direct;
+
+    const googleMaps = String(card.facts["Google Maps"] ?? "").trim();
+    if (googleMaps) return googleMaps;
+
+    const koord = String(card.facts["Koordinat"] ?? "").trim();
+    const m = koord.match(/(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)/);
+    if (m) {
+        return `https://www.google.com/maps/search/?api=1&query=${m[1]},${m[2]}`;
+    }
+    return null;
+}
+
 /** Jawaban utuh untuk SATU entitas: ringkasan, fakta relevan, petunjuk peta. */
 function answerForEntity(card: EntityCard, question: string): StructuredAnswer {
     const contact = getPublicContact();
     const facts = topFacts(card, question, 4);
     const body = facts.length ? `\n\n${facts.join("\n")}` : "";
 
-    // Tautan arah disimpan di fakta sebagai URL mentah dan sengaja tidak
-    // dicetak (lihat cleanFactValue). Agar pertanyaan "dimana lokasinya"
-    // tetap terjawab, arahkan ke kartu/halaman yang memuat tautannya.
-    const hasMapLink = Boolean(card.facts["Arah Google Maps"] || card.facts["Google Maps"]);
-    const mapHint =
-        asksLocation(question) && hasMapLink
-            ? `\n\nPeta dan tautan arah tersedia di halaman ${card.title}.`
-            : "";
+    // Pertanyaan soal letak/arah dijawab dengan tautan peta yang BISA DIKLIK
+    // langsung dari gelembung chat. Sebelumnya jawaban hanya menyebut
+    // koordinat, dan pengunjung harus mencari sendiri lewat halaman.
+    const mapLink = asksLocation(question) ? mapLinkFor(card) : null;
+    const mapHint = mapLink
+        ? `\n\nBuka peta dan rute menuju ${card.title}:\n${mapLink}`
+        : "";
 
     return {
         kind: "harga_destinasi",

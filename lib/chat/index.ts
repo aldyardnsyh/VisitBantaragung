@@ -360,6 +360,21 @@ export function buildIndex(): ChatIndex {
 
     // --- Lokasi peta -------------------------------------------------------
     for (const l of getAllLocations()) {
+        // Tautan arah dibangun dari koordinat yang memang sudah ada di data.
+        // Tanpa ini, pertanyaan "letak lokasinya di mana?" dijawab koordinat
+        // mentah saja  -  angka yang tidak bisa diklik dan tidak berguna di
+        // ponsel. Koordinat tetap disimpan untuk ditampilkan sebagai rujukan.
+        const facts: Record<string, string> = {
+            Kategori: l.category,
+            Ringkasan: l.excerpt,
+            Koordinat: `${l.lat}, ${l.lng}`,
+        };
+        if (l.lat && l.lng) {
+            facts["Arah Google Maps"] =
+                `https://www.google.com/maps/search/?api=1&query=${l.lat},${l.lng}`;
+        }
+        facts["Halaman"] = `/bmc/lokasi/${l.slug}`;
+
         cards.push({
             id: `lokasi:${l.slug}`,
             kind: "lokasi",
@@ -367,12 +382,7 @@ export function buildIndex(): ChatIndex {
             href: `/bmc/lokasi/${l.slug}`,
             summary: l.excerpt,
             cover: l.cover,
-            facts: {
-                Kategori: l.category,
-                Ringkasan: l.excerpt,
-                Koordinat: `${l.lat}, ${l.lng}`,
-                Halaman: `/bmc/lokasi/${l.slug}`,
-            },
+            facts,
             keywords: `${l.name} ${l.slug.replace(/-/g, " ")} peta lokasi ${l.category}`.toLowerCase(),
         });
     }

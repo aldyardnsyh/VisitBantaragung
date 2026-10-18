@@ -43,6 +43,20 @@ const cases = [
         mustNot: /Fasilitas:|Kategori:/i,
         check: "terima kasih singkat tanpa mengulang data",
     },
+    // Kasus laporan: pertanyaan letak harus menjawab dengan tautan peta yang
+    // bisa diklik, bukan hanya koordinat mentah.
+    {
+        q: "letak lokasi kampung herbal dimana?",
+        expect: /google\.com\/maps/i,
+        mustNot: null,
+        check: "letak lokasi disertai tautan peta",
+    },
+    {
+        q: "curug cipeuteuy itu di mana",
+        expect: /google\.com\/maps/i,
+        mustNot: null,
+        check: "pertanyaan lokasi destinasi disertai tautan peta",
+    },
 ];
 
 let fail = 0;
