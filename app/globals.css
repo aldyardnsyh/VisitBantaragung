@@ -268,6 +268,26 @@ body {
 [data-stagger] > *:nth-child(7) { animation-delay: 0.47s; }
 [data-stagger] > *:nth-child(8) { animation-delay: 0.54s; }
 
+/* Gelembung sapaan pemandu digital: muncul dari arah tombol mengambang.
+   Diputar ulang setiap pesan berganti (komponen di-mount ulang lewat key),
+   supaya terasa seperti pop up yang keluar, bukan teks yang berganti di
+   tempat. Awalnya sedikit lebih kecil, naik, lalu membesar ke ukuran asli. */
+@keyframes vb-greet-in {
+  0% { opacity: 0; transform: translateY(10px) scale(0.92); }
+  60% { opacity: 1; transform: translateY(-2px) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-greet-in {
+  transform-origin: bottom right;
+  animation: vb-greet-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-greet-in {
+    animation: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-float,
   .animate-fade-up,

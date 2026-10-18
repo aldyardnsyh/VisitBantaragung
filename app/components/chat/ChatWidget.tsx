@@ -41,8 +41,9 @@ const QUICK_QUESTIONS = [
  * pesan diacak per kunjungan sehingga pengunjung yang berbeda (dan kunjungan
  * berulang) tidak selalu melihat kalimat yang sama.
  *
- * Aturan yang dijaga: tidak muncul saat panel terbuka, berhenti total setelah
- * ditutup pengunjung (disimpan di sessionStorage), dan tidak mencuri fokus.
+ * Aturan yang dijaga: tidak muncul saat panel terbuka, melonggar (tidak
+ * berhenti) setelah pengunjung membuka chat atau menutup gelembung, dan tidak
+ * mencuri fokus.
  */
 const GREETINGS = [
     "Sampurasun! Ada yang bisa saya bantu soal wisata Bantaragung?",
@@ -52,14 +53,31 @@ const GREETINGS = [
     "Bingung mulai dari mana? Saya pemandu digital desa, silakan tanya.",
 ];
 
-/** Jeda sebelum sapaan pertama, lalu jeda antar sapaan berikutnya (ms). */
-const GREET_FIRST_MS = 8000;
-const GREET_EVERY_MS = 30000;
+/**
+ * Jeda sapaan (ms), dua tahap.
+ *
+ * - `awal`: pengunjung baru, belum pernah berinteraksi dengan pemandu. Sapaan
+ *   tampil rapat supaya bantuan cepat terlihat, tetapi tetap tidak setiap
+ *   detik: teks yang berganti terlalu cepat justru tidak terbaca dan membuat
+ *   pengunjung mengabaikan gelembungnya (banner blindness).
+ * - `tenang`: setelah pengunjung membuka chat atau menutup gelembung. Dia
+ *   sudah tahu pemandu ini ada, jadi sapaan melonggar dan tidak mengganggu.
+ *
+ * Semua angka di satu tempat supaya mudah disetel tanpa menyentuh logika.
+ */
+const GREET_GAP = {
+    /** Sapaan pertama setelah halaman siap. */
+    awal: 4000,
+    /** Jeda antar sapaan selama pengunjung belum berinteraksi. */
+    rapat: 12000,
+    /** Jeda antar sapaan setelah pengunjung sudah berinteraksi. */
+    tenang: 45000,
+};
 
 /** Penanda "badge sudah dilihat". localStorage, bukan bagian isi percakapan. */
 const BADGE_KEY = "bantaragung-chat-badge-seen";
 
-/** Penanda "sapaan sudah ditutup" untuk satu sesi peramban. */
+/** Penanda "gelembung pernah ditutup" untuk satu sesi peramban. */
 const GREET_OFF_KEY = "bantaragung-chat-greet-off";
 
 export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
@@ -70,9 +88,15 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
     // tujuannya menandai "sudah pernah dibuka", bukan menyimpan isi percakapan.
     const [showBadge, setShowBadge] = useState(false);
     // Sapaan yang sedang tampil (null = tidak ada gelembung).
-    const [greet, setGreet] = useState<string | null>(null);
-    // Pengunjung menutup sapaan: jangan ganggu lagi pada sesi ini.
-    const [greetOff, setGreetOff] = useState(false);
+    //
+    // Disimpan sebagai objek ber-`id`, bukan string: `id` dipakai sebagai key
+    // React sehingga setiap pesan baru me-mount ulang elemennya dan animasi
+    // munculnya berjalan lagi. Dengan string saja, React memakai ulang elemen
+    // yang sama dan yang terlihat hanya teks yang berganti di tempat.
+    const [greet, setGreet] = useState<{ id: number; text: string } | null>(null);
+    // Pengunjung sudah pernah membuka chat atau menutup gelembung. Sapaan
+    // berikutnya memakai jeda panjang (`GREET_GAP.tenang`).
+    const [interacted, setInteracted] = useState(false);
     const { messages, busy, send, clear } = useChat();
 
     const panelRef = useRef<HTMLDivElement>(null);
@@ -99,15 +123,18 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
         void Promise.resolve().then(() => setShowBadge(!seen));
     }, []);
 
-    // Baca preferensi "sapaan sudah ditutup" untuk sesi ini.
+    // Pengunjung yang pernah menutup gelembung (sesi ini) langsung memakai
+    // ritme tenang, tanpa menghentikan sapaan: bantuan tetap tersedia.
     useEffect(() => {
-        let off = false;
+        let closedBefore = false;
         try {
-            off = sessionStorage.getItem(GREET_OFF_KEY) === "1";
+            closedBefore = sessionStorage.getItem(GREET_OFF_KEY) === "1";
         } catch {
-            off = false;
+            closedBefore = false;
         }
-        void Promise.resolve().then(() => setGreetOff(off));
+        if (closedBefore) {
+            void Promise.resolve().then(() => setInteracted(true));
+        }
     }, []);
 
     /**
@@ -130,27 +157,33 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
         return GREETINGS[next];
     }, []);
 
-    // Sapaan berkala. Timer berhenti saat panel terbuka atau setelah ditutup.
-    // Tetap tidak muncul bila tab sedang tidak terlihat, supaya pesan tidak
-    // "terbuang" saat pengunjung berpindah tab.
+    // Sapaan berkala. Timer berhenti saat panel terbuka dan melonggar setelah
+    // pengunjung pernah berinteraksi. Tetap tidak muncul bila tab sedang tidak
+    // terlihat, supaya pesan tidak "terbuang" saat pengunjung berpindah tab.
     useEffect(() => {
-        if (open || greetOff) return;
+        if (open) return;
         let cancelled = false;
         let first = true;
         let timer: ReturnType<typeof setTimeout>;
 
         const schedule = () => {
+            const gap = first
+                ? GREET_GAP.awal
+                : interacted
+                  ? GREET_GAP.tenang
+                  : GREET_GAP.rapat;
+
             timer = setTimeout(() => {
                 if (cancelled) return;
                 if (document.visibilityState === "visible") {
-                    setGreet(pickGreeting());
+                    setGreet({ id: Date.now(), text: pickGreeting() });
                     // Titik merah menyala lagi bersama sapaan baru: penanda
                     // "ada yang bisa ditanyakan" yang terlihat juga di layar
                     // ponsel (dulu hanya tampil sekali lalu hilang selamanya).
                     setShowBadge(true);
                 }
                 schedule();
-            }, first ? GREET_FIRST_MS : GREET_EVERY_MS);
+            }, gap);
             first = false;
         };
 
@@ -159,7 +192,7 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
             cancelled = true;
             clearTimeout(timer);
         };
-    }, [open, greetOff, pickGreeting]);
+    }, [open, interacted, pickGreeting]);
 
 
     // Fokus otomatis saat panel dibuka.
@@ -184,6 +217,9 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
     const toggleOpen = () => {
         // Gelembung sapaan selalu ditutup saat panel dibuka atau ditutup.
         setGreet(null);
+        // Setelah panel dibuka, pengunjung sudah kenal pemandu ini: jeda
+        // sapaan berikutnya memakai ritme tenang.
+        setInteracted(true);
 
         if (open) {
             closePanel();
@@ -198,14 +234,20 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
         }
     };
 
-    /** Tutup sapaan untuk sesi ini: pengunjung sudah memutuskan sendiri. */
+    /**
+     * Tutup gelembung yang sedang tampil.
+     *
+     * Bukan mematikan fitur: pengunjung hanya menolak sapaan kali ini, lalu
+     * sapaan kembali dengan jeda panjang (`GREET_GAP.tenang`) dan tetap bisa
+     * ditutup lagi kapan saja. Titik merah tetap menyala sebagai jalan masuk.
+     */
     const dismissGreet = () => {
         setGreet(null);
-        setGreetOff(true);
+        setInteracted(true);
         try {
             sessionStorage.setItem(GREET_OFF_KEY, "1");
         } catch {
-            /* sessionStorage diblokir: sapaan tidak kembali selama halaman ini */
+            /* sessionStorage diblokir: tidak apa-apa, jeda tetap melonggar */
         }
     };
 
@@ -391,12 +433,17 @@ export default function ChatWidget({ whatsappUrl, whatsappDisplay }: Props) {
             )}
 
             {/* Gelembung sapaan berkala: muncul di atas tombol mengambang,
-                lebar dibatasi agar tidak melewati tepi layar ponsel sempit. */}
+                lebar dibatasi agar tidak melewati tepi layar ponsel sempit.
+                `key` memakai id tiap pesan supaya animasi keluar (naik +
+                membesar) diputar ulang setiap kali pesan berganti. */}
             {greet && !open && (
-                <div className="animate-fade-up fixed bottom-[5.75rem] right-4 z-[59] w-[min(17rem,calc(100vw-2rem))] sm:bottom-24 sm:right-6">
+                <div
+                    key={greet.id}
+                    className="animate-greet-in fixed bottom-[5.75rem] right-4 z-[59] w-[min(17rem,calc(100vw-2rem))] sm:bottom-24 sm:right-6"
+                >
                     <div className="relative rounded-2xl border border-forest-200 bg-white p-3 pr-9 shadow-xl">
                         <p className="text-[13px] leading-snug break-words text-slate-700 [overflow-wrap:anywhere]">
-                            {greet}
+                            {greet.text}
                         </p>
                         <button
                             type="button"
