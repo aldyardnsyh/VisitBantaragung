@@ -156,6 +156,33 @@ body {
   font-family: var(--font-display);
 }
 
+/* ===== Peta LeafletMap ===== */
+/*
+ * Pin lokasi digambar sendiri sebagai SVG dengan aksen clay situs, jadi
+ * gaya bawaan .leaflet-div-icon (kotak putih berbingkai) dibersihkan.
+ */
+.vb-map-pin {
+  background: transparent;
+  border: 0;
+}
+
+.vb-map-pin svg {
+  display: block;
+  filter: drop-shadow(0 2px 3px rgba(22, 48, 36, 0.35));
+}
+
+.vb-map-pin:focus-visible {
+  outline: 2px solid var(--color-clay-500);
+  outline-offset: 2px;
+}
+
+/* Popup mengikuti tipografi situs, bukan font bawaan Leaflet. */
+.vb-map .leaflet-popup-content {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  margin: 10px 14px;
+}
+
 /* Skeleton Loading Animation (dipertahankan dari versi lama) */
 @keyframes shimmer {
   0% { background-position: -200% 0; }

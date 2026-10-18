@@ -1,0 +1,47 @@
+HASIL PENCARIAN KOORDINAT DESTINASI BANTARAGUNG (OpenStreetMap)
+Dibuat: 18/10/2026, 11.36.33
+Pusat: -6.841111, 108.392778
+Objek OSM dianalisis: 14351
+
+=== DITEMUKAN (2) ===
+  villa-gardenstone
+    situs : Villa Gardenstone
+    OSM   : The Gardens [residential]  skor 100
+    koord : -6.7523925, 108.5251523
+  villa-gardenstone
+    situs : Villa Gardenstone
+    OSM   : The Gardens [residential]  skor 100
+    koord : -6.7523925, 108.5251523
+
+=== TIDAK DITEMUKAN, memakai titik desa (31) ===
+  atraksi-genjring-kuda-jaya  (Atraksi Genjring Kuda Jaya)  kandidat terdekat: Gunung Kuda skor 33
+  batu-asahan  (Batu Asahan)  kandidat terdekat: Jalan Sungai Asahan skor 33
+  bukit-batu-semar  (Bukit Batu Semar)  kandidat terdekat: Toko Semarang skor 50
+  buper-awilega  (Bumi Perkemahan Awilega)
+  cottage-ciboer-pass  (Cottage Ciboer Pass)  kandidat terdekat: Password Racing skor 50
+  curug-cipeuteuy  (Curug Cipeuteuy)
+  domba-ketangkasan  (Domba Ketangkasan)  kandidat terdekat: Domba skor 65
+  edukasi-tradisi-apem-syafar  (Edukasi Tradisi Apem Syafar)  kandidat terdekat: Radi skor 15
+  homestay-warga  (Homestay Warga)  kandidat terdekat: Home skor 55
+  kampung-herbal-mertasela  (Kampung Herbal Mertasela)
+  kopi-pakuwon  (Kopi Pakuwon)  kandidat terdekat: Gunung Pakuwon skor 50
+  langit-binuang  (Langit Binuang)  kandidat terdekat: Cibinuang skor 15
+  live-in-umkm-emping-melinjo  (Live In UMKM Emping Melinjo)
+  nyura  (Nyura)
+  paket-campervan  (Paket Campervan)
+  paket-desa-wisata-bantaragung  (Paket Desa Wisata Bantaragung)  kandidat terdekat: A&W skor 55
+  paket-eduwisata-family-gathering  (Paket Eduwisata Family Gathering)  kandidat terdekat: Jalan Family 2 skor 33
+  pasar-bumi-pakuwon  (Pasar Bumi Pakuwon)  kandidat terdekat: Gunung Pakuwon skor 65
+  penanaman-pohon-endemik  (Penanaman Pohon Endemik)  kandidat terdekat: Nana skor 55
+  pencak-silat  (Pencak Silat)
+  pertanian-organik  (Pertanian Organik)  kandidat terdekat: Ani skor 55
+  telaga-nila  (Telaga Nila)  kandidat terdekat: Gang Nila skor 65
+  terasering-ciboer  (Terasering Ciboer Pass)  kandidat terdekat: Password Racing skor 50
+  batu-asahan  (Batu Asahan)  kandidat terdekat: Jalan Sungai Asahan skor 33
+  bukit-batu-semar  (Bukit Batu Semar)  kandidat terdekat: Toko Semarang skor 50
+  buper-awilega  (Bumi Perkemahan Awilega)
+  cottage-ciboer-pass  (Cottage Ciboer Pass)  kandidat terdekat: Password Racing skor 50
+  curug-cipeuteuy  (Curug Cipeuteuy)
+  kampung-herbal  (Kampung Herbal Bantaragung)
+  langit-binuang  (Langit Binuang)  kandidat terdekat: Cibinuang skor 15
+  terasering-ciboer  (Terasering Ciboer Pass)  kandidat terdekat: Password Racing skor 50

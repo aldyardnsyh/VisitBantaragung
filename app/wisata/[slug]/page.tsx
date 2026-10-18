@@ -2,6 +2,8 @@ import { getAllWisata, getWisataBySlug } from "@/lib/content";
 import { assetUrl } from "@/lib/asset";
 import { toJsonLd } from "@/lib/jsonld";
 import PageHeader from "@/app/components/layout/PageHeader";
+import LeafletMap from "@/app/components/map/LeafletMap";
+import { isVillageCenter } from "@/lib/geo";
 import type { Metadata } from "next";
 
 export const dynamic = "force-static";
@@ -33,6 +35,7 @@ export default async function WisataDetail({
     const { slug } = await params;
     const data = getWisataBySlug(slug);
     const hasMap = Boolean(data.location && data.location.lat && data.location.lng);
+    const villagePoint = hasMap && isVillageCenter(data.location.lat, data.location.lng);
 
     const jsonLd = {
         "@context": "https://schema.org",
@@ -176,13 +179,33 @@ export default async function WisataDetail({
                         <h3 className="font-display text-2xl font-bold text-forest-800">
                             Lokasi
                         </h3>
-                        <iframe
-                            src={`https://maps.google.com/maps?q=${data.location.lat},${data.location.lng}&output=embed`}
-                            title={`Lokasi ${data.title}`}
-                            className="w-full h-[320px] rounded-2xl border-0 shadow-md"
-                            loading="lazy"
-                            sandbox="allow-scripts allow-same-origin allow-popups"
-                        />
+                        {/*
+                          Peta open-source (Leaflet + OpenStreetMap) memakai
+                          koordinat dari content/wisata/*.json. Destinasi yang
+                          koordinatnya masih titik desa jatuh ke pusat Desa
+                          Bantaragung; begitu koordinat asli terisi di
+                          content/, pin ikut bergeser tanpa mengubah kode.
+                          (Hasil pencarian koordinat: scripts/geo/.)
+                        */}
+                        <div className="overflow-hidden rounded-2xl shadow-md">
+                            <LeafletMap
+                                points={[
+                                    {
+                                        lat: data.location.lat,
+                                        lng: data.location.lng,
+                                        label: data.title,
+                                    },
+                                ]}
+                                zoom={14}
+                                className="h-[320px]"
+                                ariaLabel={`Peta lokasi ${data.title}`}
+                            />
+                        </div>
+                        {villagePoint && (
+                            <p className="text-sm text-slate-500">
+                                Titik peta berada di pusat Desa Bantaragung.
+                            </p>
+                        )}
                     </section>
                 )}
 

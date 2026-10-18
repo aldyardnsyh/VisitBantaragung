@@ -1,12 +1,11 @@
 import Breadcrumb from "@/app/components/ui/Breadcrumb";
 import ContactSection from "./ContactSection";
-import { getPublicContact } from "@/lib/content";
-
-const MAPS_EMBED =
-  "https://maps.google.com/maps?q=Desa%20Bantaragung%20Sindangwangi%20Majalengka&t=&z=13&ie=UTF8&iwloc=&output=embed";
+import LeafletMap from "@/app/components/map/LeafletMap";
+import { getPublicContact, getSiteSettings } from "@/lib/content";
 
 export default function KontakPage() {
   const contact = getPublicContact();
+  const site = getSiteSettings();
 
   return (
     <main>
@@ -38,13 +37,17 @@ export default function KontakPage() {
       <section className="pb-20 md:pb-24">
         <div className="max-w-7xl mx-auto px-6">
           <div className="rounded-2xl overflow-hidden border border-forest-200/60 shadow-sm">
-            <iframe
-              src={MAPS_EMBED}
-              title="Lokasi Desa Bantaragung di Google Maps"
-              className="w-full h-[400px] border-0"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              allowFullScreen
+            <LeafletMap
+              points={[
+                {
+                  lat: site.location.latitude,
+                  lng: site.location.longitude,
+                  label: `Desa ${site.location.village}`,
+                },
+              ]}
+              zoom={13}
+              className="h-[400px]"
+              ariaLabel="Peta Desa Bantaragung"
             />
           </div>
           <p className="text-center mt-4">

@@ -5,6 +5,7 @@ import { getAllLocations, getLocationBySlug, type Location } from "@/lib/content
 import { assetUrl } from "@/lib/asset";
 import Breadcrumb from "@/app/components/ui/Breadcrumb";
 import ImageWithSkeleton from "@/app/components/ui/ImageWithSkeleton";
+import LeafletMap from "@/app/components/map/LeafletMap";
 
 interface LocationDetailProps {
     params: Promise<{ slug: string }>;
@@ -49,7 +50,6 @@ export default async function LocationDetailPage({ params }: LocationDetailProps
         notFound();
     }
 
-    const embedUrl = `https://maps.google.com/maps?q=${location.lat},${location.lng}&z=14&output=embed`;
     const externalUrl = `https://www.google.com/maps?q=${location.lat},${location.lng}`;
 
     return (
@@ -112,13 +112,10 @@ export default async function LocationDetailPage({ params }: LocationDetailProps
                 </section>
 
                 <section className="rounded-2xl overflow-hidden shadow-md border border-forest-200/70 bg-white/80">
-                    <iframe
-                        src={embedUrl}
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                        title={`Peta lokasi ${location.name}`}
-                        className="w-full h-[420px] border-0"
-                        allowFullScreen
+                    <LeafletMap
+                        points={[{ lat: location.lat, lng: location.lng, label: location.name }]}
+                        zoom={14}
+                        ariaLabel={`Peta lokasi ${location.name}`}
                     />
                 </section>
             </div>

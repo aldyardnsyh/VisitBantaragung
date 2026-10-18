@@ -1,0 +1,670 @@
+{
+    "generatedAt": "2026-10-18T04:36:33.154Z",
+    "village": {
+        "lat": -6.841111,
+        "lng": 108.392778
+    },
+    "poolSize": 14351,
+    "items": [
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\atraksi-genjring-kuda-jaya.json",
+            "slug": "atraksi-genjring-kuda-jaya",
+            "title": "Atraksi Genjring Kuda Jaya",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 33,
+                "name": "Gunung Kuda",
+                "lat": -6.773611,
+                "lng": 108.398889,
+                "type": "peak"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\batu-asahan.json",
+            "slug": "batu-asahan",
+            "title": "Batu Asahan",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 33,
+                "name": "Jalan Sungai Asahan",
+                "lat": -6.730912,
+                "lng": 108.5295658,
+                "type": "residential"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\bukit-batu-semar.json",
+            "slug": "bukit-batu-semar",
+            "title": "Bukit Batu Semar",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 50,
+                "name": "Toko Semarang",
+                "lat": -6.7203517,
+                "lng": 108.5644831,
+                "type": "-"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\buper-awilega.json",
+            "slug": "buper-awilega",
+            "title": "Bumi Perkemahan Awilega",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": null,
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\cottage-ciboer-pass.json",
+            "slug": "cottage-ciboer-pass",
+            "title": "Cottage Ciboer Pass",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 50,
+                "name": "Password Racing",
+                "lat": -6.7279899,
+                "lng": 108.5586434,
+                "type": "-"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\curug-cipeuteuy.json",
+            "slug": "curug-cipeuteuy",
+            "title": "Curug Cipeuteuy",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": null,
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\domba-ketangkasan.json",
+            "slug": "domba-ketangkasan",
+            "title": "Domba Ketangkasan",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 65,
+                "name": "Domba",
+                "lat": -6.7290832,
+                "lng": 108.3001944,
+                "type": "farmyard"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\edukasi-tradisi-apem-syafar.json",
+            "slug": "edukasi-tradisi-apem-syafar",
+            "title": "Edukasi Tradisi Apem Syafar",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 15,
+                "name": "Radi",
+                "lat": -6.7276489,
+                "lng": 108.2971968,
+                "type": "-"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\homestay-warga.json",
+            "slug": "homestay-warga",
+            "title": "Homestay Warga",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 55,
+                "name": "Home",
+                "lat": -6.8646883,
+                "lng": 108.5166565,
+                "type": "-"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\kampung-herbal-mertasela.json",
+            "slug": "kampung-herbal-mertasela",
+            "title": "Kampung Herbal Mertasela",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": null,
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\kopi-pakuwon.json",
+            "slug": "kopi-pakuwon",
+            "title": "Kopi Pakuwon",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 50,
+                "name": "Gunung Pakuwon",
+                "lat": -6.778333,
+                "lng": 108.39,
+                "type": "peak"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\langit-binuang.json",
+            "slug": "langit-binuang",
+            "title": "Langit Binuang",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 15,
+                "name": "Cibinuang",
+                "lat": -6.9975315,
+                "lng": 108.4735014,
+                "type": "village"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\live-in-umkm-emping-melinjo.json",
+            "slug": "live-in-umkm-emping-melinjo",
+            "title": "Live In UMKM Emping Melinjo",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": null,
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\nyura.json",
+            "slug": "nyura",
+            "title": "Nyura",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": null,
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\paket-campervan.json",
+            "slug": "paket-campervan",
+            "title": "Paket Campervan",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": null,
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\paket-desa-wisata-bantaragung.json",
+            "slug": "paket-desa-wisata-bantaragung",
+            "title": "Paket Desa Wisata Bantaragung",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 55,
+                "name": "A&W",
+                "lat": -6.7189876,
+                "lng": 108.5497456,
+                "type": "fast_food"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\paket-eduwisata-family-gathering.json",
+            "slug": "paket-eduwisata-family-gathering",
+            "title": "Paket Eduwisata Family Gathering",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 33,
+                "name": "Jalan Family 2",
+                "lat": -6.786038,
+                "lng": 108.4325245,
+                "type": "residential"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\pasar-bumi-pakuwon.json",
+            "slug": "pasar-bumi-pakuwon",
+            "title": "Pasar Bumi Pakuwon",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 65,
+                "name": "Gunung Pakuwon",
+                "lat": -6.778333,
+                "lng": 108.39,
+                "type": "peak"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\penanaman-pohon-endemik.json",
+            "slug": "penanaman-pohon-endemik",
+            "title": "Penanaman Pohon Endemik",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 55,
+                "name": "Nana",
+                "lat": -6.7297521,
+                "lng": 108.2959163,
+                "type": "-"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\pencak-silat.json",
+            "slug": "pencak-silat",
+            "title": "Pencak Silat",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": null,
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\pertanian-organik.json",
+            "slug": "pertanian-organik",
+            "title": "Pertanian Organik",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 55,
+                "name": "Ani",
+                "lat": -6.7276459,
+                "lng": 108.2976884,
+                "type": "-"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\telaga-nila.json",
+            "slug": "telaga-nila",
+            "title": "Telaga Nila",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 65,
+                "name": "Gang Nila",
+                "lat": -6.7545376,
+                "lng": 108.5580934,
+                "type": "living_street"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\terasering-ciboer.json",
+            "slug": "terasering-ciboer",
+            "title": "Terasering Ciboer Pass",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 50,
+                "name": "Password Racing",
+                "lat": -6.7279899,
+                "lng": 108.5586434,
+                "type": "-"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "wisata",
+            "file": "content\\wisata\\villa-gardenstone.json",
+            "slug": "villa-gardenstone",
+            "title": "Villa Gardenstone",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": true,
+            "match": {
+                "score": 100,
+                "name": "The Gardens",
+                "lat": -6.7523925,
+                "lng": 108.5251523,
+                "type": "residential"
+            },
+            "fallback": null
+        },
+        {
+            "kind": "lokasi",
+            "file": "content\\bmc\\lokasi\\batu-asahan.json",
+            "slug": "batu-asahan",
+            "title": "Batu Asahan",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 33,
+                "name": "Jalan Sungai Asahan",
+                "lat": -6.730912,
+                "lng": 108.5295658,
+                "type": "residential"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "lokasi",
+            "file": "content\\bmc\\lokasi\\bukit-batu-semar.json",
+            "slug": "bukit-batu-semar",
+            "title": "Bukit Batu Semar",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 50,
+                "name": "Toko Semarang",
+                "lat": -6.7203517,
+                "lng": 108.5644831,
+                "type": "-"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "lokasi",
+            "file": "content\\bmc\\lokasi\\buper-awilega.json",
+            "slug": "buper-awilega",
+            "title": "Bumi Perkemahan Awilega",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": null,
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "lokasi",
+            "file": "content\\bmc\\lokasi\\cottage-ciboer-pass.json",
+            "slug": "cottage-ciboer-pass",
+            "title": "Cottage Ciboer Pass",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 50,
+                "name": "Password Racing",
+                "lat": -6.7279899,
+                "lng": 108.5586434,
+                "type": "-"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "lokasi",
+            "file": "content\\bmc\\lokasi\\curug-cipeuteuy.json",
+            "slug": "curug-cipeuteuy",
+            "title": "Curug Cipeuteuy",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": null,
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "lokasi",
+            "file": "content\\bmc\\lokasi\\kampung-herbal.json",
+            "slug": "kampung-herbal",
+            "title": "Kampung Herbal Bantaragung",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": null,
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "lokasi",
+            "file": "content\\bmc\\lokasi\\langit-binuang.json",
+            "slug": "langit-binuang",
+            "title": "Langit Binuang",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 15,
+                "name": "Cibinuang",
+                "lat": -6.9975315,
+                "lng": 108.4735014,
+                "type": "village"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "lokasi",
+            "file": "content\\bmc\\lokasi\\terasering-ciboer.json",
+            "slug": "terasering-ciboer",
+            "title": "Terasering Ciboer Pass",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": false,
+            "match": {
+                "score": 50,
+                "name": "Password Racing",
+                "lat": -6.7279899,
+                "lng": 108.5586434,
+                "type": "-"
+            },
+            "fallback": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            }
+        },
+        {
+            "kind": "lokasi",
+            "file": "content\\bmc\\lokasi\\villa-gardenstone.json",
+            "slug": "villa-gardenstone",
+            "title": "Villa Gardenstone",
+            "current": {
+                "lat": -6.841111,
+                "lng": 108.392778
+            },
+            "encontrado": true,
+            "match": {
+                "score": 100,
+                "name": "The Gardens",
+                "lat": -6.7523925,
+                "lng": 108.5251523,
+                "type": "residential"
+            },
+            "fallback": null
+        }
+    ]
+}
