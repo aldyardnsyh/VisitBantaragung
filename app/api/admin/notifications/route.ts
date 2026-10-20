@@ -49,7 +49,7 @@ export async function GET() {
           ? "Crawler sedang mengambil berita baru. Hasilnya muncul beberapa menit lagi."
           : failed
             ? `Run terakhir (${run.event === "schedule" ? "jadwal otomatis" : "manual"}) tidak selesai dengan sukses. Buka catatan untuk melihat penyebabnya.`
-            : `Berita terbaru sudah masuk lewat ${run.event === "schedule" ? "jadwal otomatis" : "sinkronisasi manual"}.`,
+            : `Sinkronisasi lewat ${run.event === "schedule" ? "jadwal otomatis" : "sinkronisasi manual"} selesai. Jika tidak ada berita baru, daftar berita yang ada sudah yang terbaru.`,
         at: run.createdAt,
         href: run.htmlUrl,
       });

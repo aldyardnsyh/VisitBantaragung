@@ -34,7 +34,9 @@ loadDotEnvLocal();
 // LLM_MODEL + LLM_FALLBACK_MODELS). GATE 0 memakai kandidat pertama yang
 // sehat, jadi run tidak merah hanya karena satu model down/salah ID.
 // Stage-gate pipeline (hijau = sistem sehat; merah = ada masalah nyata):
-//   GATE 0 model  -> ping kandidat berurutan; semua gagal => FATAL (exit 1).
+//   GATE 0 model  -> dipanggil hanya saat ada artikel baru yang perlu
+//                    di-rewrite. Semua kandidat gagal => FATAL (exit 1).
+//                    Tanpa artikel baru, model tidak dipanggil sama sekali.
 //   GATE 1 crawl  -> sumber wajib memberi data; kosong => FATAL.
 //   GATE 2 rewrite-> artikel gagal rewrite TIDAK di-push mentah; run FATAL.
 //   TIPIS  skip   -> sumber video/CTA-only (<200 char bersih) di-skip permanen
@@ -46,13 +48,10 @@ loadDotEnvLocal();
 // AMANAN: key/URL cukup dari env, jangan pernah di-commit (gitignore sudah memblokir .env*).
 const LLM_API_KEY = process.env.LLM_API_KEY || "";
 const LLM_URL = process.env.LLM_URL || ""; // contoh: http://localhost:11434/v1/chat/completions (9router lokal)
-// Default diganti dari `muse-spark-1.3-free` karena model itu sudah TIDAK
-// TERSEDIA di plan free (error model_not_available saat diuji). Kandidat
-// pertama selalu gagal sehingga GATE 0 membuang 3 percobaan + jeda 2/4/6 detik
-// di setiap run. `deepseek-v4.1-flash-free` terukur 1,8 detik dan stabil.
+// Default lokal: minimax-m3 (model yang dipakai workflow GitHub Actions).
 // Daftar model gratis penyedia berubah setiap hari; bila kandidat pertama
 // bermasalah, GATE 0 tetap mencoba kandidat berikutnya.
-const LLM_MODEL = process.env.LLM_MODEL || "deepseek-v4.1-flash-free";
+const LLM_MODEL = process.env.LLM_MODEL || "minimax-m3";
 // Urutan kandidat model yang dicoba GATE 0. LLM_MODELS (koma) menang bila diisi;
 // kalau kosong, gabungan LLM_MODEL + LLM_FALLBACK_MODELS (koma).
 function modelCandidates() {
@@ -835,10 +834,13 @@ async function fetchCover(post, slug) {
 async function main() {
   if (DRY) console.log("[dry-run] no files will be written, no covers downloaded");
 
-  // GATE 0 — pastikan model merespons SEBELUM crawl. Tanpa rewrite yang bekerja,
-  // sync tidak boleh diklaim berhasil.
+  // GATE 0 dijalankan malas: hanya saat artikel baru pertama benar-benar akan
+  // di-rewrite. Run yang tidak menemukan artikel baru tidak perlu memanggil
+  // model, sehingga tetap sukses (hijau) meski kuota/model sedang bermasalah.
   const NO_REWRITE_FLAG = process.argv.includes("--no-rewrite");
-  if (!DRY && !NO_REWRITE_FLAG) {
+  let modelReady = false;
+  async function ensureModelReady() {
+    if (modelReady) return;
     // Placeholder (mis. "ISI_DENGAN_KEY_...") bukan key valid; tolak eksplisit
     // agar tidak terkecoh log "[llm] rewrite AI aktif" lalu gagal 401 di GATE 0.
     if (!LLM_API_KEY || !LLM_URL || /^ISI_/i.test(LLM_API_KEY)) {
@@ -846,6 +848,7 @@ async function main() {
       process.exit(1);
     }
     await assertLLMHealthy();
+    modelReady = true;
   }
   const catsById = new Map();
   try {
@@ -972,6 +975,11 @@ async function main() {
       continue;
     }
 
+    // GATE 0 baru dijalankan di sini: artikel ini benar-benar butuh rewrite.
+    // Jika semua artikel sudah ada (tidak ada yang lolos sampai titik ini),
+    // model tidak pernah dipanggil dan run tetap sukses.
+    if (!DRY && !NO_REWRITE_FLAG) await ensureModelReady();
+
     if (LLM_REWRITE && !DRY) {
       try {
         await sleep(500);
@@ -1025,7 +1033,7 @@ async function main() {
   }
 
   console.log(
-    `done. posts=${posts.length} added=${added} updated=${updated} skipped=${skipped} thinSkipped=${skippedThin} rewriteFails=${rewriteFails} coverFails=${coverFails} model=${ACTIVE_MODEL}`
+    `done. posts=${posts.length} added=${added} updated=${updated} skipped=${skipped} thinSkipped=${skippedThin} rewriteFails=${rewriteFails} coverFails=${coverFails} model=${modelReady ? ACTIVE_MODEL : "tidak dipanggil"}`
   );
 
   // GATE 2 — semua rewrite wajib sukses; yang gagal tidak di-push mentah dan run merah.

@@ -35,13 +35,13 @@ jobs:
         # bukan tertutup exit 0 dari tee.
         run: set -o pipefail; node scripts/sync/crawl.js 2>&1 | tee "$RUNNER_TEMP/sync.log"
         env:
-          # Rewrite AI (openagentic.id). Model utama dicoba dulu; bila tidak
-          # sehat, GATE 0 otomatis pakai fallback (lihat scripts/sync/crawl.js)
-          # agar run tidak merah hanya karena satu model bermasalah.
+          # Rewrite AI (openagentic.id). Model utama minimax-m3; bila tidak
+          # sehat, GATE 0 mencoba fallback mimo-v2.6-flash (lihat
+          # scripts/sync/crawl.js) agar run tidak merah karena satu model.
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           LLM_URL: https://openagentic.id/api/v1/chat/completions
-          LLM_MODEL: muse-spark-1.3-free
-          LLM_FALLBACK_MODELS: minimax-m3,mimo-v2.6-flash
+          LLM_MODEL: minimax-m3
+          LLM_FALLBACK_MODELS: mimo-v2.6-flash
           # Maks artikel terbit per run (terbaru dulu). Backlog lama terkuras
           # bertahap tiap run 3-harian; melindungi kuota FREE & timeout 30 mnt.
           SYNC_MAX_PER_RUN: 6
