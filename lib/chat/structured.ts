@@ -1,8 +1,13 @@
 import "server-only";
 
 import { getPublicContact } from "@/lib/content";
-import { buildIndex, type EntityCard } from "@/lib/chat/index";
-import type { RetrievalResult } from "@/lib/chat/retrieve";
+import {
+    buildIndex,
+    tokenize,
+    type EntityCard,
+    type TextChunk,
+} from "@/lib/chat/index";
+import { NEWS_WORDS, type RetrievalResult } from "@/lib/chat/retrieve";
 import { cleanFactValue, pickKeys } from "@/lib/chat/fallback";
 
 /**
@@ -323,22 +328,71 @@ function listPaket(): StructuredAnswer {
  * Chunk kepala artikel tidak disimpan per-artikel di hasil retrieval, jadi
  * daftar ini dibaca langsung dari indeks (indeks sudah memuat seluruh artikel
  * dan berita, termasuk yang isinya belum layak diindeks).
+ *
+ * Bila pertanyaan menyebut topik tertentu ("berita terbaru tentang sampah"),
+ * judul yang relevan dengan topik itu didahulukan, lalu diurutkan dari yang
+ * paling baru. Tulisan lama yang relevan tetap ikut sebagai konteks pendukung.
  */
-function artikelTerbaru(limit = 5): StructuredAnswer {
+function artikelTerbaru(question = "", limit = 5): StructuredAnswer {
     const index = buildIndex();
+    const heads = index.chunks.filter((c) => c.id.endsWith(":head"));
+    const topics = tokenize(question).filter((t) => !NEWS_WORDS.has(t));
 
-    // Satu chunk "head" per artikel, urut tanggal terbaru.
-    const heads = index.chunks
-        .filter((c) => c.id.endsWith(":head"))
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-        // Deduplikasi per artikel. Satu artikel bisa punya lebih dari satu
-        // chunk kepala (mis. slug sama di dua folder), dan tanpa ini judul
-        // yang sama muncul dua kali di daftar sekaligus di blok Sumber.
-        .filter((c, i, arr) => arr.findIndex((x) => x.href === c.href) === i)
+    let ranked: TextChunk[] = [];
+    if (topics.length) {
+        const scored = heads
+            .map((chunk) => {
+                const hay = `${chunk.title} ${chunk.text} ${chunk.tags.join(" ")}`.toLowerCase();
+                const score = topics.reduce(
+                    (total, term) => total + (hay.includes(term) ? 1 : 0),
+                    0
+                );
+                return { chunk, score };
+            })
+            .filter((item) => item.score > 0);
+
+        // Relevansi topik dulu, lalu tanggal terbaru. Tulisan lama yang
+        // relevan tetap masuk daftar selama masih ada ruang.
+        scored.sort(
+            (a, b) =>
+                b.score - a.score ||
+                new Date(b.chunk.date).getTime() - new Date(a.chunk.date).getTime()
+        );
+        ranked = scored.map((item) => item.chunk);
+    }
+
+    // Tanpa topik, atau topik tidak ditemukan: tampilkan judul terbaru umum.
+    const topical = ranked.length > 0;
+    if (!ranked.length) {
+        ranked = [...heads].sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+    }
+
+    // Deduplikasi per artikel. Satu artikel bisa punya lebih dari satu chunk
+    // kepala (mis. slug sama di dua folder), dan tanpa ini judul yang sama
+    // muncul dua kali di daftar sekaligus di blok Sumber.
+    const seen = new Set<string>();
+    const selected = ranked
+        .filter((chunk) => {
+            if (seen.has(chunk.href)) return false;
+            seen.add(chunk.href);
+            return true;
+        })
         .slice(0, limit);
 
+    if (!selected.length) {
+        return {
+            kind: "artikel_terbaru",
+            answer:
+                "Belum ada tulisan yang bisa ditampilkan di situs ini. " +
+                "Coba tanyakan topik lain atau buka halaman Berita.",
+            sources: [],
+        };
+    }
+
     const sources: { n: number; title: string; href: string }[] = [];
-    const lines = heads.map((c, i) => {
+    const lines = selected.map((c, i) => {
         sources.push({ n: i + 1, title: c.title, href: c.href });
         const tanggal = new Date(c.date).toLocaleDateString("id-ID", {
             day: "numeric",
@@ -348,10 +402,14 @@ function artikelTerbaru(limit = 5): StructuredAnswer {
         return bullet(i + 1, c.title, `${tanggal}`);
     });
 
+    const intro = topical
+        ? "Ini tulisan yang relevan dengan topik itu, urut dari yang terbaru:"
+        : `Ini ${selected.length} tulisan terbaru di situs Bantaragung:`;
+
     return {
         kind: "artikel_terbaru",
         answer:
-            `Ini ${heads.length} tulisan terbaru di situs Bantaragung:\n\n${lines.join("\n")}\n\n` +
+            `${intro}\n\n${lines.join("\n")}\n\n` +
             `Semua berita dan artikel KKN bisa dibaca di halaman Berita. ${closing()}`,
         sources,
     };
@@ -437,7 +495,7 @@ export function buildStructuredAnswer(
 ): StructuredAnswer | null {
     switch (kind) {
         case "artikel_terbaru":
-            return artikelTerbaru();
+            return artikelTerbaru(question);
         case "list_destinasi":
             return listDestinasi();
         case "list_paket":

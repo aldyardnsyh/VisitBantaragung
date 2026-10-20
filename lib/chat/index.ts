@@ -19,9 +19,9 @@ import { isVillageCenter } from "@/lib/geo";
  * Indeks pengetahuan chatbot.
  *
  * Seluruh data diambil dari folder content/ (satu sumber kebenaran). Indeks
- * dibangun sekali per proses lalu di-cache di memori; karena situs ini statis
- * dan dibangun ulang setiap kali konten berubah lewat dasbor, tidak ada
- * invalidasi yang diperlukan.
+ * dibangun ulang otomatis setiap 5 menit agar artikel baru hasil sync ikut
+ * terbaca tanpa harus menunggu proses server di-restart. Di Vercel, deploy
+ * baru tetap menjadi jalur utama pembaruan karena berkas konten ikut dibundel.
  *
  * Bentuk datanya dua lapis:
  *
@@ -29,7 +29,11 @@ import { isVillageCenter } from "@/lib/geo";
  *    fasilitas, kontak) dan selalu dikirim utuh ke model, tidak dipotong.
  *    Ini yang mencegah halusinasi harga: model tidak pernah melihat potongan
  *    harga tanpa konteksnya.
- * 2. `chunks`  -  potongan artikel/berita untuk pencarian kata kunci.
+ * 2. `chunks`  -  potongan artikel/berita untuk pencarian kata kunci. Setiap
+ *    artikel SELALU punya chunk "head" berisi judul + ringkasan singkat, jadi
+ *    judul terbaru tetap dikenali tanpa harus memasukkan seluruh isi artikel
+ *    ke konteks model. Isi lengkap hanya diindeks bila stylenya aman dan
+ *    dipakai saat pertanyaan memang membutuhkan detail.
  */
 
 export type EntityKind =
@@ -182,10 +186,12 @@ function isStyleSafe(text: string): boolean {
     return true;
 }
 
+const CACHE_TTL_MS = 5 * 60 * 1000;
 let cache: ChatIndex | null = null;
+let cacheExpiresAt = 0;
 
 export function buildIndex(): ChatIndex {
-    if (cache) return cache;
+    if (cache && Date.now() < cacheExpiresAt) return cache;
 
     const site = getSiteSettings();
     const seo = getSeoSettings();
@@ -461,7 +467,11 @@ export function buildIndex(): ChatIndex {
         const href =
             a.origin === "berita" ? `/bic/artikel/${a.slug}` : `/bic/artikel/${a.slug}`;
 
-        // Header selalu diindeks (judul + ringkasan) agar tetap bisa ditemukan.
+        // Header selalu diindeks (judul + ringkasan pendek) agar tetap bisa
+        // ditemukan tanpa memuat seluruh isi artikel ke konteks model. Batas
+        // 280 karakter menjaga biaya token tetap kecil meski sumber menulis
+        // ringkasan panjang.
+        const headText = `${a.title}. ${a.excerpt}`.replace(/\s+/g, " ").trim();
         chunks.push({
             id: `${a.origin}:${a.slug}:head`,
             kind: a.origin === "berita" ? "berita" : "artikel",
@@ -470,7 +480,7 @@ export function buildIndex(): ChatIndex {
             date: a.date,
             category: a.category,
             tags: a.tags ?? [],
-            text: `${a.title}. ${a.excerpt}`,
+            text: headText.length > 280 ? `${headText.slice(0, 277).trimEnd()}...` : headText,
         });
 
         // Isi hanya diindeks bila stylenya aman.
@@ -507,6 +517,7 @@ export function buildIndex(): ChatIndex {
         avgChunkLen: chunks.length ? totalLen / chunks.length : 0,
         builtAt: new Date().toISOString(),
     };
+    cacheExpiresAt = Date.now() + CACHE_TTL_MS;
     return cache;
 }
 
@@ -518,6 +529,7 @@ const STOPWORDS = new Set([
     "dalam", "oleh", "sebagai", "bagaimana", "berapa", "dimana", "mana",
     "kapan", "siapa", "mau", "ingin", "pengen", "minta", "tolong", "kak",
     "min", "bang", "halo", "hai", "hi", "terima", "kasih", "makasih",
+    "tentang", "mengenai", "soal", "terkait", "saja", "aja", "pun", "lah",
     "the", "a", "an", "is", "are", "to", "of", "and", "in", "for",
 ]);
 
@@ -533,4 +545,5 @@ export function tokenize(text: string): string[] {
 /** Hanya untuk pengujian: paksa indeks dibangun ulang. */
 export function resetIndexForTests(): void {
     cache = null;
+    cacheExpiresAt = 0;
 }

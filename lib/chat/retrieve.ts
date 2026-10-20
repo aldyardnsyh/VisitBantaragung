@@ -28,6 +28,48 @@ const MAX_CHUNKS = 4;
 const K1 = 1.5;
 const B = 0.75;
 
+/**
+ * Bonus kesegaran untuk potongan artikel. Relevansi tetap faktor utama,
+ * tetapi di antara tulisan yang sama-sama relevan, yang lebih baru naik.
+ * Tulisan lama tidak dibuang: ia tetap muncul sebagai konteks pendukung bila
+ * skornya cukup, hanya tidak mengalahkan tulisan baru yang setara.
+ */
+const RECENCY_BOOST = 0.3;
+const RECENCY_DECAY_DAYS = 120;
+
+/** Kata yang menandai pertanyaan tentang tulisan, bukan topik isinya. */
+export const NEWS_WORDS = new Set([
+    "artikel",
+    "berita",
+    "kabar",
+    "tulisan",
+    "kegiatan",
+    "cerita",
+    "info",
+    "informasi",
+    "terbaru",
+    "terkini",
+    "terakhir",
+    "baru",
+    "update",
+]);
+
+function dateValue(value: string): number {
+    const t = new Date(value).getTime();
+    return Number.isFinite(t) ? t : 0;
+}
+
+function recencyFactor(value: string): number {
+    const t = dateValue(value);
+    if (!t) return 0;
+    const ageDays = Math.max(0, (Date.now() - t) / 86_400_000);
+    return Math.exp(-ageDays / RECENCY_DECAY_DAYS);
+}
+
+function topicTerms(terms: string[]): string[] {
+    return terms.filter((t) => !NEWS_WORDS.has(t));
+}
+
 export interface RetrievedCard {
     card: EntityCard;
     score: number;
@@ -145,10 +187,17 @@ function bm25(
         // relevan, bukan sekadar menyebut kata itu sekali.
         if (terms.some((t) => chunk.title.toLowerCase().includes(t))) score += 2.0;
 
+        // Dorong tulisan yang lebih baru ke atas bila relevansinya berdekatan.
+        score *= 1 + RECENCY_BOOST * recencyFactor(chunk.date);
+
         scored.push({ chunk, score });
     }
 
-    scored.sort((a, b) => b.score - a.score);
+    scored.sort(
+        (a, b) =>
+            b.score - a.score ||
+            dateValue(b.chunk.date) - dateValue(a.chunk.date)
+    );
     return scored;
 }
 
@@ -305,17 +354,33 @@ function retrieveInternal(query: string, index: ReturnType<typeof buildIndex>): 
 
     // Pertanyaan tentang konten terbaru ("artikel terbaru", "kabar terkini")
     // tidak punya kata kunci yang khas, sehingga BM25 mengembalikan apa pun.
-    // Di sini chunk artikel terbaru diambil eksplisit sebagai konteks.
+    // Di sini chunk kepala artikel dipakai eksplisit: judul + ringkasan saja,
+    // tanpa isi penuh, supaya konteks tetap murah. Bila pertanyaan menyebut
+    // topik tertentu, judul yang relevan dengan topik itu didahulukan; tulisan
+    // lama yang relevan tetap bisa muncul sebagai pendukung.
     const asksLatest = /(terbaru|terkini|terakhir|baru|update|artikel|berita)/i.test(query);
-    if (asksLatest && /(artikel|berita|kabar|tulisan|kegiatan)/i.test(query)) {
-        const heads = index.chunks
-            .filter((c) => c.id.endsWith(":head"))
-            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-            .slice(0, 5)
-            .map((chunk, i) => ({ chunk, score: 20 - i }));
+    if (asksLatest && /(artikel|berita|kabar|tulisan|kegiatan|cerita)/i.test(query)) {
+        const heads = index.chunks.filter((c) => c.id.endsWith(":head"));
+        const topics = topicTerms(terms);
+
+        let picked: RetrievedChunk[] = [];
+        if (topics.length) {
+            picked = bm25(index, topics)
+                .filter((c) => c.chunk.id.endsWith(":head"))
+                .slice(0, 5);
+        }
+        if (!picked.length) {
+            picked = heads
+                .sort((a, b) => dateValue(b.date) - dateValue(a.date))
+                .slice(0, 5)
+                .map((chunk, i) => ({ chunk, score: 20 - i }));
+        }
+
         return {
             cards: [],
-            chunks: heads,
+            // Skor dinormalkan agar urutan konteks stabil: judul teratas
+            // tetap yang paling relevan dan paling baru.
+            chunks: picked.map((c, i) => ({ chunk: c.chunk, score: 20 - i })),
             terms: [...terms, "terbaru"],
         };
     }

@@ -347,7 +347,17 @@ export async function POST(req: NextRequest) {
         // tentang Bu Ani, bukan seluruh daftar homestay. Pengecualian bila
         // jelas minta tambahan ("selain X, apa saja lagi?").
         const asksOthers = /\b(selain|lainnya|lain|dll)\b/i.test(question);
-        const structuredKind = mention && !asksOthers ? null : detectStructuredIntent(question);
+        const structuredIntent = detectStructuredIntent(question);
+        // Pertanyaan "artikel/berita terbaru" tetap dijawab jalur terstruktur
+        // walau ada penyebutan entitas lemah (mis. kata "tradisi" yang juga
+        // muncul di judul entitas lain). Fungsi artikelTerbaru sudah
+        // memprioritaskan judul yang relevan dengan topik yang disebut.
+        const structuredKind =
+            structuredIntent === "artikel_terbaru"
+                ? structuredIntent
+                : mention && !asksOthers
+                  ? null
+                  : structuredIntent;
         if (structuredKind) {
             // Bila percakapan sedang membahas satu entitas, jawaban terstruktur
             // yang bersifat umum (mis. daftar semua harga) harus mundur agar
