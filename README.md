@@ -48,6 +48,18 @@ Contoh percakapan dan jawaban:
 
 ![Jawaban pemandu digital](docs/snapshots/chatbot-answer.jpeg)
 
+### Untuk pengelola desa
+
+Pengelola desa dapat memperbarui isi situs sendiri: berita, destinasi wisata, katalog tanaman herbal, homestay, UMKM, lokasi peta, galeri, dan pengaturan situs. Semua dikerjakan lewat dasbor yang ringkas, tanpa menyentuh kode.
+
+| Tangkapan |
+|---|
+| ![Masuk](docs/snapshots/cms-login.jpeg) |
+| ![Ringkasan](docs/snapshots/cms-dashboard.jpeg) |
+| ![Daftar berita](docs/snapshots/cms-berita.jpeg) |
+| ![Pustaka gambar](docs/snapshots/cms-media.jpeg) |
+| ![Pengaturan situs](docs/snapshots/cms-pengaturan.jpeg) |
+
 ## Kontak
 
 - **Alamat** — Desa Bantaragung, Kecamatan Sindangwangi, Kabupaten Majalengka, Jawa Barat
