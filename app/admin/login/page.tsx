@@ -110,7 +110,7 @@ export default async function LoginPage({
               <div className="mb-5 rounded-[var(--radius-adm-md)] border border-[#f2e0bb] bg-adm-warning-soft px-3.5 py-2.5 text-[12px] leading-relaxed text-adm-warning">
                 Dasbor belum dikonfigurasi. Isi <code className="font-mono">ADMIN_PASSWORD_HASH</code>{" "}
                 dan <code className="font-mono">ADMIN_SESSION_SECRET</code> pada environment, lalu
-                deploy ulang. Petunjuk ada di <code className="font-mono">docs/ADMIN.md</code>.
+                deploy ulang.
               </div>
             ) : null}
             <LoginForm nextPath={nextPath} />

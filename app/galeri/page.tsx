@@ -56,7 +56,7 @@ export const metadata: Metadata = {
 // Dua berkas di bawah sudah dikonversi ke .webp di repo aset
 // (scripts/migrate-images-webp.mjs), tetapi rujukannya masih .png sehingga
 // jsDelivr membalas 404 dan logo tampil kosong. Nama berkas di CDN bersifat
-// permanen (lihat docs/ADMIN.md), jadi yang harus disesuaikan adalah path-nya.
+// permanen, jadi yang harus disesuaikan adalah path-nya.
 const KKN_LOGOS = [
     { src: "_brand/logo/LogoAlmamaterUgm.webp", alt: "Universitas Gadjah Mada" },
     { src: "_brand/logo/LogoKknPpmUgm.png", alt: "KKN-PPM UGM" },

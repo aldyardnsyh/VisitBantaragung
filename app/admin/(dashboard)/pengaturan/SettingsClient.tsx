@@ -337,7 +337,7 @@ function SystemInfo({
         </dl>
         <p className="mt-4 text-[13px] leading-relaxed text-adm-subtle">
           Semua nilai sensitif diatur lewat environment variabel di Vercel, bukan lewat
-          halaman ini. Petunjuk lengkap ada di <code>docs/ADMIN.md</code>.
+          halaman ini.
         </p>
       </section>
 

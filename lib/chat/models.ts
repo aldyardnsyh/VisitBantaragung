@@ -6,16 +6,15 @@ import { ProviderError, callModel, type CallOptions, type ProviderErrorKind } fr
  * Rantai fallback model.
  *
  * Urutan di bawah diambil dari pengujian langsung terhadap 8 model gratis
- * penyedia (lihat docs/CHATBOT-PLAN.md bagian 3.1), bukan dari dokumentasi, karena
- * dokumentasi dan halaman beranda penyedia menyebut daftar model yang berbeda.
+ * penyedia, bukan dari dokumentasi, karena dokumentasi dan halaman beranda
+ * penyedia menyebut daftar model yang berbeda.
  *
  * Aturan yang penting untuk dipahami:
  *
  * - `space-bunny-free` masuk daftar hitam. Saat diuji, teks keluarannya rusak
  *   ("untukploitation", "antiduzi"). Jawaban rusak lebih berbahaya daripada
  *   tidak menjawab. Model yang sama saat ini dipakai crawler berita sebagai
- *   cadangan, sehingga teks rusak berpotensi tersimpan ke content/  -  lihat
- *   catatan di docs/CHATBOT-PLAN.md.
+ *   cadangan, sehingga teks rusak berpotensi tersimpan ke content/.
  * - `minimax-m3` juga diblokir: sesekali butuh 65 detik dan membuat pengunjung
  *   menunggu tanpa batas.
  * - `gemini-4-argon` belum berfungsi (503 no_provider_under_bid) tetapi tetap
@@ -213,7 +212,7 @@ export interface ChainResult {
  * PERILAKU PENYEDIA YANG MENENTUKAN DESAIN INI
  * --------------------------------------------
  * Plan FREE hanya memberi SATU request bersamaan untuk SEMUA model. Hasil
- * pengukuran langsung (lihat docs/CHATBOT-PLAN.md):
+ * pengukuran langsung:
  *
  *   - Selama satu request masih berjalan, request lain ke MODEL APA PUN
  *     langsung dijawab "Batas request bersamaan tercapai (1/1)" dalam ~120 ms.
