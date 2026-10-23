@@ -35,7 +35,7 @@ export type ScopeVerdict =
     | {
           inScope: false;
           /** Jenis penolakan, untuk balasan yang tepat sasaran. */
-          reason: "math" | "public_figure" | "market_price" | "general_knowledge" | "off_topic";
+          reason: "math" | "public_figure" | "market_price" | "general_knowledge" | "off_topic" | "other_region";
           reply: string;
       };
 
@@ -85,6 +85,65 @@ const GENERAL_KNOWLEDGE_RE =
     /\b(cara membuat|resep|puisi|pantun|cerpen|lirik|lagu|terjemahkan|translate|bahasa inggris|kode|script|program|javascript|python|rumus|persamaan)\b/i;
 const WEATHER_RE = /\b(cuaca|prakiraan cuaca|gempa|banjir jakarta|hujan di)\b/i;
 
+/**
+ * Daerah / destinasi LAIN yang sering disebut pengunjung.
+ *
+ * Kenapa perlu eksplisit: penjaga sebelumnya hanya memeriksa "ada isyarat
+ * topik desa?". Kata umum seperti "wisata", "tempat", "hotel", dan "tiket"
+ * dihitung sebagai isyarat desa, sehingga kalimat seperti
+ *
+ *   "Berikan saya rekomendasi wisata Bali"
+ *   "tempat wisata di bandung yang bagus"
+ *   "wisata di jogja apa saja?"
+ *
+ * lolos sebagai pertanyaan tentang Bantaragung, lalu dijawab daftar destinasi
+ * desa. Jawaban itu salah dan menyesatkan: pengunjung bisa mengira Bantaragung
+ * berada di Bali atau Yogyakarta.
+ *
+ * Karena itu nama daerah diperiksa LEBIH DULU dan mengalahkan isyarat generik.
+ * Pengecualian: bila pertanyaan menyebut Bantaragung/Ciremai/Majalengka secara
+ * eksplisit, itu memang pertanyaan tentang desa ini (mis. "apa bedanya wisata
+ * Bantaragung dengan Bali?"), sehingga tetap dilayani.
+ */
+const OTHER_REGION_RE = new RegExp(
+    "\\b(" +
+        [
+            // Pulau & provinsi populer
+            "bali", "lombok", "sumbawa", "flores", "labuan bajo", "komodo", "raja ampat",
+            "papua", "sumatera", "sumatra", "medan", "aceh", "padang", "bukittinggi",
+            "lampung", "palembang", "bangka", "belitung", "batam", "kalimantan",
+            "balikpapan", "samarinda", "banjarmasin", "pontianak", "makassar",
+            "sulawesi", "toraja", "manado", "bunaken", "ambon", "maluku", "ternate",
+            "ntb", "ntt", "kupang", "ende", "maumere", "sumba", "timor",
+            // Jawa di luar Majalengka
+            "jakarta", "bogor", "puncak", "bandung", "lembang", "ciwidey", "pangandaran",
+            "garut", "tasik", "tasikmalaya", "ciamis", "pangandaran", "sukabumi",
+            "pelabuhan ratu", "cirebon", "indramayu", "subang", "purwakarta",
+            "karawang", "bekasi", "depok", "tangerang", "serang", "anyer", "banten",
+            "jogja", "yogya", "yogyakarta", "sleman", "bantul", "magelang",
+            "borobudur", "prambanan", "dieng", "wonosobo", "solo", "surakarta",
+            "semarang", "karimunjawa", "malang", "batu", "bromo", "surabaya",
+            "sidoarjo", "jember", "banyuwangi", "ijen", "madura", "blitar", "kediri",
+            "purwokerto", "banyumas", "cilacap", "tegal", "pekalongan", "kebumen",
+            // Luar negeri yang sering muncul
+            "singapura", "singapore", "malaysia", "kuala lumpur", "thailand",
+            "bangkok", "phuket", "vietnam", "jepang", "tokyo", "korea", "seoul",
+            "china", "tiongkok", "hongkong", "taiwan", "eropa", "paris", "london",
+            "belanda", "italia", "turki", "dubai", "mesir", "amerika", "australia",
+            "sydney", "selandia baru", "maldives", "mekkah", "madinah", "umroh", "haji",
+        ].join("|") +
+        ")\\b",
+    "i"
+);
+
+/**
+ * Isyarat bahwa pertanyaan benar-benar milik desa ini. Nama desa/kecamatan
+ * diperiksa terpisah karena mengalahkan `OTHER_REGION_RE`.
+ */
+const ENTITY_ANCHOR_RE =
+    /bantaragung|sindangwangi|majalengka|ciremai|gunung ciremai|jawa barat|kkn|ugm|adwi|mertasela|pakuwon|ciboer|awilega|binuang|batu semar|batu asahan|cipeuteuy|nila|genjring|nyura|apem|silat|emping|gardenstone/i;
+
+
 function hasDomainHint(q: string): boolean {
     return DOMAIN_HINTS.some((re) => re.test(q));
 }
@@ -131,6 +190,28 @@ export function checkScope(question: string, isFollowUp = false): ScopeVerdict {
     // Lanjutan dari percakapan yang sudah jelas tentang desa.
     if (isFollowUp && ANAPHORA_PATTERN.test(q) && !MATH_RE.test(q) && !PUBLIC_FIGURE_RE.test(q)) {
         return { inScope: true };
+    }
+
+    /**
+     * Daerah lain diperiksa SEBELUM isyarat domain.
+     *
+     * Urutan ini disengaja: kata generik seperti "wisata", "tempat", "hotel",
+     * dan "tiket" ada di DOMAIN_HINTS, sehingga tanpa pemeriksaan lebih dulu,
+     * "rekomendasi wisata Bali" dianggap pertanyaan tentang Bantaragung dan
+     * dijawab daftar destinasi desa. Pengecualian diberikan bila pengunjung
+     * menyebut Bantaragung/Ciremai/Majalengka secara eksplisit, karena itu
+     * memang pertanyaan tentang desa ini.
+     */
+    if (OTHER_REGION_RE.test(q) && !ENTITY_ANCHOR_RE.test(q)) {
+        return {
+            inScope: false,
+            reason: "other_region",
+            reply:
+                "Saya pemandu digital khusus Desa Wisata Bantaragung di Majalengka, jadi informasi daerah lain " +
+                "tidak saya miliki dan saya tidak akan menebak. Di Bantaragung sendiri ada destinasi alam seperti " +
+                "Curug Cipeuteuy, Batu Asahan, dan Terasering Ciboer Pass, plus atraksi budaya dan paket eduwisata. " +
+                "Kalau Anda berencana ke Majalengka, saya siap bantu menyusun rencananya.",
+        };
     }
 
     // Pertanyaan tentang desa selalu dilayani.

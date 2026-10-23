@@ -62,6 +62,9 @@ function modelCandidates() {
 }
 // Model terpilih GATE 0 untuk seluruh run (default = kandidat pertama).
 let ACTIVE_MODEL = modelCandidates()[0];
+// Model yang sudah terbukti kehabisan kuota pada run ini (HTTP 429). Kuota
+// gratis dihitung per model per hari, jadi mencoba ulang model ini sia-sia.
+const EXHAUSTED_MODELS = new Set();
 const LLM_NO_THINK = process.env.LLM_NO_THINKING === "1";
 const LLM_REWRITE = Boolean(LLM_API_KEY && LLM_URL) && !process.argv.includes("--no-rewrite");
 if (LLM_REWRITE) {
@@ -503,6 +506,7 @@ async function pingModel(model) {
 async function assertLLMHealthy() {
   const gagal = [];
   for (const model of modelCandidates()) {
+    if (EXHAUSTED_MODELS.has(model)) continue;
     console.log(`[gate-model] cek respons model=${model} ...`);
     let ok = false;
     let lastErr = "";
@@ -514,6 +518,12 @@ async function assertLLMHealthy() {
       } catch (e) {
         lastErr = e.message;
         console.warn(`[gate-model] ${model} percobaan ${attempt}/3 gagal: ${e.message}`);
+        // 429 = kuota model ini habis hari ini. Retry tidak menolong, langsung
+        // pindah kandidat dan catat agar rewrite tidak memilihnya lagi.
+        if (e.message.includes("429")) {
+          EXHAUSTED_MODELS.add(model);
+          break;
+        }
         await sleep(2000 * attempt);
       }
     }
@@ -672,10 +682,52 @@ async function rewriteArticle(post) {
     `Judul: ${post.title}\n\n` +
     post.content.join("\n\n");
 
-  let res;
+  // Model yang sudah terbukti kehabisan kuota pada run ini. Me-retry model
+  // seperti ini hanya membuang waktu: kuota gratis dihitung per model per hari,
+  // jadi status "habis" tidak akan berubah sampai besok.
+  const kandidat = modelCandidates().filter((m) => !EXHAUSTED_MODELS.has(m));
+  if (!kandidat.length) {
+    throw new Error("semua kandidat model kehabisan kuota hari ini");
+  }
+  // Model terpilih GATE 0 dicoba lebih dulu, sisanya menyusul.
+  const urutan = [ACTIVE_MODEL, ...kandidat.filter((m) => m !== ACTIVE_MODEL)].filter((m) =>
+    kandidat.includes(m)
+  );
+
+  let firstErr;
+  for (const model of urutan) {
+    const hasil = await cobaRewriteDenganModel(post, userMsg, model);
+    if (hasil.ok) {
+      // Model cadangan yang berhasil naik jadi model utama run ini supaya
+      // artikel berikutnya tidak perlu mencoba model yang sudah habis lagi.
+      if (model !== ACTIVE_MODEL) {
+        console.log(`[fallback] model aktif dipindah ke ${model} (sebelumnya ${ACTIVE_MODEL})`);
+        ACTIVE_MODEL = model;
+      }
+      return hasil.out;
+    }
+    if (hasil.exhausted) {
+      EXHAUSTED_MODELS.add(model);
+      console.warn(`[fallback] ${model} kehabisan kuota: ${hasil.error.message}`);
+    } else {
+      // Bukan soal kuota: model ini memang gagal menulis artikel ini.
+      firstErr = firstErr || hasil.error;
+    }
+  }
+  throw firstErr || new Error("LLM gagal di semua kandidat model");
+}
+
+/**
+ * Satu percobaan rewrite pada SATU model, dengan retry internal untuk gangguan
+ * sesaat (5xx, jaringan) dan output yang masih kotor.
+ *
+ * Mengembalikan `{ ok, out }`, atau `{ ok:false, exhausted }` sehingga pemanggil
+ * bisa memutuskan pindah model (kuota habis) atau melaporkan gagal biasa.
+ */
+async function cobaRewriteDenganModel(post, userMsg, model) {
   for (let attempt = 1; attempt <= 4; attempt++) {
     try {
-      res = await fetch(LLM_URL, {
+      const res = await fetch(LLM_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -683,7 +735,7 @@ async function rewriteArticle(post) {
           Authorization: `Bearer ${LLM_API_KEY}`,
         },
         body: JSON.stringify({
-          model: ACTIVE_MODEL,
+          model,
           temperature: 0.7,
           max_tokens: 4000,
           ...(LLM_NO_THINK ? { enable_thinking: false } : {}),
@@ -694,7 +746,14 @@ async function rewriteArticle(post) {
         }),
       });
 
-      if ((res.status === 503 || res.status === 429 || res.status >= 500) && attempt < 4) {
+      // 429 = kuota model ini habis untuk periode berjalan. Retry tidak akan
+      // menolong, jadi sinyalkan ke pemanggil untuk pindah model.
+      if (res.status === 429) {
+        const body = await res.text();
+        const err = new Error(`LLM HTTP 429: ${body.slice(0, 200)}`);
+        return { ok: false, exhausted: true, error: err };
+      }
+      if ((res.status === 503 || res.status >= 500) && attempt < 4) {
         await sleep(3000 * attempt);
         continue;
       }
@@ -732,9 +791,9 @@ async function rewriteArticle(post) {
         e.retryable = true;
         throw e;
       }
-      return out;
+      return { ok: true, out };
     } catch (e) {
-      // Retry bila: error jaringan/5xx, ATAU output still contaminated (retryable).
+      // Retry bila: error jaringan/5xx, ATAU output masih terkontaminasi.
       const transient =
         e.message.includes("503") ||
         e.message.includes("fetch") ||
@@ -742,16 +801,16 @@ async function rewriteArticle(post) {
       if (attempt < 4 && transient) {
         if (e.retryable) {
           console.warn(
-            `[gate] output belum bersih: ${e.message} (percobaan ${attempt + 1})`
+            `[gate] output belum bersih (model=${model}): ${e.message} (percobaan ${attempt + 1})`
           );
         }
         await sleep(3000 * attempt);
         continue;
       }
-      throw e;
+      return { ok: false, exhausted: false, error: e };
     }
   }
-  throw new Error("LLM gagal setelah 4x retry");
+  return { ok: false, exhausted: false, error: new Error("LLM gagal setelah 4x retry") };
 }
 
 // Terapkan hasil rewrite LLM ke artikel (judul, ekscerpt, isi)
@@ -886,6 +945,7 @@ async function main() {
   let skipped = 0;
   let skippedThin = 0;
   let rewriteFails = 0;
+  let rewriteFallbacks = 0;
   let coverFails = 0;
   let capped = false;
 
@@ -997,7 +1057,11 @@ async function main() {
           console.warn(`rewrite gagal untuk ${slug}: ${e.message}; sumber terlalu pendek, skip (GATE 2)`);
           continue;
         }
-        rewriteFails++;
+        // Artikel tetap terbit dari sumber yang sudah dibersihkan, jadi ini
+        // BUKAN kegagalan sync. Sebelumnya baris ini ikut menaikkan
+        // rewriteFails, sehingga satu artikel yang ditolak model membuat run
+        // merah selamanya walau artikelnya sudah tayang.
+        rewriteFallbacks++;
         console.warn(`rewrite gagal untuk ${slug}: ${e.message}; terbit dengan konten bersih (fallback)`);
         finalizeArticle(article, cadangan);
         article.rewriteStatus = "cleaned";
@@ -1033,13 +1097,21 @@ async function main() {
   }
 
   console.log(
-    `done. posts=${posts.length} added=${added} updated=${updated} skipped=${skipped} thinSkipped=${skippedThin} rewriteFails=${rewriteFails} coverFails=${coverFails} model=${modelReady ? ACTIVE_MODEL : "tidak dipanggil"}`
+    `done. posts=${posts.length} added=${added} updated=${updated} skipped=${skipped} thinSkipped=${skippedThin} rewriteFails=${rewriteFails} rewriteFallbacks=${rewriteFallbacks} coverFails=${coverFails} model=${modelReady ? ACTIVE_MODEL : "tidak dipanggil"}`
   );
 
-  // GATE 2 — semua rewrite wajib sukses; yang gagal tidak di-push mentah dan run merah.
+  // GATE 2 — artikel yang tidak bisa ditulis ulang TIDAK di-push mentah.
+  // Hanya kegagalan nyata (sumber terlalu tipis sehingga artikel tidak terbit)
+  // yang memerahkan run. Artikel yang tetap terbit dengan konten bersih
+  // (rewriteStatus="cleaned") dihitung sebagai fallback, bukan kegagalan.
   if (rewriteFails > 0) {
     console.error(`FATAL [gate-rewrite]: ${rewriteFails} artikel gagal rewrite dan tidak ikut di-push.`);
     process.exit(1);
+  }
+  if (rewriteFallbacks > 0) {
+    console.warn(
+      `[gate-rewrite] ${rewriteFallbacks} artikel terbit dengan konten bersih dari sumber (rewrite AI dilewati); periksa kualitasnya saat meninjau.`
+    );
   }
   // Tidak ada artikel baru = kondisi normal (sumber sering sepi),
   // BUKAN kegagalan. Exit 0 supaya tidak mengirim email notifikasi kegagalan.
