@@ -146,9 +146,16 @@ function loadPricing(): Map<string, PricingEntry> {
     }
 }
 
-/** Pecah teks jadi potongan ~900 karakter pada batas paragraf. */
-function chunkText(paragraphs: string[], maxLen = 900): string[] {
-    const out: string[] = [];
+/**
+ * Pecah teks jadi potongan ~900 karakter pada batas paragraf.
+ *
+ * `overlap`: potongan berurutan berbagi ekor/kepala ~200 karakter. Tujuannya:
+ * kalimat yang kebetulan terbelah di batas potongan tetap utuh di salah satu
+ * sisi. Tanpa overlap, pertanyaan tentang hal yang kebetulan berada tepat di
+ * batas potongan tidak ditemukan karena kata kuncinya terpotong dua-duanya.
+ */
+function chunkText(paragraphs: string[], maxLen = 900, overlap = 200): string[] {
+    const pieces: string[] = [];
     let buf = "";
     for (const raw of paragraphs) {
         const p = String(raw).replace(/\s+/g, " ").trim();
@@ -158,17 +165,35 @@ function chunkText(paragraphs: string[], maxLen = 900): string[] {
         } else if (buf.length + p.length + 1 <= maxLen) {
             buf = `${buf} ${p}`;
         } else {
-            out.push(buf);
+            pieces.push(buf);
             buf = p;
         }
         while (buf.length > maxLen) {
             const cut = buf.lastIndexOf(". ", maxLen);
             const at = cut > maxLen * 0.5 ? cut + 1 : maxLen;
-            out.push(buf.slice(0, at).trim());
+            pieces.push(buf.slice(0, at).trim());
             buf = buf.slice(at).trim();
         }
     }
-    if (buf) out.push(buf);
+    if (buf) pieces.push(buf);
+
+    if (pieces.length <= 1 || overlap <= 0) return pieces;
+
+    // Sambungkan potongan dengan overlap: potongan ke-n diawali ekor potongan
+    // ke-(n-1). Overlap dihitung pada batas spasi agar tidak membelah kata.
+    const out: string[] = [pieces[0]];
+    for (let i = 1; i < pieces.length; i++) {
+        const prev = pieces[i - 1];
+        const cutAt = Math.max(0, prev.length - overlap);
+        const spaceAt = prev.indexOf(" ", cutAt);
+        const tail = (spaceAt > 0 ? prev.slice(spaceAt + 1) : prev.slice(cutAt)).trim();
+        const head = pieces[i].trim();
+        // Jangan berlebihan: bila gabungan melewati batas, potong ekornya.
+        const joined = tail && tail.length + head.length + 1 <= maxLen
+            ? `${tail} ${head}`
+            : head;
+        out.push(joined);
+    }
     return out;
 }
 
@@ -487,7 +512,12 @@ export function buildIndex(): ChatIndex {
         const safe = a.origin === "berita" ? isStyleSafe(full) : full.length >= 200;
         if (!safe) continue;
 
-        chunkText(paragraphs).forEach((text, i) => {
+        chunkText(paragraphs).forEach((part, i) => {
+            // Prefiks judul di setiap potongan isi: BM25 memberi skor tinggi
+            // bila kata kunci muncul di teks yang dinilai, dan judul memuat
+            // kata kunci topik terkuat (mis. "KKN"). Tanpa prefiks, potongan
+            // kedua/ketiga kalah hanya karena judulnya tidak ikut dinilai.
+            const text = i === 0 ? part : `${a.title}. ${part}`;
             chunks.push({
                 id: `${a.origin}:${a.slug}:${i}`,
                 kind: a.origin === "berita" ? "berita" : "artikel",

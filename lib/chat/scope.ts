@@ -73,6 +73,18 @@ const DOMAIN_HINTS: RegExp[] = [
     /anak|keluarga|balita|orang tua|lansia|rombongan|grup|kelompok/i,
     /capek|lelah|penat|segar|hiking|trekking|jalan kaki|naik gunung maupun/i,
     /parkir|akses jalan|jalan rusak|kendaraan|motor|mobil|bus|angkot|ojek|transportasi/i,
+
+    /**
+     * Isyarat bahasa Inggris: pengunjung asing bertanya tentang hal yang sama
+     * dengan kosakata mereka. Kasus nyata yang dulu salah ditolak:
+     * "How much is the waterfall entrance fee?" — retrieval sudah menemukan
+     * Curug Cipeuteuy lewat kamus EN->ID, tetapi penjaga cakupan membuangnya
+     * karena tidak ada satu pun kata Indonesia yang dikenali.
+     */
+    /waterfall|waterfalls|entrance fee|entrance ticket|camping|campsite|homestay|guesthouse|accommodation|lodging/i,
+    /ticket price|ticket cost|opening hours|how to get there|attraction|destination/i,
+    /swimming|swim|trekking|hiking|sightseeing|souvenir|culinary|traditional food/i,
+    /where can i|is there a|what time|how much/i,
 ];
 
 /** Penanda pertanyaan yang jelas BUKAN tentang desa. */
@@ -187,9 +199,25 @@ export const ANAPHORA_PATTERN =
 export function checkScope(question: string, isFollowUp = false): ScopeVerdict {
     const q = String(question ?? "");
 
-    // Lanjutan dari percakapan yang sudah jelas tentang desa.
-    if (isFollowUp && ANAPHORA_PATTERN.test(q) && !MATH_RE.test(q) && !PUBLIC_FIGURE_RE.test(q)) {
-        return { inScope: true };
+    /**
+     * Lanjutan dari percakapan yang sudah jelas tentang desa.
+     *
+     * Dua jalur: (a) memuat kata rujukan ("itu", "tersebut", "yang mana"), atau
+     * (b) kalimat pendek TANPA topik baru yang jelas. Kasus nyata yang dulu
+     * salah ditolak: setelah bot membahas artikel KKN, pengunjung bertanya
+     * "terus yang paling seru yang mana?" — kata "seru" bukan isyarat desa dan
+     * bukan penanda luar-topik, sehingga aturan panjang-kalimat membuangnya.
+     * Padahal itu lanjutan yang sah.
+     *
+     * Aturan (b) hanya berlaku bila pertanyaan TIDAK memuat penanda luar-topik
+     * yang kuat (matematika, tokoh, daerah lain), karena penolakan salah atas
+     * pertanyaan sah jauh lebih merugikan daripada sekali menjawab hal miring.
+     */
+    if (isFollowUp && !MATH_RE.test(q) && !PUBLIC_FIGURE_RE.test(q)) {
+        const short = q.trim().split(/\s+/).filter(Boolean).length <= 8;
+        if (ANAPHORA_PATTERN.test(q) || (short && !OTHER_REGION_RE.test(q) && !MARKET_PRICE_RE.test(q))) {
+            return { inScope: true };
+        }
     }
 
     /**

@@ -54,6 +54,251 @@ export const NEWS_WORDS = new Set([
     "update",
 ]);
 
+/**
+ * Kata tanya/basa-basi yang BUKAN penanda topik.
+ *
+ * Kasus nyata: "kalau anak kkn itu biasanya agendanya suka pada ngapain?"
+ * — artikel promosi berjudul "Weekend terakhir Oktober mau ngapain?" ikut
+ * di-boost karena judulnya kebetulan memuat kata "ngapain", lalu menang atas
+ * artikel yang benar-benar tentang KKN hanya karena kebetulan kata itu
+ * muncul dua kali. Kata tanya seperti ini tidak membawa topik, jadi tidak
+ * boleh ikut menentukan skor.
+ */
+const QUESTION_FILLER_RE =
+    /^(ngapain|ngapainnya|apa|apanya|apakah|gimana|bagaimana|kenapa|mengapa|kapan|dimana|di mana|mana|siapa|berapa|yang|yg|kalau|kalo|kira|kiranya|biasanya|suka|suka nya|paling|dong|sih|deh|ya|aja|saja|bisa|boleh|mau|pengen|ingin|coba|tolong|kasih|banget|gitu|gini|tuh|nih)$/;
+
+/**
+ * Perluasan kueri: padanan kata yang maknanya sama di data situs tetapi
+ * ditulis berbeda oleh pengunjung.
+ *
+ * BM25 murni pencocokan kata. Pengunjung menulis "menginap", data menulis
+ * "penginapan"; pengunjung menulis "kemah", data menulis "perkemahan".
+ * Tanpa perluasan, pertanyaan yang sah tidak menemukan apa pun bukan karena
+ * datanya tidak ada, melainkan karena katanya beda bentuk.
+ *
+ * Bentuk: kata pengunjung -> kata yang ADA DI DATA. Hanya dipakai untuk
+ * pencarian; pertanyaan asli tetap dikirim ke model apa adanya.
+ */
+const SYNONYMS: Record<string, string[]> = {
+    // Penginapan
+    menginap: ["penginapan", "homestay", "kamar"],
+    nginep: ["penginapan", "homestay", "menginap"],
+    nginepnya: ["penginapan", "homestay"],
+    inap: ["penginapan", "homestay"],
+    nginap: ["penginapan", "homestay"],
+    hotel: ["penginapan", "homestay", "villa", "cottage"],
+    villa: ["penginapan", "homestay"],
+    penginapan: ["homestay", "menginap"],
+    homestay: ["penginapan", "menginap"],
+    // Kemah / camping
+    kemah: ["perkemahan", "camping", "kemah"],
+    camping: ["perkemahan", "buper", "kemah"],
+    berkemah: ["perkemahan", "camping"],
+    tenda: ["perkemahan", "camping", "buper"],
+    buper: ["perkemahan", "awilega", "camping"],
+    // Wisata air
+    mandi: ["berenang", "kolam", "air"],
+    berenang: ["kolam", "air", "curug"],
+    renang: ["berenang", "kolam"],
+    cemplung: ["berenang", "air"],
+    airterjun: ["curug", "air terjun"],
+    curug: ["air terjun"],
+    // Kuliner
+    makan: ["kuliner", "warung", "restoran"],
+    makanan: ["kuliner", "makan"],
+    kuliner: ["makanan", "makan", "warung"],
+    sarapan: ["makan", "kuliner"],
+    makanmalam: ["makan", "kuliner"],
+    makansiangan: ["makan", "kuliner"],
+    ngopi: ["kopi", "kedai", "warung kopi"],
+    nongkrong: ["kopi", "warung", "santai"],
+    kafe: ["kopi", "warung"],
+    oleh2: ["oleh oleh", "suvenir", "souvenir"],
+    oleholeh: ["oleh oleh", "suvenir"],
+    suvenir: ["souvenir", "oleh oleh"],
+    souvenir: ["suvenir", "oleh oleh"],
+    // Kegiatan
+    piknik: ["wisata", "liburan"],
+    healing: ["wisata", "liburan", "santai"],
+    liburan: ["wisata", "piknik"],
+    jalanjalan: ["wisata", "liburan"],
+    "jalan jalan": ["wisata", "liburan"],
+    touring: ["wisata", "trip"],
+    hiking: ["trekking", "jalan kaki", "bukit"],
+    trekking: ["hiking", "jalan kaki", "bukit"],
+    sunrise: ["matahari terbit", "bukit", "panorama"],
+    sunset: ["senja", "matahari terbenam"],
+    foto: ["spot foto", "selfie", "pemandangan"],
+    foto2: ["spot foto", "selfie"],
+    selfie: ["spot foto", "foto"],
+    gathering: ["rombongan", "acara", "paket"],
+    outing: ["paket", "rombongan", "outbound"],
+    outbound: ["paket", "rombongan", "eduwisata"],
+    studytour: ["study tour", "rombongan", "eduwisata"],
+    // Lainnya
+    tiket: ["harga", "retribusi", "tiket masuk"],
+    hargatiket: ["harga", "tiket"],
+    entrace: ["tiket", "harga"],
+    wc: ["kamar mandi", "toilet"],
+    toilet: ["kamar mandi", "wc"],
+    musala: ["musholla"],
+    musolla: ["musholla"],
+    parkiran: ["parkir"],
+    rute: ["arah", "lokasi", "jalan"],
+    arah: ["lokasi", "rute", "maps"],
+    lokasinya: ["lokasi", "alamat"],
+    alamat: ["lokasi", "arah"],
+    tanaman: ["herbal", "togа", "toga"],
+    obat: ["herbal", "jamu", "khasiat"],
+    khasiat: ["manfaat", "herbal"],
+    manfaat: ["khasiat", "herbal"],
+    umkm: ["usaha", "warung", "toko", "produk"],
+    oleh: ["oleh oleh"],
+
+    /**
+     * Kamus EN -> ID untuk pengunjung berbahasa Inggris.
+     *
+     * Cara kerjanya murni kamus statis di lapisan pencarian: pertanyaan
+     * diterjemahkan kata demi kata SEBELUM BM25, jadi pencarian tetap
+     * memakai kata Indonesia yang ada di data. Model tidak perlu tuning
+     * apa pun - yang berubah hanya kosakata yang dikenali pencari.
+     *
+     * Dipakai juga sebaliknya saat konteks perlu dicocokkan ke istilah
+     * umum turis (waterfall, homestay).
+     */
+    waterfall: ["curug", "air terjun"],
+    waterfalls: ["curug", "air terjun"],
+    "hot spring": ["pemandian"],
+    beach: ["pantai", "telaga"],
+    lake: ["telaga", "danau"],
+    river: ["sungai", "kali"],
+    mountain: ["gunung", "bukit"],
+    hill: ["bukit"],
+    camp: ["perkemahan", "kemah"],
+    campsite: ["perkemahan", "buper"],
+    tent: ["tenda", "perkemahan"],
+    stay: ["menginap", "penginapan"],
+    lodging: ["penginapan", "homestay"],
+    guesthouse: ["penginapan", "homestay"],
+    room: ["kamar"],
+    booking: ["pemesanan", "reservasi"],
+    reserve: ["pemesanan", "reservasi"],
+    reservation: ["pemesanan", "reservasi"],
+    price: ["harga"],
+    prices: ["harga"],
+    ticket: ["tiket"],
+    tickets: ["tiket"],
+    fee: ["tiket", "harga", "retribusi"],
+    entrance: ["tiket masuk", "harga"],
+    "entrance fee": ["tiket masuk", "harga"],
+    facilities: ["fasilitas"],
+    facility: ["fasilitas"],
+    amenities: ["fasilitas"],
+    activity: ["aktivitas"],
+    activities: ["aktivitas"],
+    guide: ["pemandu"],
+    "tour guide": ["pemandu"],
+    tour: ["wisata", "trip"],
+    trip: ["wisata", "paket"],
+    package: ["paket"],
+    packages: ["paket"],
+    village: ["desa"],
+    traditional: ["tradisi", "budaya"],
+    culture: ["budaya", "tradisi"],
+    cultural: ["budaya"],
+    herbal: ["herbal", "tanaman"],
+    medicine: ["obat", "jamu"],
+    remedy: ["jamu", "obat"],
+    "herbal medicine": ["jamu", "herbal"],
+    garden: ["kebun"],
+    farm: ["pertanian", "kebun"],
+    farming: ["pertanian"],
+    market: ["pasar"],
+    food: ["makanan", "kuliner"],
+    culinary: ["kuliner", "makanan"],
+    restaurant: ["warung makan", "restoran"],
+    coffee: ["kopi"],
+    cafe: ["kedai kopi", "kopi"],
+    "souvenir shop": ["toko suvenir", "umkm"],
+    handicraft: ["kerajinan"],
+    community: ["warga", "masyarakat"],
+    local: ["warga", "lokal"],
+    location: ["lokasi"],
+    address: ["alamat"],
+    "how to get": ["arah", "rute"],
+    route: ["rute", "arah"],
+    map: ["peta"],
+    contact: ["kontak"],
+    phone: ["telepon", "whatsapp"],
+    whatsapp: ["whatsapp"],
+    open: ["jam buka", "buka"],
+    hours: ["jam buka", "jam operasional"],
+    schedule: ["jadwal"],
+    event: ["acara", "kegiatan"],
+    festival: ["festival", "acara"],
+    performance: ["pentas", "pertunjukan"],
+    dance: ["tari"],
+    music: ["musik"],
+    kid: ["anak"],
+    kids: ["anak"],
+    children: ["anak"],
+    family: ["keluarga"],
+    group: ["rombongan", "grup"],
+    swim: ["berenang", "kolam"],
+    swimming: ["berenang", "kolam"],
+    bath: ["mandi"],
+    bathroom: ["kamar mandi", "toilet"],
+    parking: ["parkir"],
+    photo: ["foto", "spot foto"],
+    photos: ["foto"],
+    spot: ["spot"],
+    view: ["pemandangan"],
+    scenery: ["pemandangan"],
+    nature: ["alam"],
+    plantation: ["kebun", "pertanian"],
+    ugm: ["kkn", "ugm"],
+    "field trip": ["study tour", "eduwisata"],
+    "study tour": ["study tour", "eduwisata"],
+    itinerary: ["paket", "rencana"],
+};
+
+/**
+ * Bangun bentuk mentah dari kata berimbuhan umum (me-, ber-, di-, -nya, -an)
+ * agar "menginapnya" juga cocok dengan "menginap". Ini memperluas cakupan
+ * kamus di atas tanpa harus mendaftar tiap variasi.
+ */
+function stemRaw(word: string): string {
+    return word
+        .replace(/^(meng|meny|mem|men|ber|bel|ter|di|ke|pe|se)/, (m) =>
+            word.length - m.length >= 4 ? "" : m
+        )
+        .replace(/(nya|kah|lah|an)$/i, (m) => (word.length - m.length >= 4 ? "" : m));
+}
+
+/** Perluas istilah topik dengan padanannya. Maksimal 2 padanan per kata. */
+function expandTerms(terms: string[]): string[] {
+    const out = new Set<string>();
+    for (const t of terms) {
+        out.add(t);
+        const extra = SYNONYMS[t] ?? SYNONYMS[stemRaw(t)];
+        if (extra) {
+            for (const s of extra) {
+                // Padanan bisa berupa frasa ("kamar mandi"): istilah BM25 hanya
+                // kata tunggal, jadi frasa dipecah dan tiap katanya diambil.
+                if (s.includes(" ")) {
+                    for (const w of s.split(" ")) {
+                        if (w.length >= 3 && !QUESTION_FILLER_RE.test(w)) out.add(w);
+                    }
+                } else {
+                    out.add(s);
+                }
+            }
+        }
+        if (out.size > terms.length * 3 + 6) break;
+    }
+    return [...out];
+}
+
 function dateValue(value: string): number {
     const t = new Date(value).getTime();
     return Number.isFinite(t) ? t : 0;
@@ -67,7 +312,7 @@ function recencyFactor(value: string): number {
 }
 
 function topicTerms(terms: string[]): string[] {
-    return terms.filter((t) => !NEWS_WORDS.has(t));
+    return terms.filter((t) => !NEWS_WORDS.has(t) && !QUESTION_FILLER_RE.test(t));
 }
 
 export interface RetrievedCard {
@@ -108,21 +353,36 @@ function scoreCard(card: EntityCard, terms: string[], rawQuery: string): number 
     let score = 0;
     const kw = card.keywords;
     const body = card.bodyTokens ?? "";
+    // Padanan kata ikut dinilai dengan bobot lebih kecil: kata asli pengunjung
+    // tetap yang paling menentukan.
+    const expanded = expandTerms(terms.filter((t) => t !== rawQuery.toLowerCase()));
 
     // Nama yang disebut utuh memberi bobot paling besar.
     for (const term of terms) {
         if (term.length < 3) continue;
         if (new RegExp(`(^|\\s)${escapeRegex(term)}(\\s|$)`, "i").test(kw)) {
             score += 3.0;
-        } else if (kw.includes(term)) {
+        } else if (term.length >= 5 && kw.includes(term)) {
+            // Pencocokan substring HANYA untuk kata >=5 huruf. Tanpa batas ini,
+            // kata pendek kebetulan menjadi bagian dari nama lain:
+            // "suka" ⊂ "Sukarsih" membuat homestay Bu Sukarsih menjawab
+            // pertanyaan tentang KKN (kasus nyata yang pernah terjadi).
             score += 1.2;
-        } else if (body.includes(term)) {
-            // Kata yang hanya muncul di isi (mis. "imun" pada khasiat Jahe)
+        } else if (term.length >= 5 && body.includes(term)) {
+            // Kata yang hanya muncul di isi (mis. "manfaat" pada khasiat Jahe)
             // bernilai lebih kecil daripada nama, tetapi cukup untuk
             // memisahkan tanaman yang benar-benar relevan dari yang sekadar
             // berlabel "tanaman herbal".
             score += 0.9;
         }
+    }
+
+    // Padanan kata (query expansion): bobot lebih kecil dari kata asli.
+    for (const term of expanded) {
+        if (terms.includes(term)) continue;
+        if (term.length < 5) continue;
+        if (kw.includes(term)) score += 0.8;
+        else if (body.includes(term)) score += 0.5;
     }
 
     // Judul yang disebut hampir persis (dengan salah ketik) tetap dikenali.
@@ -160,6 +420,16 @@ function bm25(
     index: ReturnType<typeof buildIndex>,
     terms: string[]
 ): RetrievedChunk[] {
+    /**
+     * Kata tanya/basa-basi dibuang sebelum skoring: ia tidak membawa topik.
+     * Tanpa ini, judul yang kebetulan memuat "ngapain" bisa mengalahkan
+     * artikel yang benar-benar membahas topik yang ditanyakan.
+     *
+     * Jika SEMUA istilah ternyata filler (pertanyaan tanpa kata bermakna),
+     * pakai istilah asli agar BM25 tetap punya sesuatu untuk dicari.
+     */
+    const topical = terms.filter((t) => !QUESTION_FILLER_RE.test(t));
+    const effective = expandTerms(topical.length ? topical : terms);
     const N = index.chunks.length || 1;
     const scored: RetrievedChunk[] = [];
 
@@ -173,7 +443,7 @@ function bm25(
         for (const t of tokens) tf.set(t, (tf.get(t) ?? 0) + 1);
 
         let score = 0;
-        for (const term of terms) {
+        for (const term of effective) {
             const f = tf.get(term);
             if (!f) continue;
             const df = index.docFreq.get(term) ?? 0;
@@ -185,7 +455,24 @@ function bm25(
 
         // Judul yang memuat kata kunci menandakan artikel yang benar-benar
         // relevan, bukan sekadar menyebut kata itu sekali.
-        if (terms.some((t) => chunk.title.toLowerCase().includes(t))) score += 2.0;
+        const titleLower = chunk.title.toLowerCase();
+        if (effective.some((t) => titleLower.includes(t))) score += 2.0;
+
+        /*
+         * Cakupan judul: berapa banyak kata kunci inti yang muncul di judul.
+         *
+         * Kasus nyata: pertanyaan "agenda kkn" harus mengalahkan artikel
+         * promosi yang judulnya kebetulan memuat SATU kata basa-basi.
+         * Bonus ini memberi bobot besar pada artikel yang judulnya mencakup
+         * SEMUA istilah inti — kecocokan penuh di judul hampir selalu berarti
+         * artikel itu memang tentang topik yang ditanyakan.
+         */
+        const covered = effective.filter((t) => titleLower.includes(t)).length;
+        if (effective.length >= 2 && covered === effective.length) {
+            score += 3.0;
+        } else if (covered >= 2) {
+            score += 1.5;
+        }
 
         // Dorong tulisan yang lebih baru ke atas bila relevansinya berdekatan.
         score *= 1 + RECENCY_BOOST * recencyFactor(chunk.date);
@@ -237,6 +524,13 @@ function isFollowUp(query: string, terms: string[]): boolean {
  *
  * Dengan langkah ini, entitas yang muncul di giliran sebelumnya dipakai
  * sebagai jangkar, lalu pertanyaan lanjutan dinilai terhadap entitas itu.
+ *
+ * Selain entitas, fungsi ini JUGA mengembalikan judul artikel/berita yang
+ * dikutip riwayat (via `titles`). Kasus nyata: bot mengutip artikel "Kenangan
+ * Perjalanan KKN...", lalu pengunjung bertanya "bukannya ada ya di artikel?"
+ * — tanpa memori judul, retrieval kehilangan artikel itu dan menjawab
+ * dengan artikel lain yang tidak relevan, sehingga bot tampak membantah
+ * dirinya sendiri.
  */
 function entitiesFromHistory(
     history: { role: string; content: string }[],
@@ -285,6 +579,42 @@ function entitiesFromHistory(
     });
 
     return [...scored.values()].sort((a, b) => b.score - a.score);
+}
+
+/**
+ * Judul tulisan (artikel/berita) yang dikutip riwayat percakapan.
+ *
+ * Pencocokan memakai judul lengkap yang tersimpan di indeks, sehingga
+ * "bukannya ada ya di artikel?" setelah bot mengutip artikel KKN tetap
+ * berjangkar pada artikel yang sama, bukan pada artikel lain yang kebetulan
+ * muncul di jawaban daftar.
+ */
+function articleTitlesFromHistory(
+    history: { role: string; content: string }[],
+    maxTurns = 4
+): string[] {
+    const index = buildIndex();
+    const recent = history.slice(-maxTurns * 2);
+    const titles = new Map<string, number>();
+
+    recent.forEach((msg, i) => {
+        const text = String(msg.content ?? "").toLowerCase();
+        if (!text) return;
+        const recency = (i + 1) / recent.length;
+        for (const c of index.chunks) {
+            if (!c.id.endsWith(":head")) continue;
+            const title = c.title.toLowerCase();
+            // Judul cukup panjang untuk tidak salah cocok dengan kalimat umum.
+            if (title.length < 12) continue;
+            if (text.includes(title)) {
+                titles.set(title, (titles.get(title) ?? 0) + recency);
+            }
+        }
+    });
+
+    return [...titles.keys()].sort(
+        (a, b) => (titles.get(b) ?? 0) - (titles.get(a) ?? 0)
+    );
 }
 
 /** Pindahkan jangkar ke urutan pertama; sisipkan bila tidak ikut terjaring. */
@@ -337,6 +667,58 @@ export function retrieve(
     // seperti "kalau yang itu cara pakainya gimana?" (5 kata bermakna) tetap
     // dinilai tanpa jangkar, sehingga mengambil entitas acak. Sekarang cukup
     // syarat "merupakan lanjutan" dan ada entitas terbawa dari riwayat.
+    /**
+     * Pergantian topik: pertanyaan yang memuat topik/kata kunci BARU yang
+     * TIDAK berasal dari percakapan sebelumnya tidak boleh dijangkari riwayat.
+     *
+     * Contoh nyata: setelah membahas KKN, pengunjung tiba-tiba bertanya
+     * "resep rendang gimana?" atau "tiket pantai kuta berapa?". Kata-kata
+     * barunya sama sekali tidak muncul di giliran-giliran sebelumnya. Tanpa
+     * pemeriksaan ini, jangkar riwayat tetap dilekatkan dan jawaban jadi
+     * kacau: setengah konteks lama, setengah topik baru.
+     *
+     * Aturan: bila pertanyaan punya istilah topik yang cukup dan TIDAK SATU PUN
+     * yang muncul di riwayat, perlakukan sebagai topik baru (lewati jangkar).
+     * Pertanyaan nyambung hampir selalu berbagi minimal satu istilah dengan
+     * riwayat (nama tempat, kata topik, atau kata rujukan "itu/tersebut").
+     */
+    if (history.length && isFollowUp(query, terms)) {
+        const topical = terms.filter((t) => !QUESTION_FILLER_RE.test(t));
+        const historyText = history
+            .slice(-8)
+            .map((m) => String(m.content ?? "").toLowerCase())
+            .join(" ");
+        const fresh = topical.filter(
+            (t) => !historyText.includes(t) && !(expandTerms([t]).some((e) => e !== t && historyText.includes(e)))
+        );
+        // Mayoritas istilah benar-benar baru -> topik berganti; perlakukan
+        // sebagai pertanyaan mandiri tanpa jangkar riwayat.
+        if (topical.length >= 2 && fresh.length >= Math.ceil(topical.length * 0.75)) {
+            return retrieveInternal(query, index);
+        }
+    }
+
+    /**
+     * Jangkar artikel: pertanyaan lanjutan tentang tulisan yang BARU DIKUTIP.
+     *
+     * Kasus nyata: bot mengutip "Kenangan Perjalanan KKN di Bantaragung...",
+     * pengunjung balas "bukannya ada ya di artikel?" — tanpa jangkar ini,
+     * retrieval mencocokkan kata "artikel" ke artikel lain yang kebetulan
+     * lebih baru, dan bot tampak membantah kutipannya sendiri.
+     *
+     * Dijalankan SEBELUM jangkar entitas karena kata seperti "artikel" dan
+     * "berita" bukan nama tempat: yang sedang dibicarakan adalah tulisannya.
+     * Bila riwayat tidak mengutip tulisan apa pun, blok jangkar entitas di
+     * bawah yang bekerja seperti biasa.
+     */
+    if (isFollowUp(query, terms)) {
+        const quoted = articleTitlesFromHistory(history);
+        if (quoted.length) {
+            const resolved = retrieveInternal(`${quoted[0]} ${cleaned}`, index);
+            if (resolved.chunks.length) return resolved;
+        }
+    }
+
     const carried = isFollowUp(query, terms) ? entitiesFromHistory(history) : [];
     if (carried.length) {
         const topic = carried[0].card;
@@ -403,9 +785,8 @@ function retrieveInternal(query: string, index: ReturnType<typeof buildIndex>): 
         .sort((a, b) => b.score - a.score)
         .slice(0, MAX_CARDS);
 
-    const chunks = bm25(index, terms)
-        .filter((c) => c.score > 1.5)
-        .slice(0, MAX_CHUNKS);
+    const rawChunks = bm25(index, terms).filter((c) => c.score > 1.5);
+    const chunks = rerankChunks(rawChunks, cards);
 
     // Pertanyaan tentang kontak/booking selalu menyertakan kartu kontak.
     const needsContact =
@@ -418,6 +799,65 @@ function retrieveInternal(query: string, index: ReturnType<typeof buildIndex>): 
     }
 
     return { cards, chunks, terms };
+}
+
+/**
+ * Reranker potongan: gabungkan sinyal yang BM25 lihat terpisah.
+ *
+ * BM25 menilai tiap potongan secara independen. Tiga kelemahannya yang nyata:
+ *
+ * 1. Banyak potongan dari artikel yang sama memenuhi slot, sehingga konteks
+ *    "kaku" pada satu tulisan dan kehabisan ruang untuk tulisan pendukung.
+ * 2. Potongan dari artikel yang juga cocok dengan kartu entitas (judul
+ *    destinasi yang disebut pengunjung) sebenarnya lebih kuat, tapi BM25
+ *    tidak tahu itu.
+ * 3. Potongan kepala (judul+ringkasan) dan potongan isi dari artikel yang
+ *    sama bersaing satu sama lain; kepala seharusnya menang karena lebih
+ *    ringkas dan sudah memuat konteksnya.
+ *
+ * Urutan akhir: keanekaragaman sumber dulu (maks 2 potongan per artikel),
+ * lalu skor gabungan, lalu tanggal terbaru.
+ */
+function rerankChunks(
+    chunks: RetrievedChunk[],
+    cards: RetrievedCard[]
+): RetrievedChunk[] {
+    // Skor kartu diubah jadi bonus per href: kartu yang cocok menandakan
+    // artikel terkait itu memang topik yang ditanyakan.
+    const cardBoost = new Map<string, number>();
+    for (const { card, score } of cards) {
+        // Normalisasi: skor kartu bisa >10; bonus dibatasi agar tidak menenggelamkan skor BM25 murni.
+        cardBoost.set(card.href, Math.min(6, score * 0.6));
+    }
+
+    const boosted = chunks.map(({ chunk, score }) => ({
+        chunk,
+        score: score + (cardBoost.get(chunk.href) ?? 0),
+    }));
+
+    // Dedup per artikel: potongan terbaik per href dipertahankan di depan,
+    // potongan kedua dari artikel yang sama diberi penalti supaya artikel
+    // lain masih mendapat slot.
+    const perArticle = new Map<string, number>();
+    const ordered: RetrievedChunk[] = [];
+    const secondPass: RetrievedChunk[] = [];
+    for (const item of boosted.sort((a, b) => b.score - a.score)) {
+        const count = perArticle.get(item.chunk.href) ?? 0;
+        if (count === 0) {
+            perArticle.set(item.chunk.href, 1);
+            ordered.push(item);
+        } else if (count === 1) {
+            perArticle.set(item.chunk.href, 2);
+            secondPass.push({ chunk: item.chunk, score: item.score * 0.55 });
+        }
+        // Potongan ketiga dst dari artikel yang sama dibuang: tidak menambah
+        // informasi berarti, hanya menyita slot konteks.
+    }
+
+    // Gabungkan: pemenang per artikel dulu, lalu potongan kedua yang masih
+    // kuat, dibatasi MAX_CHUNKS.
+    const merged = [...ordered, ...secondPass.sort((a, b) => b.score - a.score)];
+    return merged.slice(0, MAX_CHUNKS);
 }
 
 /** Ringkasan konteks dalam format yang dibaca model, dengan nomor kutipan. */

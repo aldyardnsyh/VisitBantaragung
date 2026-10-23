@@ -188,6 +188,24 @@ const PRIORITY: NeedKind[] = [
 ];
 
 export function detectNeed(question: string): NeedKind | null {
+    /**
+     * Pertanyaan tentang KONTEN SITUS harus lewat retrieval, bukan jalur
+     * rekomendasi.
+     *
+     * Kasus nyata yang diperbaiki: "kalau anak kkn itu biasanya agendanya suka
+     * pada ngapain?" — kata "anak" cocok dengan kebutuhan `ramah_keluarga`,
+     * sehingga bot menjawab "untuk bawa keluarga, ini yang paling nyaman..."
+     * padahal pengunjung bertanya tentang kegiatan KKN (konten artikel).
+     * Kata "anak" bermakna ganda: anak kecil vs anak KKN.
+     *
+     * Sinyal pengetahuan-konten: kkn, ugm, artikel, berita, program, kegiatan
+     * organisasi. Kalimat semacam ini menanyakan ISI situs, dan retrieval
+     * (BM25 atas judul + isi artikel) jauh lebih tepat untuk itu.
+     */
+    const CONTENT_QUESTION_RE =
+        /\b(kkn|ugm|simfoni|artikel|berita|cerita|kisah|pengalaman|program kerja|agenda)\b/i;
+    if (CONTENT_QUESTION_RE.test(question)) return null;
+
     for (const kind of PRIORITY) {
         const need = NEEDS.find((n) => n.kind === kind);
         if (need && need.match.test(question)) return need.kind;
