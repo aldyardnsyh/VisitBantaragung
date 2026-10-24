@@ -1,20 +1,40 @@
 # Visit Bantaragung
 
+![Next.js](https://img.shields.io/badge/Next.js_16-black?logo=nextdotjs)
+![React](https://img.shields.io/badge/React_19-20232a?logo=react&logoColor=61dafb)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178c6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-06b6d4?logo=tailwindcss&logoColor=white)
+![RAG](https://img.shields.io/badge/RAG-BM25_+_Rerank-orange)
+![LLM](https://img.shields.io/badge/LLM-Fallback_Chain-8b5cf6)
+![Tests](https://img.shields.io/badge/Tests-9_suites-22c55e)
+
 Situs resmi Desa Wisata Bantaragung, Kecamatan Sindangwangi, Kabupaten Majalengka, Jawa Barat.
 
 Bantaragung berada di kaki Gunung Ciremai. Desa ini menawarkan wisata alam, edukasi, dan budaya: terasering, curug, kampung herbal, homestay warga, serta produk UMKM lokal. Situs ini disiapkan sebagai pintu masuk bagi wisatawan yang ingin mengenal desa, menyusun kunjungan, dan menghubungi pengelola.
 
-## Tech Stack Singkat
+## Tech Stack
+
+### Situs publik & CMS
 
 | Lapisan | Teknologi |
 |---|---|
-| Frontend & Backend | Next.js 16 (App Router), React 19, TypeScript |
-| Styling & Peta | Tailwind CSS 4, Leaflet (OpenStreetMap) |
-| Konten | JSON tanpa database (single source of truth), CDN aset |
-| Chatbot (RAG + LLM) | Pipeline RAG mandiri: BM25, reranker, guardrail berlapis |
-| CMS | Dasbor konten berbasis Git (commit per penyimpanan) |
-| Otomasi | GitHub Actions (sync berita terjadwal), Vercel |
-| Kualitas | ESLint, TypeScript strict, 9 suite uji chatbot |
+| Framework | ![Next.js](https://img.shields.io/badge/Next.js_16_(App_Router)-000000?logo=nextdotjs&logoColor=white) ![React](https://img.shields.io/badge/React_19-20232a?logo=react&logoColor=61dafb) ![TypeScript](https://img.shields.io/badge/TypeScript_strict-3178c6?logo=typescript&logoColor=white) |
+| Styling & Peta | ![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS_4-06b6d4?logo=tailwindcss&logoColor=white) ![Leaflet](https://img.shields.io/badge/Leaflet_+_OpenStreetMap-199900?logo=leaflet&logoColor=white) |
+| Konten & Aset | ![JSON](https://img.shields.io/badge/Konten_JSON_tanpa_database-f9a825?logo=json&logoColor=white) ![jsDelivr](https://img.shields.io/badge/CDN_jsDelivr-e84e3f?logo=jsdelivr&logoColor=white) |
+| CMS | ![GitHub](https://img.shields.io/badge/Dasbor_berbasis_Git-181717?logo=github&logoColor=white) |
+| Otomasi & Hosting | ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088ff?logo=githubactions&logoColor=white) ![Vercel](https://img.shields.io/badge/Vercel-000000?logo=vercel&logoColor=white) |
+| Kualitas | ![ESLint](https://img.shields.io/badge/ESLint-4b32c3?logo=eslint&logoColor=white) ![Tests](https://img.shields.io/badge/9_suite_uji_chatbot-22c55e) |
+
+### Pemandu digital (RAG + LLM)
+
+| Komponen | Teknologi & mekanisme |
+|---|---|
+| Retrieval | ![BM25](https://img.shields.io/badge/BM25_k1=1.5_b=0.75-e67e22) ![Fuzzy](https://img.shields.io/badge/Fuzzy_Entity_Edit_Distance-16a085) ![Expansion](https://img.shields.io/badge/Query_Expansion_~190_istilah-2980b9) |
+| Indexing | ![Chunking](https://img.shields.io/badge/Chunking_900c_+_Overlap_200c-d35400) ![Refresh](https://img.shields.io/badge/Index_Refresh_5_menit-27ae60) |
+| Reranking | ![Reranker](https://img.shields.io/badge/Reranker_Dedup_per_Artikel-8e44ad) |
+| Generation | ![LLM](https://img.shields.io/badge/Fallback_Chain_+_Health_Tracking-8b5cf6) |
+| Guardrail | ![Anti-Halusinasi](https://img.shields.io/badge/Anti_Halusinasi_Validasi_Konteks-c0392b) ![Anti-Jailbreak](https://img.shields.io/badge/Anti_Jailbreak_ID_EN_Jawa-2c3e50) |
+| Testing | ![Vitest-like](https://img.shields.io/badge/9_Suite_Uji_Regresi-22c55e) |
 
 ## Yang bisa ditemukan di situs
 
