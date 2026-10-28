@@ -2,9 +2,19 @@ name: sync-berita
 
 on:
   schedule:
-    # Tiap 3 hari pukul 19:00 WIB (12:00 UTC).
+    # Tiap 3 hari pukul 00:02 WIB (17:02 UTC hari sebelumnya).
+    #
+    # Kenapa jam 00:02: kuota model gratis penyedia direset tepat saat
+    # pergantian hari (00:00 WIB). Berjalan dua menit setelah reset membuat
+    # kuota harian masih utuh, sehingga seluruh artikel baru bisa ditulis ulang
+    # AI pada run yang sama, tidak jatuh ke konten pembersihan (cleaned) karena
+    # kuota sudah terpakai run lain.
+    #
     # */3 = tanggal 1,4,7,10,... (di bulan 31 hari sesekali jeda 2 hari: 31 -> 1).
-    - cron: "0 12 */3 * *"
+    #
+    # Catatan konversi: cron GitHub Actions memakai UTC, WIB = UTC+7.
+    # 00:02 WIB  -> 17:02 UTC (hari sebelumnya)  -> "2 17 */3 * *"
+    - cron: "2 17 */3 * *"
   workflow_dispatch:
 
 # Cegah run tumpang-tindih (jadwal vs dispatch manual): run baru membatalkan

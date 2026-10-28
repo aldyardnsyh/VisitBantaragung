@@ -148,7 +148,7 @@ export default function DashboardClient({
         <div className="rounded-[var(--radius-adm-lg)] border border-adm-border bg-adm-surface p-5">
           <CardHeader
             title="Status sinkronisasi berita"
-            description="Crawler berjalan otomatis setiap 3 hari pukul 19.00 WIB."
+            description="Crawler berjalan otomatis setiap 3 hari pukul 00.02 WIB, tepat setelah kuota model direset."
             icon={<RefreshCw aria-hidden className="h-4 w-4" />}
           />
           <div className="mt-3.5">
