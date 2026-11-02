@@ -9,7 +9,12 @@ export function assetUrl(path: string) {
   if (path.startsWith("/")) return path;
 
   const base = process.env.NEXT_PUBLIC_ASSET_BASE_URL;
-  if (!base) return path;
+  if (!base) {
+    // Fallback: path relatif CDN-style ("berita/...") maupun lokal tanpa
+    // garis miring dijadikan path absolut agar tidak pecah jadi URL relatif
+    // terhadap halaman aktif (penyebab gambar hilang saat env base belum diisi).
+    return path.startsWith("/") ? path : `/${path}`;
+  }
 
   const url = `${base}/${path}`.replace(/([^:])\/\//g, "$1/");
 

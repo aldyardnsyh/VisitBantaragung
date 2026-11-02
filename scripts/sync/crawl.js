@@ -1072,6 +1072,9 @@ async function main() {
 
     // Cover diunduh SETELAH rewrite sukses agar tidak ada cover yatim
     // (cover tanpa JSON) bila rewrite gagal.
+    // Cover disimpan di public/berita (repo konten) agar ikut ter-commit
+    // bersama JSON oleh step "Commit & push" di CI — tidak ada repo kedua
+    // yang perlu disinkronkan, jadi gambar tidak bisa hilang di jalan.
     article.cover = await fetchCover(post, slug);
     if (!article.cover && post.featured_media) coverFails++;
 
